@@ -1,3 +1,5 @@
+import 'package:fashion_customer/views/cart_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -39,7 +41,14 @@ class _HomePageState extends State<HomePage> {
                 color: Color(0XFF604FCD),
                 fontWeight: FontWeight.w100),
           ),
-          actions: [Image.asset("Icons/Bag.png")],
+          actions: [
+            InkWell(
+                onTap: () {
+                  Navigator.push(context,
+                      CupertinoPageRoute(builder: (context) => Cartpage()));
+                },
+                child: Image.asset("Icons/Bag.png")),
+          ],
         ),
         body: Padding(
           padding: const EdgeInsets.only(left: 10, right: 10),

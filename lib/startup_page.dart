@@ -1,4 +1,4 @@
-import 'package:fashion_customer/views/login_page.dart';
+import 'package:fashion_customer/bottom_navigation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -203,7 +203,7 @@ class _StartupPageState extends State<StartupPage> {
                         Navigator.push(
                           context,
                           CupertinoPageRoute(
-                            builder: (context) => const LoginPage(),
+                            builder: (context) => const BottomNavigation(),
                           ),
                         );
                       });

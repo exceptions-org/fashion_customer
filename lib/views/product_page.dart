@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 class ProductPage extends StatelessWidget {
   static const String routeName = "/ProductPage";
@@ -11,7 +10,7 @@ class ProductPage extends StatelessWidget {
       // backgroundColor: Colors.white,
       appBar: AppBar(
         leading: IconButton(
-          icon: SvgPicture.asset("assets/icons/arrow_right.svg"),
+          icon: Image.asset("Icons/Arrow.png"),
           onPressed: () {},
         ),
         elevation: 0,
@@ -42,15 +41,15 @@ class ProductPage extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     image: const DecorationImage(
-                      image: AssetImage("assets/icons/product.png"),
+                      image: AssetImage("Icons/product.png"),
                       fit: BoxFit.cover,
                     ),
                   ),
                 ),
                 Expanded(
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
                       SizedBox(
                         height: 15,
                       ),
@@ -78,7 +77,16 @@ class ProductPage extends StatelessWidget {
                           ),
                         ),
                       ),
-                    ]))
+                    ],
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    "Add to Cart",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ),
               ],
             ),
           );

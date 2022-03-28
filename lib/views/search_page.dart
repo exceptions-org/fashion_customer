@@ -63,8 +63,8 @@ class SearchPage extends StatelessWidget {
                       const SizedBox(
                         width: 16,
                       ),
-                      SvgPicture.asset(
-                        "assets/icons/Search.svg",
+                      Image.asset(
+                        "Icons/Search.png",
                         color: Colors.white60,
                       ),
                       const SizedBox(

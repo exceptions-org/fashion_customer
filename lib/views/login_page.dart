@@ -64,6 +64,7 @@ class _LoginPageState extends State<LoginPage> {
                   height: 40,
                   width: 240,
                   child: TextField(
+                    maxLength: 10,
                     controller: phoneController,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
@@ -81,6 +82,7 @@ class _LoginPageState extends State<LoginPage> {
                 GestureDetector(
                   onTap: () {
                     authService.signinWithPhone(phoneController.text, context);
+                    
                   },
                   child: Center(
                     child: Padding(

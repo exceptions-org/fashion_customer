@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class PhoneVerification extends StatefulWidget {
   final AuthService authService;
-  PhoneVerification({Key? key, required this.authService}) : super(key: key);
+  PhoneVerification({Key? key, required this.authService,}) : super(key: key);
 
   @override
   _PhoneVerificationState createState() => _PhoneVerificationState();
@@ -56,7 +56,7 @@ class _PhoneVerificationState extends State<PhoneVerification> {
                     width: 4,
                   ),
                   Text(
-                    "+918805723094",
+                    smsController.text,
                     style: TextStyle(
                         fontSize: 14,
                         color: Color(0xff604FCD),
@@ -73,6 +73,7 @@ class _PhoneVerificationState extends State<PhoneVerification> {
                 height: 40,
                 width: 240,
                 child: TextField(
+                  maxLength: 6,
                   controller: smsController,
                   decoration: InputDecoration(
                     labelStyle: TextStyle(
