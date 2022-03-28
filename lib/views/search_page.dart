@@ -5,14 +5,22 @@ import 'package:flutter_svg/svg.dart';
 
 import '../model/product_model.dart';
 
-class SearchPage extends StatelessWidget {
+class SearchPage extends StatefulWidget {
   static const String routeName = "/SearchPage";
   const SearchPage({Key? key}) : super(key: key);
 
   @override
+  State<SearchPage> createState() => _SearchPageState();
+}
+
+class _SearchPageState extends State<SearchPage> {
+  TextEditingController search = TextEditingController();
+  CollectionReference productRefs =
+      FirebaseFirestore.instance.collection('products');
+  @override
   Widget build(BuildContext context) {
-    CollectionReference productRefs =
-        FirebaseFirestore.instance.collection('products');
+    var width = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
     return Scaffold(
       // backgroundColor: Colors.white,
       appBar: AppBar(
@@ -70,14 +78,36 @@ class SearchPage extends StatelessWidget {
                       const SizedBox(
                         width: 8,
                       ),
-                      const Text(
+                      SizedBox(
+                        width: width * 0.7,
+                        child: TextField(
+                          onChanged: (value) {
+                            print(value);
+                            setState(() {});
+                          },
+                          controller: search,
+                          decoration: InputDecoration(
+                            hintText: "search footwear, dress & dresses",
+                            hintStyle: TextStyle(
+                              color: Colors.white60,
+                              fontSize: 16,
+                            ),
+                            border: InputBorder.none,
+                          ),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                      /* const Text(
                         "search footwear, dress & dresses",
                         style: TextStyle(
                           fontSize: 15,
                           color: Colors.white60,
                           // fontWeight: FontWeight.bold,
                         ),
-                      ),
+                      ), */
                     ],
                   ),
                 ),
@@ -96,23 +126,129 @@ class SearchPage extends StatelessWidget {
                     ProductModel.fromMap(snapshot.data()!),
                 toFirestore: (product, options) => product.toMap())
             .snapshots(),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
+        builder: (BuildContext context, snapshot) {
           if (snapshot.hasError) {
             return const Center(
               child: Text("something went wrong"),
             );
           }
           if (snapshot.hasData && snapshot.data != null) {
-            var productLength = snapshot.data.docs.length;
+            // var productLength = snapshot.data!.docs.length;
+
             return SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
-              child: GridView.builder(
+              child: GridView.count(
+                childAspectRatio: 1 / 1.1,
                 shrinkWrap: true,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.8,
-                ),
-                itemBuilder: (context, index) {
+                crossAxisCount: 2,
+                children: snapshot.data!.docs
+                    .where((element) => element
+                        .data()
+                        .name
+                        .toLowerCase()
+                        .contains(search.text.toLowerCase()))
+                    .map((e) => e.data())
+                    .map(
+                      (data) => GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  ProductDetails(productModel: data),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(
+                              color: Colors.blueGrey.shade100,
+                              // width: 1,
+                            ),
+                            // color: Colors.white,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          margin: const EdgeInsets.all(10),
+                          // padding: const EdgeInsets.all(8),
+                          height: height * 0.25,
+
+                          width: width * 0.4,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              // mainAxisSize: MainAxisSize.max,
+                              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  height: height * 0.15,
+                                  width: 142,
+                                  // padding: const EdgeInsets.only(left: 10),
+                                  margin:
+                                      const EdgeInsets.only(top: 10, left: 15),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(4),
+                                    image: DecorationImage(
+                                      image: NetworkImage(
+                                          data.images.first.images.first),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 15),
+                                  child: Text(
+                                    data.name,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 15),
+                                  child: Text(
+                                    "Rs. ${data.prices.first.colorPrice.first.price}",
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Color(0xFF604FCD),
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                /* Container(
+                                                  height: 50,
+                                                  width: 162,
+                                                  decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            color: Colors.white,
+                                                  ),
+                                                  child: const Center(
+                            child: Text(
+                              "NameOfProduct",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                                                  ),
+                                                ), */
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                    .toList(), /* (context, index) {
                   ProductModel data = snapshot.data.docs[index].data();
                   return GestureDetector(
                     onTap: () {
@@ -208,8 +344,8 @@ class SearchPage extends StatelessWidget {
                       ),
                     ),
                   );
-                },
-                itemCount: productLength,
+                } */
+                // itemCount: productLength,
               ),
             );
           }
