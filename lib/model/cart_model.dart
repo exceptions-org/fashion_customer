@@ -1,21 +1,26 @@
 import 'dart:convert';
 
+
 class CartModel {
+  String image;
   String name;
   String price;
   String quantity;
   String productId;
   int color;
   CartModel({
+    required this.image,
     required this.name,
     required this.price,
     required this.quantity,
     required this.productId,
     required this.color,
   });
-  
+
+  get productModel => null;
 
   CartModel copyWith({
+    String? image,
     String? name,
     String? price,
     String? quantity,
@@ -23,6 +28,7 @@ class CartModel {
     int? color,
   }) {
     return CartModel(
+      image: image ?? this.image,
       name: name ?? this.name,
       price: price ?? this.price,
       quantity: quantity ?? this.quantity,
@@ -33,6 +39,7 @@ class CartModel {
 
   Map<String, dynamic> toMap() {
     return {
+      'image': image,
       'name': name,
       'price': price,
       'quantity': quantity,
@@ -43,6 +50,7 @@ class CartModel {
 
   factory CartModel.fromMap(Map<String, dynamic> map) {
     return CartModel(
+      image: map['image'] ?? '',
       name: map['name'] ?? '',
       price: map['price'] ?? '',
       quantity: map['quantity'] ?? '',
@@ -53,11 +61,12 @@ class CartModel {
 
   String toJson() => json.encode(toMap());
 
-  factory CartModel.fromJson(String source) => CartModel.fromMap(json.decode(source));
+  factory CartModel.fromJson(String source) =>
+      CartModel.fromMap(json.decode(source));
 
   @override
   String toString() {
-    return 'CartModel(name: $name, price: $price, quantity: $quantity, productId: $productId, color: $color)';
+    return 'CartModel(image: $image, name: $name, price: $price, quantity: $quantity, productId: $productId, color: $color)';
   }
 
   @override
@@ -65,6 +74,7 @@ class CartModel {
     if (identical(this, other)) return true;
   
     return other is CartModel &&
+      other.image == image &&
       other.name == name &&
       other.price == price &&
       other.quantity == quantity &&
@@ -74,7 +84,8 @@ class CartModel {
 
   @override
   int get hashCode {
-    return name.hashCode ^
+    return image.hashCode ^
+      name.hashCode ^
       price.hashCode ^
       quantity.hashCode ^
       productId.hashCode ^

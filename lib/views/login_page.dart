@@ -69,9 +69,7 @@ class _LoginPageState extends State<LoginPage> {
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       labelStyle: TextStyle(
-                        color: Color(
-                          0xff4E4872,
-                        ),
+                        color: Color(0xff4E4872),
                       ),
                     ),
                   ),
@@ -82,7 +80,6 @@ class _LoginPageState extends State<LoginPage> {
                 GestureDetector(
                   onTap: () {
                     authService.signinWithPhone(phoneController.text, context);
-                    
                   },
                   child: Center(
                     child: Padding(

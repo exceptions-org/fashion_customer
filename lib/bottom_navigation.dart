@@ -25,6 +25,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0XFFFAFAFF),
       body: routes[index],
       bottomNavigationBar: SizedBox(
         height: 60,
