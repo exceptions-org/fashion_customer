@@ -38,6 +38,7 @@ class _StartupPageState extends State<StartupPage> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       /* appBar: AppBar(
         backgroundColor: Colors.white,
@@ -60,97 +61,87 @@ class _StartupPageState extends State<StartupPage> {
                     fontWeight: FontWeight.w400),
               ),
             ),
-            const SizedBox(
-              height: 280,
-            ),
+            Spacer(),
             SizedBox(
-              height: 280,
+              height: size.height * .5,
               // color: Colors.blue,
               child: PageView(
                 onPageChanged: pageChange,
                 controller: pageController,
-                scrollDirection: Axis.horizontal,
+                physics: BouncingScrollPhysics(),
                 children: [
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height,
-                    child: Column(
-                      children: const [
-                        Text(
-                          "Welcome",
-                          style:
-                              TextStyle(fontSize: 40, color: Color(0XFF604FCD)),
-                        ),
-                        SizedBox(
-                          height: 25,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 20, right: 20),
-                          child: Text(
-                            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.grey,
-                              wordSpacing: 8,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height / 2,
-                    child: Column(
-                      children: const [
-                        Text(
-                          "Choose",
-                          style: TextStyle(
-                            fontSize: 40,
-                            color: Color(0XFF604FCD),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 25,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 20, right: 20),
-                          child: Text(
-                            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.grey,
-                              wordSpacing: 8,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    child: Column(
-                      children: const [
-                        Text(
-                          "Order",
-                          style: TextStyle(
-                            fontSize: 40,
-                            color: Color(0XFF604FCD),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 25,
-                        ),
-                        Text(
-                          "Lorem Ipsum is simply dummy text of the printing and typesetting industry.\nLorem Ipsum has been the industry's standard dummy text ever\nsince the 1500s, when an unknown printer took a galley of type and scrambled it to make\na type specimen book.",
+                  Column(
+                    children: const [
+                      Text(
+                        "Welcome",
+                        style:
+                            TextStyle(fontSize: 40, color: Color(0XFF604FCD)),
+                      ),
+                      SizedBox(
+                        height: 25,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 20, right: 20),
+                        child: Text(
+                          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 20,
                             color: Colors.grey,
                             wordSpacing: 8,
                           ),
-                        )
-                      ],
-                    ),
+                        ),
+                      )
+                    ],
+                  ),
+                  Column(
+                    children: const [
+                      Text(
+                        "Choose",
+                        style: TextStyle(
+                          fontSize: 40,
+                          color: Color(0XFF604FCD),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 25,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 20, right: 20),
+                        child: Text(
+                          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.grey,
+                            wordSpacing: 8,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  Column(
+                    children: const [
+                      Text(
+                        "Order",
+                        style: TextStyle(
+                          fontSize: 40,
+                          color: Color(0XFF604FCD),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        "Lorem Ipsum is simply dummy text of the printing and typesetting industry.\nLorem Ipsum has been the industry's standard dummy text ever\nsince the 1500s, when an unknown printer took a galley of type and scrambled it to make\na type specimen book.",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.grey,
+                          wordSpacing: 8,
+                        ),
+                      )
+                    ],
                   ),
                 ],
               ),
