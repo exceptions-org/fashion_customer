@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fashion_customer/views/cart_page.dart';
+
+import 'package:fashion_customer/views/contact_details.dart';
 import 'package:fashion_customer/views/product_details.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +30,7 @@ class _HomePageState extends State<HomePage> {
     {'image': 'Icons/Bag.png', 'name': 'Lace'},
     {'image': 'Icons/Bag.png', 'name': 'Lace'},
   ];
-   CollectionReference productRefs =
+  CollectionReference productRefs =
       FirebaseFirestore.instance.collection('products');
 
   @override
@@ -38,7 +39,7 @@ class _HomePageState extends State<HomePage> {
     double height = size.height;
     double width = size.width;
 
-        return SafeArea(
+    return SafeArea(
       child: Scaffold(
         backgroundColor: Color(0XFFFAFAFF),
         appBar: AppBar(
@@ -56,7 +57,7 @@ class _HomePageState extends State<HomePage> {
             InkWell(
                 onTap: () {
                   Navigator.push(context,
-                      CupertinoPageRoute(builder: (context) => Cartpage()));
+                      CupertinoPageRoute(builder: (context) => SignupPage2()));
                 },
                 child: Image.asset("Icons/Bag.png")),
           ],
@@ -204,116 +205,119 @@ class _HomePageState extends State<HomePage> {
                       .toList(),
                 ) */
                 StreamBuilder<QuerySnapshot<ProductModel>>(
-        stream: productRefs
-            .withConverter<ProductModel>(
-                fromFirestore: (snapshot, options) =>
-                    ProductModel.fromMap(snapshot.data()!),
-                toFirestore: (product, options) => product.toMap())
-            .snapshots(),
-        builder: (BuildContext context, snapshot) {
-          if (snapshot.hasError) {
-            return const Center(
-              child: Text("something went wrong"),
-            );
-          }
-          // if (snapshot.data!.docs.isEmpty) {
-          //   return Center(child: Text("No such Product Found"));
-          // }
-          if (snapshot.hasData && snapshot.data != null) {
-            // var productLength = snapshot.data!.docs.length;
-            if (snapshot.data!.docs.isEmpty) {
-              return Text(
-                "No such Product Found",
-                style: TextStyle(fontSize: 50),
-              );
-            }
-          
-            return SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: GridView.count(
-                childAspectRatio: 1 / 1.1,
-                shrinkWrap: true,
-                crossAxisCount: 2,
-                children: snapshot.data!.docs
-                  
-                    .map((e) => e.data())
-                    .map(
-                      (data) => GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  ProductDetails(productModel: data),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                              color: Colors.blueGrey.shade100,
-                              // width: 1,
-                            ),
-                            // color: Colors.white,
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          margin: const EdgeInsets.all(10),
-                          // padding: const EdgeInsets.all(8),
-                          height: height * 0.25,
+                  stream: productRefs
+                      .withConverter<ProductModel>(
+                          fromFirestore: (snapshot, options) =>
+                              ProductModel.fromMap(snapshot.data()!),
+                          toFirestore: (product, options) => product.toMap())
+                      .snapshots(),
+                  builder: (BuildContext context, snapshot) {
+                    if (snapshot.hasError) {
+                      return const Center(
+                        child: Text("something went wrong"),
+                      );
+                    }
+                    // if (snapshot.data!.docs.isEmpty) {
+                    //   return Center(child: Text("No such Product Found"));
+                    // }
+                    if (snapshot.hasData && snapshot.data != null) {
+                      // var productLength = snapshot.data!.docs.length;
+                      if (snapshot.data!.docs.isEmpty) {
+                        return Text(
+                          "No such Product Found",
+                          style: TextStyle(fontSize: 50),
+                        );
+                      }
 
-                          width: width * 0.4,
-                          child: SingleChildScrollView(
-                            child: Column(
-                              // mainAxisSize: MainAxisSize.max,
-                              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  height: height * 0.15,
-                                  width: 142,
-                                  // padding: const EdgeInsets.only(left: 10),
-                                  margin:
-                                      const EdgeInsets.only(top: 10, left: 15),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(4),
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                          data.images.first.images.first),
-                                      fit: BoxFit.cover,
+                      return SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
+                        child: GridView.count(
+                          childAspectRatio: 1 / 1.1,
+                          shrinkWrap: true,
+                          crossAxisCount: 2,
+                          children: snapshot.data!.docs
+                              .map((e) => e.data())
+                              .map(
+                                (data) => GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ProductDetails(productModel: data),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      border: Border.all(
+                                        color: Colors.blueGrey.shade100,
+                                        // width: 1,
+                                      ),
+                                      // color: Colors.white,
+                                      borderRadius: BorderRadius.circular(4),
                                     ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 15),
-                                  child: Text(
-                                    data.name,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 15),
-                                  child: Text(
-                                    "Rs. ${data.prices.first.colorPrice.first.price}",
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      color: Color(0xFF604FCD),
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                /* Container(
+                                    margin: const EdgeInsets.all(10),
+                                    // padding: const EdgeInsets.all(8),
+                                    height: height * 0.25,
+
+                                    width: width * 0.4,
+                                    child: SingleChildScrollView(
+                                      child: Column(
+                                        // mainAxisSize: MainAxisSize.max,
+                                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            height: height * 0.15,
+                                            width: 142,
+                                            // padding: const EdgeInsets.only(left: 10),
+                                            margin: const EdgeInsets.only(
+                                                top: 10, left: 15),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                              image: DecorationImage(
+                                                image: NetworkImage(data
+                                                    .images.first.images.first),
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 15),
+                                            child: Text(
+                                              data.name,
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 15),
+                                            child: Text(
+                                              "Rs. ${data.prices.first.colorPrice.first.price}",
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                                color: Color(0xFF604FCD),
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                          /* Container(
                                                   height: 50,
                                                   width: 162,
                                                   decoration: BoxDecoration(
@@ -331,13 +335,13 @@ class _HomePageState extends State<HomePage> {
                             ),
                                                   ),
                                                 ), */
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                    .toList(), /* (context, index) {
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                              .toList(), /* (context, index) {
                   ProductModel data = snapshot.data.docs[index].data();
                   return GestureDetector(
                     onTap: () {
@@ -434,13 +438,13 @@ class _HomePageState extends State<HomePage> {
                     ),
                   );
                 } */
-                // itemCount: productLength,
-              ),
-            );
-          }
-          return const Center(child: Text('Loading...'));
-        },
-      ),
+                          // itemCount: productLength,
+                        ),
+                      );
+                    }
+                    return const Center(child: Text('Loading...'));
+                  },
+                ),
               ],
             ),
           ),
