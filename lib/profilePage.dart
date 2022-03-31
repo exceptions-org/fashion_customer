@@ -11,50 +11,143 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0XFFFAFAFF),
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: const Color(0XFF604FCD),
+        backgroundColor: Colors.transparent,
+        title: const Text(
+          'Profile',
+          style: TextStyle(color: Color(0XFF604FCD)),
+        ),
         centerTitle: true,
-        title: const Text("Profile"),
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 50),
         child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: const [
-                CircleAvatar(
-                  radius: 80,
-                  //backgroundColor: Color(0XFF604FCD),
-                  foregroundImage: AssetImage("Icons/account.png"),
-                ),
-                SizedBox(height: 30),
-                ListTile(
+          child: Column(
+            children: [
+              CircleAvatar(
+                radius: 80,
+                //backgroundColor: Color(0XFF604FCD),
+                foregroundImage: AssetImage("Icons/account.png"),
+              ),
+              SizedBox(height: 20),
+              Text(
+                "Arif Khan",
+                style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 20),
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 2),
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                width: double.maxFinite,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(
+                      //width: 1,
+                      color: Color(0XFFC8DFEF),
+                    )),
+                child: ListTile(
                   leading: Icon(Icons.person, color: Colors.blueGrey),
-                  title: Text("User Name"),
+                  title: Text("Personal Details"),
+                  trailing: RotatedBox(
+                    quarterTurns: 2,
+                    child: Image.asset(
+                      "Icons/Arrow.png",
+                      height: 25,
+                      color: Color(0XFF604FCD),
+                    ),
+                  ),
                 ),
-                ListTile(
+              ),
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 2),
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                width: double.maxFinite,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(
+                      //width: 1,
+                      color: Color(0XFFC8DFEF),
+                    )),
+                child: ListTile(
                   leading: Icon(Icons.location_city, color: Colors.green),
                   title: Text("User Address"),
+                  trailing: RotatedBox(
+                    quarterTurns: 2,
+                    child: Image.asset(
+                      "Icons/Arrow.png",
+                      height: 25,
+                      color: Color(0XFF604FCD),
+                    ),
+                  ),
                 ),
-                ListTile(
+              ),
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 2),
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                width: double.maxFinite,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(
+                      //width: 1,
+                      color: Color(0XFFC8DFEF),
+                    )),
+                child: ListTile(
                   leading: Icon(Icons.phone, color: Colors.blue),
                   title: Text("User Contact No"),
+                  trailing: RotatedBox(
+                    quarterTurns: 2,
+                    child: Image.asset(
+                      "Icons/Arrow.png",
+                      height: 25,
+                      color: Color(0XFF604FCD),
+                    ),
+                  ),
                 ),
-                ListTile(
+              ),
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 2),
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                width: double.maxFinite,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(
+                      //width: 1,
+                      color: Color(0XFFC8DFEF),
+                    )),
+                child: ListTile(
                   leading: Icon(Icons.email, color: Colors.orange),
                   title: Text("User Email ID"),
-                ),
-                ListTile(
-                  leading: Icon(
-                    Icons.logout,
-                    color: Colors.red,
+                  trailing: RotatedBox(
+                    quarterTurns: 2,
+                    child: Image.asset(
+                      "Icons/Arrow.png",
+                      height: 25,
+                      color: Color(0XFF604FCD),
+                    ),
                   ),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 2),
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                width: double.maxFinite,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(
+                      //width: 1,
+                      color: Color(0XFFC8DFEF),
+                    )),
+                child: ListTile(
+                  leading: Icon(Icons.logout, color: Colors.red),
                   title: Text("Logout"),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
