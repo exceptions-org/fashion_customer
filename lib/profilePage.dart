@@ -1,3 +1,6 @@
+import 'package:fashion_customer/views/login_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -12,6 +15,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         elevation: 0,
         backgroundColor: const Color(0XFF604FCD),
         centerTitle: true,
@@ -23,7 +27,7 @@ class _ProfilePageState extends State<ProfilePage> {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
-              children: const [
+              children: [
                 CircleAvatar(
                   radius: 80,
                   //backgroundColor: Color(0XFF604FCD),
@@ -47,6 +51,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   title: Text("User Email ID"),
                 ),
                 ListTile(
+                  onTap: () {
+                    FirebaseAuth.instance.signOut();
+                    Navigator.pushReplacement(context,
+                        CupertinoPageRoute(builder: (context) => LoginPage()));
+                  },
                   leading: Icon(
                     Icons.logout,
                     color: Colors.red,

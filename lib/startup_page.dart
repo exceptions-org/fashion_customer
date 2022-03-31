@@ -1,6 +1,7 @@
-import 'package:fashion_customer/bottom_navigation.dart';
+import 'package:fashion_customer/views/login_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StartupPage extends StatefulWidget {
   const StartupPage({Key? key}) : super(key: key);
@@ -171,7 +172,13 @@ class _StartupPageState extends State<StartupPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    SharedPreferences sharedPreferences =
+                        await SharedPreferences.getInstance();
+                    sharedPreferences.setBool("first", true);
+                    Navigator.pushReplacement(context,
+                        CupertinoPageRoute(builder: (context) => LoginPage()));
+                  },
                   child: const Text(
                     "Skip",
                     style: TextStyle(color: Color(0XFF604FCD), fontSize: 18),
@@ -185,16 +192,19 @@ class _StartupPageState extends State<StartupPage> {
                   height: 50,
                   minWidth: 150,
                   color: const Color(0XFF604FCD),
-                  onPressed: () {
+                  onPressed: () async {
                     if (pageIndex != 2) {
                       onNext(pageIndex + 1);
                     } else {
-                      setState(() {
+                      setState(() async {
                         buttonText = "Get Started";
-                        Navigator.push(
+                        SharedPreferences sharedPreferences =
+                            await SharedPreferences.getInstance();
+                        sharedPreferences.setBool("first", true);
+                        Navigator.pushReplacement(
                           context,
                           CupertinoPageRoute(
-                            builder: (context) => const BottomNavigation(),
+                            builder: (context) => const LoginPage(),
                           ),
                         );
                       });

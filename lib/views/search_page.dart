@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fashion_customer/views/product_details.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 import '../model/product_model.dart';
 
@@ -27,13 +26,19 @@ class _SearchPageState extends State<SearchPage> {
         backgroundColor: const Color(0xFF604FCD),
         elevation: 0,
         centerTitle: true,
-        leading: IconButton(
-          icon: SvgPicture.asset("assets/icons/arrow_right.svg"),
-          onPressed: () {},
-        ),
+        automaticallyImplyLeading: false,
+        // leading: IconButton(
+        //   icon: Image.asset("Icons/Arrow.png"),
+        //   onPressed: () {
+        //     Navigator.of(context);
+        //   },
+        // ),
         actions: [
           IconButton(
-            icon: SvgPicture.asset("assets/icons/Bag.svg"),
+            icon: Image.asset(
+              "Icons/Bag.png",
+              color: Colors.white,
+            ),
             onPressed: () {},
           ),
         ],
@@ -54,63 +59,55 @@ class _SearchPageState extends State<SearchPage> {
             ) */
               Container(
             alignment: Alignment.center,
-            margin: const EdgeInsets.only(bottom: 20),
-            height: 50,
-            width: 335,
+            margin: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
+            //height: 50,
+            width: double.infinity,
             decoration: BoxDecoration(
               color: Colors.white30,
               borderRadius: BorderRadius.circular(4),
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                const SizedBox(
+                  width: 16,
+                ),
+                Image.asset(
+                  "Icons/Search.png",
+                  color: Colors.white60,
+                ),
+                const SizedBox(
+                  width: 8,
+                ),
                 SizedBox(
-                  // width: MediaQuery.of(context).size.width * 0.5,
-                  child: Row(
-                    children: [
-                      const SizedBox(
-                        width: 16,
-                      ),
-                      Image.asset(
-                        "Icons/Search.png",
+                  width: width * 0.7,
+                  child: TextField(
+                    onChanged: (value) {
+                      print(value);
+                      setState(() {});
+                    },
+                    controller: search,
+                    decoration: InputDecoration(
+                      hintText: "search footwear, dress & dresses",
+                      hintStyle: TextStyle(
                         color: Colors.white60,
+                        fontSize: 16,
                       ),
-                      const SizedBox(
-                        width: 8,
-                      ),
-                      SizedBox(
-                        width: width * 0.7,
-                        child: TextField(
-                          onChanged: (value) {
-                            print(value);
-                            setState(() {});
-                          },
-                          controller: search,
-                          decoration: InputDecoration(
-                            hintText: "search footwear, dress & dresses",
-                            hintStyle: TextStyle(
-                              color: Colors.white60,
-                              fontSize: 16,
-                            ),
-                            border: InputBorder.none,
-                          ),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                      /* const Text(
-                        "search footwear, dress & dresses",
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.white60,
-                          // fontWeight: FontWeight.bold,
-                        ),
-                      ), */
-                    ],
+                      border: InputBorder.none,
+                    ),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
                   ),
                 ),
+                /* const Text(
+                  "search footwear, dress & dresses",
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.white60,
+                    // fontWeight: FontWeight.bold,
+                  ),
+                ), */
               ],
             ),
             // color: Colors.grey,
@@ -132,9 +129,31 @@ class _SearchPageState extends State<SearchPage> {
               child: Text("something went wrong"),
             );
           }
+          // if (snapshot.data!.docs.isEmpty) {
+          //   return Center(child: Text("No such Product Found"));
+          // }
           if (snapshot.hasData && snapshot.data != null) {
             // var productLength = snapshot.data!.docs.length;
-
+            if (snapshot.data!.docs.isEmpty) {
+              return Text(
+                "No such Product Found",
+                style: TextStyle(fontSize: 50),
+              );
+            }
+            if (snapshot.data!.docs
+                .where((element) => element
+                    .data()
+                    .name
+                    .toLowerCase()
+                    .contains(search.text.toLowerCase()))
+                .isEmpty) {
+              return Center(
+                child: Text(
+                  "${search.text} not found",
+                  style: TextStyle(fontSize: 20),
+                ),
+              );
+            }
             return SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: GridView.count(
