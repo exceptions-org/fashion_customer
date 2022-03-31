@@ -133,32 +133,29 @@ class _ProfilePageState extends State<ProfilePage> {
                       height: 25,
                       color: Color(0XFF604FCD),
                     ),
-                ),
-                ListTile(
-                  onTap: () {
-                    FirebaseAuth.instance.signOut();
-                    Navigator.pushReplacement(context,
-                        CupertinoPageRoute(builder: (context) => LoginPage()));
-                  },
-                  leading: Icon(
-                    Icons.logout,
-                    color: Colors.red,
                   ),
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 2),
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                width: double.maxFinite,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(
-                      //width: 1,
-                      color: Color(0XFFC8DFEF),
-                    )),
-                child: ListTile(
-                  leading: Icon(Icons.logout, color: Colors.red),
-                  title: Text("Logout"),
+              InkWell(
+                onTap: () {
+                  FirebaseAuth.instance.signOut();
+                  Navigator.pushReplacement(context,
+                      CupertinoPageRoute(builder: (context) => LoginPage()));
+                },
+                child: Container(
+                  margin: const EdgeInsets.symmetric(vertical: 2),
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  width: double.maxFinite,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(
+                        //width: 1,
+                        color: Color(0XFFC8DFEF),
+                      )),
+                  child: ListTile(
+                    leading: Icon(Icons.logout, color: Colors.red),
+                    title: Text("Logout"),
+                  ),
                 ),
               ),
             ],
