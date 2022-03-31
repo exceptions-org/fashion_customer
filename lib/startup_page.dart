@@ -196,18 +196,16 @@ class _StartupPageState extends State<StartupPage> {
                     if (pageIndex != 2) {
                       onNext(pageIndex + 1);
                     } else {
-                      setState(() async {
-                        buttonText = "Get Started";
-                        SharedPreferences sharedPreferences =
-                            await SharedPreferences.getInstance();
-                        sharedPreferences.setBool("first", true);
-                        Navigator.pushReplacement(
-                          context,
-                          CupertinoPageRoute(
-                            builder: (context) => const LoginPage(),
-                          ),
-                        );
-                      });
+                      buttonText = "Get Started";
+                      SharedPreferences sharedPreferences =
+                          await SharedPreferences.getInstance();
+                      sharedPreferences.setBool("first", true);
+                      Navigator.pushReplacement(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => const LoginPage(),
+                        ),
+                      );
                     }
                   },
                   child: Row(
