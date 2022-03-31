@@ -18,13 +18,14 @@ class _ProductPageState extends State<ProductPage> {
     return Scaffold(
       // backgroundColor: Colors.white,
       appBar: AppBar(
-        leading: IconButton(
-          icon: Image.asset(
-            "Icons/Arrow.png",
-            color: Color(0XFF604FCD),
-          ),
-          onPressed: () {},
-        ),
+        automaticallyImplyLeading: false,
+        // leading: IconButton(
+        //   icon: Image.asset(
+        //     "Icons/Arrow.png",
+        //     color: Color(0XFF604FCD),
+        //   ),
+        //   onPressed: () {},
+        // ),
         elevation: 0,
         backgroundColor: Colors.transparent,
         title: const Text(
