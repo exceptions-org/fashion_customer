@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
     {'image': 'Icons/Bag.png', 'name': 'Lace'},
     {'image': 'Icons/Bag.png', 'name': 'Lace'},
   ];
-   CollectionReference productRefs =
+  CollectionReference productRefs =
       FirebaseFirestore.instance.collection('products');
 
   @override
@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
     double height = size.height;
     double width = size.width;
 
-        return SafeArea(
+    return SafeArea(
       child: Scaffold(
         backgroundColor: Color(0XFFFAFAFF),
         appBar: AppBar(
@@ -204,123 +204,127 @@ class _HomePageState extends State<HomePage> {
                       .toList(),
                 ) */
                 StreamBuilder<QuerySnapshot<ProductModel>>(
-        stream: productRefs
-            .withConverter<ProductModel>(
-                fromFirestore: (snapshot, options) =>
-                    ProductModel.fromMap(snapshot.data()!),
-                toFirestore: (product, options) => product.toMap())
-            .snapshots(),
-        builder: (BuildContext context, snapshot) {
-          if (snapshot.hasError) {
-            return const Center(
-              child: Text("something went wrong"),
-            );
-          }
-          // if (snapshot.data!.docs.isEmpty) {
-          //   return Center(child: Text("No such Product Found"));
-          // }
-          if (snapshot.hasData && snapshot.data != null) {
-            // var productLength = snapshot.data!.docs.length;
-            if (snapshot.data!.docs.isEmpty) {
-              return Text(
-                "No such Product Found",
-                style: TextStyle(fontSize: 50),
-              );
-            }
-          
-            return SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: GridView.count(
-                childAspectRatio: 1 / 1.1,
-                shrinkWrap: true,
-                crossAxisCount: 2,
-                children: snapshot.data!.docs
-                  
-                    .map((e) => e.data())
-                    .map(
-                      (data) => GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  ProductDetails(productModel: data),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                              color: Colors.blueGrey.shade100,
-                              // width: 1,
-                            ),
-                            // color: Colors.white,
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          margin: const EdgeInsets.all(10),
-                          // padding: const EdgeInsets.all(8),
-                          height: height * 0.25,
+                  stream: productRefs
+                      .orderBy("orderCount")
+                      .withConverter<ProductModel>(
+                          fromFirestore: (snapshot, options) =>
+                              ProductModel.fromMap(snapshot.data()!),
+                          toFirestore: (product, options) => product.toMap())
+                      .snapshots(),
+                  builder: (BuildContext context, snapshot) {
+                    if (snapshot.hasError) {
+                      return const Center(
+                        child: Text("something went wrong"),
+                      );
+                    }
+                    // if (snapshot.data!.docs.isEmpty) {
+                    //   return Center(child: Text("No such Product Found"));
+                    // }
+                    if (snapshot.hasData && snapshot.data != null) {
+                      // var productLength = snapshot.data!.docs.length;
+                      if (snapshot.data!.docs.isEmpty) {
+                        return Text(
+                          "No such Product Found",
+                          style: TextStyle(fontSize: 50),
+                        );
+                      }
 
-                          width: width * 0.4,
-                          child: SingleChildScrollView(
-                            child: Column(
-                              // mainAxisSize: MainAxisSize.max,
-                              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  height: height * 0.15,
-                                  width: 142,
-                                  // padding: const EdgeInsets.only(left: 10),
-                                  margin:
-                                      const EdgeInsets.only(top: 10, left: 15),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(4),
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                          data.images.first.images.first),
-                                      fit: BoxFit.cover,
+                      return SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
+                        child: GridView.count(
+                          physics: BouncingScrollPhysics(),
+                          childAspectRatio: 1 / 1.2,
+                          shrinkWrap: true,
+                          crossAxisCount: 2,
+                          children: snapshot.data!.docs
+                              .map((e) => e.data())
+                              .map(
+                                (data) => GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ProductDetails(productModel: data),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      border: Border.all(
+                                        color: Colors.blueGrey.shade100,
+                                        // width: 1,
+                                      ),
+                                      // color: Colors.white,
+                                      borderRadius: BorderRadius.circular(4),
                                     ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 15),
-                                  child: Text(
-                                    data.name,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 15),
-                                  child: Text(
-                                    "Rs. ${data.prices.first.colorPrice.first.price}",
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      color: Color(0xFF604FCD),
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                /* Container(
-                                                  height: 50,
-                                                  width: 162,
-                                                  decoration: BoxDecoration(
+                                    margin: const EdgeInsets.all(10),
+                                    // padding: const EdgeInsets.all(8),
+                                    height: height * 0.25,
+
+                                    width: width * 0.4,
+                                    child: Column(
+                                      // mainAxisSize: MainAxisSize.max,
+                                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          height: height * 0.15,
+                                          width: 142,
+                                          // padding: const EdgeInsets.only(left: 10),
+                                          margin: const EdgeInsets.only(
+                                              top: 10, left: 15),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(4),
+                                            image: DecorationImage(
+                                              image: NetworkImage(data
+                                                  .images.first.images.first),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 15),
+                                          child: Text(
+                                            data.name,
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 15),
+                                          child: Text(
+                                            "Rs. ${data.prices.first.colorPrice.first.price}",
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              color: Color(0xFF604FCD),
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                        /* Container(
+                                                height: 50,
+                                                width: 162,
+                                                decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(4),
                             color: Colors.white,
-                                                  ),
-                                                  child: const Center(
+                                                ),
+                                                child: const Center(
                             child: Text(
                               "NameOfProduct",
                               style: TextStyle(
@@ -329,15 +333,14 @@ class _HomePageState extends State<HomePage> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                                                  ),
-                                                ), */
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                    .toList(), /* (context, index) {
+                                                ),
+                                              ), */
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              )
+                              .toList(), /* (context, index) {
                   ProductModel data = snapshot.data.docs[index].data();
                   return GestureDetector(
                     onTap: () {
@@ -434,13 +437,13 @@ class _HomePageState extends State<HomePage> {
                     ),
                   );
                 } */
-                // itemCount: productLength,
-              ),
-            );
-          }
-          return const Center(child: Text('Loading...'));
-        },
-      ),
+                          // itemCount: productLength,
+                        ),
+                      );
+                    }
+                    return const Center(child: Text('Loading...'));
+                  },
+                ),
               ],
             ),
           ),

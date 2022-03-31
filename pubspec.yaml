@@ -42,6 +42,7 @@ dependencies:
   firebase_auth: ^3.3.11
   shared_preferences: ^2.0.13
   after_layout: ^1.1.0
+  google_maps: ^6.1.0
 
 dev_dependencies:
   flutter_test:
