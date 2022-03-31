@@ -33,7 +33,6 @@ class _SplashScreenState extends State<SplashScreen> with AfterLayoutMixin {
 
   @override
   void afterFirstLayout(BuildContext context) async {
-    // TODO: implement afterFirstLayout
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     bool? isfirst = sharedPreferences.getBool("first");
     await Future.delayed(Duration(seconds: 2));
