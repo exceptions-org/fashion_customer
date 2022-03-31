@@ -18,13 +18,16 @@ class _SplashScreenState extends State<SplashScreen> with AfterLayoutMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.purple,
-      body: Column(children: [
-        Text(
-          "Fashio",
-          style: TextStyle(color: Colors.white),
-        )
-      ]),
+      //backgroundColor: Colors.purple,
+      body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              "Fashio",
+              style: TextStyle(color: Colors.purple, fontSize: 20),
+            )
+          ]),
     );
   }
 
@@ -33,6 +36,7 @@ class _SplashScreenState extends State<SplashScreen> with AfterLayoutMixin {
     // TODO: implement afterFirstLayout
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     bool? isfirst = sharedPreferences.getBool("first");
+    await Future.delayed(Duration(seconds: 2));
     Navigator.pushReplacement(
         context,
         CupertinoPageRoute(
