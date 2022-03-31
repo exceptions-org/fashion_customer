@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fashion_customer/views/cart_page.dart';
+
+import 'package:fashion_customer/views/contact_details.dart';
 import 'package:fashion_customer/views/product_details.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +57,7 @@ class _HomePageState extends State<HomePage> {
             InkWell(
                 onTap: () {
                   Navigator.push(context,
-                      CupertinoPageRoute(builder: (context) => Cartpage()));
+                      CupertinoPageRoute(builder: (context) => SignupPage2()));
                 },
                 child: Image.asset("Icons/Bag.png")),
           ],
