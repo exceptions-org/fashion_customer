@@ -1,10 +1,12 @@
 // ignore_for_file: unused_local_variable
 
+import 'package:fashion_customer/model/cart_model.dart';
 import 'package:flutter/material.dart';
 
 import '../model/image_color_model.dart';
 import '../model/product_model.dart';
 
+List<CartModel> cartItems = [];
 class ProductDetails extends StatefulWidget {
   final ProductModel productModel;
   // final DocumentReference documentReference;
@@ -20,8 +22,10 @@ class ProductDetails extends StatefulWidget {
 
 class _ProductDetailsState extends State<ProductDetails> {
   late List<String> listOfImage = productModel.images.first.images;
+  
 
   ProductModel get productModel => widget.productModel;
+  Color selectedColor = Color(0xffffffff);
   // DocumentReference get documentReference => widget.documentReference;
   late String price = productModel.prices.first.colorPrice
       .firstWhere(
@@ -134,6 +138,16 @@ class _ProductDetailsState extends State<ProductDetails> {
 
                         InkWell(
                           onTap: () async {
+                            cartItems.add(CartModel(
+                                image: listOfImage,
+                                name: productModel.name,
+                                price: price,
+                                quantity: "1",
+                                productId: productModel.id,
+                                color: selectedColor.value));
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text("Product added to the cart")));
+                            Navigator.pop(context);
                             // productModel.images.forEach((element) async {
                             //   element.images.forEach((el) async {
                             //     Reference getRef = await FirebaseStorage
@@ -282,6 +296,7 @@ class _ProductDetailsState extends State<ProductDetails> {
         ImageColorModel imageColorModel = productModel.images
             .firstWhere((element) => element.colorCode == color.value);
         setState(() {
+          selectedColor = color;
           listOfImage = imageColorModel.images;
           price = productModel.prices.first.colorPrice
               .firstWhere(

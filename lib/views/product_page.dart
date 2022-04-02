@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../model/cart_model.dart';
 
-List<CartModel> cartItems = [];
+
 
 class ProductPage extends StatefulWidget {
   static const String routeName = "/ProductPage";
@@ -106,16 +106,16 @@ class _ProductPageState extends State<ProductPage> {
                       cartItems[ind].quantity;
                       cartItems[ind].price + cartItems[ind].price;
                     } */
-                    cartItems.add(
-                      CartModel(
-                        image: "", //cartItems[index].image,
-                        name: "NameOfProduct",
-                        price: "233",
-                        quantity: "2",
-                        productId: "1",
-                        color: Colors.green.value,
-                      ),
-                    );
+                    // cartItems.add(
+                    //   CartModel(
+                    //     image: "", //cartItems[index].image,
+                    //     name: "NameOfProduct",
+                    //     price: "233",
+                    //     quantity: "2",
+                    //     productId: "1",
+                    //     color: Colors.green.value,
+                    //   ),
+                    // );
 
                     setState(() {});
 

@@ -1,13 +1,14 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 
 class CartModel {
-  String image;
+ List<String> image;
   String name;
   String price;
   String quantity;
   String productId;
-  int color;
+  int color; 
   CartModel({
     required this.image,
     required this.name,
@@ -17,10 +18,8 @@ class CartModel {
     required this.color,
   });
 
-  get productModel => null;
-
   CartModel copyWith({
-    String? image,
+    List<String>? image,
     String? name,
     String? price,
     String? quantity,
@@ -50,7 +49,7 @@ class CartModel {
 
   factory CartModel.fromMap(Map<String, dynamic> map) {
     return CartModel(
-      image: map['image'] ?? '',
+      image: List<String>.from(map['image']),
       name: map['name'] ?? '',
       price: map['price'] ?? '',
       quantity: map['quantity'] ?? '',
@@ -61,8 +60,7 @@ class CartModel {
 
   String toJson() => json.encode(toMap());
 
-  factory CartModel.fromJson(String source) =>
-      CartModel.fromMap(json.decode(source));
+  factory CartModel.fromJson(String source) => CartModel.fromMap(json.decode(source));
 
   @override
   String toString() {
@@ -74,7 +72,7 @@ class CartModel {
     if (identical(this, other)) return true;
   
     return other is CartModel &&
-      other.image == image &&
+      listEquals(other.image, image) &&
       other.name == name &&
       other.price == price &&
       other.quantity == quantity &&

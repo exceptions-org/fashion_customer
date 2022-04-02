@@ -1,4 +1,6 @@
+import 'package:fashion_customer/model/cart_model.dart';
 import 'package:fashion_customer/views/checkout.dart';
+import 'package:fashion_customer/views/product_details.dart';
 import 'package:fashion_customer/views/product_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +49,7 @@ class _CartpageState extends State<Cartpage> {
                           height: 120,
                           width: 140,
                           // color: Colors.blue,
-                          child: Image.asset("Icons/product.png"),
+                          child: Image.network(cartItems[index].image.first),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
