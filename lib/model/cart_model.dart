@@ -5,28 +5,29 @@ import 'package:flutter/foundation.dart';
 class CartModel {
  List<String> image;
   String name;
-  String price;
-  String quantity;
+  double price;
+  int quantity;
   String productId;
   int color; 
   double discountPrice;
   CartModel({
-    required this.discountPrice,
     required this.image,
     required this.name,
     required this.price,
     required this.quantity,
     required this.productId,
     required this.color,
+    required this.discountPrice,
   });
 
   CartModel copyWith({
     List<String>? image,
     String? name,
-    String? price,
-    String? quantity,
+    double? price,
+    int? quantity,
     String? productId,
     int? color,
+    double? discountPrice,
   }) {
     return CartModel(
       image: image ?? this.image,
@@ -35,7 +36,7 @@ class CartModel {
       quantity: quantity ?? this.quantity,
       productId: productId ?? this.productId,
       color: color ?? this.color,
-      discountPrice: discountPrice,
+      discountPrice: discountPrice ?? this.discountPrice,
     );
   }
 
@@ -47,6 +48,7 @@ class CartModel {
       'quantity': quantity,
       'productId': productId,
       'color': color,
+      'discountPrice': discountPrice,
     };
   }
 
@@ -54,11 +56,11 @@ class CartModel {
     return CartModel(
       image: List<String>.from(map['image']),
       name: map['name'] ?? '',
-      price: map['price'] ?? '',
-      quantity: map['quantity'] ?? '',
+      price: map['price']?.toDouble() ?? 0.0,
+      quantity: map['quantity']?.toInt() ?? 0,
       productId: map['productId'] ?? '',
       color: map['color']?.toInt() ?? 0,
-      discountPrice: map['discountPrice']??'',
+      discountPrice: map['discountPrice']?.toDouble() ?? 0.0,
     );
   }
 
@@ -68,7 +70,7 @@ class CartModel {
 
   @override
   String toString() {
-    return 'CartModel(image: $image, name: $name, price: $price, quantity: $quantity, productId: $productId, color: $color)';
+    return 'CartModel(image: $image, name: $name, price: $price, quantity: $quantity, productId: $productId, color: $color, discountPrice: $discountPrice)';
   }
 
   @override
@@ -81,7 +83,8 @@ class CartModel {
       other.price == price &&
       other.quantity == quantity &&
       other.productId == productId &&
-      other.color == color;
+      other.color == color &&
+      other.discountPrice == discountPrice;
   }
 
   @override
@@ -91,6 +94,7 @@ class CartModel {
       price.hashCode ^
       quantity.hashCode ^
       productId.hashCode ^
-      color.hashCode;
+      color.hashCode ^
+      discountPrice.hashCode;
   }
 }

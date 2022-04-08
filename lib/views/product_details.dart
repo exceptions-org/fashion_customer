@@ -7,6 +7,7 @@ import '../model/image_color_model.dart';
 import '../model/product_model.dart';
 
 List<CartModel> cartItems = [];
+
 class ProductDetails extends StatefulWidget {
   final ProductModel productModel;
   // final DocumentReference documentReference;
@@ -22,7 +23,6 @@ class ProductDetails extends StatefulWidget {
 
 class _ProductDetailsState extends State<ProductDetails> {
   late List<String> listOfImage = productModel.images.first.images;
-  
 
   ProductModel get productModel => widget.productModel;
   Color selectedColor = Color(0xffffffff);
@@ -136,58 +136,122 @@ class _ProductDetailsState extends State<ProductDetails> {
                               letterSpacing: 1),
                         ),
 
-                        InkWell(
-                          onTap: () async {
-                            cartItems.add(CartModel(
-                                image: listOfImage,
-                                name: productModel.name,
-                                price: price,
-                                quantity: "1",
-                                productId: productModel.id,
-                                color: selectedColor.value,
-                                discountPrice: 100
-                                ));
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text("Product added to the cart")));
-                            Navigator.pop(context);
-                            // productModel.images.forEach((element) async {
-                            //   element.images.forEach((el) async {
-                            //     Reference getRef = await FirebaseStorage
-                            //         .instance
-                            //         .refFromURL(el);
-                            //     await getRef.delete();
-                            //   });
-                            // });
-                            // await documentReference.delete();
-                            // Navigator.pop(context);
-                            // for (var element in productModel.images) {
-                            //   for (var el in element.images) {
-                            //     Reference getRef =
-                            //         FirebaseStorage.instance.refFromURL(el);
-                            //     await getRef.delete();
-                            //   }
-                            // }
-                          },
-                          child: Container(
-                            child: Center(
-                              child: Text(
-                                "Add to Cart",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: height * 0.025,
-                                    letterSpacing: 1),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Align(
+                            alignment: Alignment.bottomRight,
+                            child: Container(
+                              width: width * 0.5,
+                              child: cartItems.any((element) =>
+                                      element.productId == productModel.id)
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        IconButton(
+                                            onPressed: () {
+                                              int index = cartItems.indexOf(
+                                                  cartItems.firstWhere(
+                                                      (element) =>
+                                                          element.productId ==
+                                                          productModel.id));
+                                              if (cartItems[index].quantity >
+                                                  1) {
+                                                double singleProdPrice =
+                                                    cartItems[index].price /
+                                                        cartItems[index]
+                                                            .quantity;
+                                                setState(() {
+                                                  cartItems[index].quantity--;
+                                                  cartItems[index].price =
+                                                      cartItems[index].price -
+                                                          singleProdPrice;
+                                                });
+                                              } else {
+                                                cartItems.removeAt(index);
+                                                setState(() {});
+                                              }
+                                            },
+                                            icon: Icon(Icons.remove,
+                                                color: Colors.white)),
+                                        Text(
+                                          cartItems
+                                              .firstWhere((element) =>
+                                                  element.productId ==
+                                                  productModel.id)
+                                              .quantity
+                                              .toString(),
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: height * 0.025,
+                                              letterSpacing: 1),
+                                        ),
+                                        IconButton(
+                                            onPressed: () {
+                                              int index = cartItems.indexOf(
+                                                  cartItems.firstWhere(
+                                                      (element) =>
+                                                          element.productId ==
+                                                          productModel.id));
+                                              double singleProdPrice =
+                                                  cartItems[index].price /
+                                                      cartItems[index].quantity;
+
+                                              setState(() {
+                                                cartItems[index].quantity++;
+                                                cartItems[index]
+                                                    .price = cartItems[index]
+                                                        .price +
+                                                    singleProdPrice; /* cartItems[index].price +
+                                          cartItems[index].price; */
+                                              });
+                                            },
+                                            icon: Icon(Icons.add,
+                                                color: Colors.white)),
+                                      ],
+                                    )
+                                  : TextButton.icon(
+                                      onPressed: () {
+                                        cartItems.add(CartModel(
+                                            image: listOfImage,
+                                            name: productModel.name,
+                                            price: double.parse(price),
+                                            quantity: 1,
+                                            productId: productModel.id,
+                                            color: selectedColor.value,
+                                            discountPrice: 100));
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                content: Text(
+                                                    "Product added to the cart")));
+
+                                        setState(() {});
+                                        // Navigator.pop(context);
+                                      },
+                                      icon: Image.asset('Icons/Bag.png',
+                                          color: Colors.white),
+                                      label: Text(
+                                        "Add to Cart",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: height * 0.025,
+                                            letterSpacing: 1),
+                                      ),
+                                    ),
+                              decoration: BoxDecoration(
+                                color: Color(0XFF604FCD),
+                                borderRadius: BorderRadius.circular(10),
                               ),
+                              alignment: Alignment.center,
+                              /* margin: EdgeInsets.only(
+                                top: height * 0.03,
+                                bottom: 10,
+                              ), */
+                              //width: double.infinity,
+                              height: kBottomNavigationBarHeight,
                             ),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFFF5E62),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            margin: EdgeInsets.only(
-                              top: height * 0.03,
-                              bottom: 10,
-                            ),
-                            //width: double.infinity,
-                            height: kBottomNavigationBarHeight,
                           ),
                         ),
 

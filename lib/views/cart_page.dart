@@ -11,9 +11,6 @@ class Cartpage extends StatefulWidget {
 }
 
 class _CartpageState extends State<Cartpage> {
-  int addItem = 0;
-
-  get index => null;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,9 +66,15 @@ class _CartpageState extends State<Cartpage> {
                               children: [
                                 InkWell(
                                   onTap: () {
+                                    double singleProdPrice =
+                                        cartItems[index].price /
+                                            cartItems[index].quantity;
+
                                     setState(() {
-                                      addItem++;
-                                      /* cartItems[index].price +
+                                      cartItems[index].quantity++;
+                                      cartItems[index].price = cartItems[index]
+                                              .price +
+                                          singleProdPrice; /* cartItems[index].price +
                                           cartItems[index].price; */
                                     });
                                   },
@@ -82,14 +85,25 @@ class _CartpageState extends State<Cartpage> {
                                   ),
                                 ),
                                 SizedBox(height: 10),
-                                Text("$addItem"),
+                                Text("${cartItems[index].quantity}"),
                                 // Text(cartItems[index].productId),
                                 SizedBox(height: 10),
                                 InkWell(
                                   onTap: () {
-                                    setState(() {
-                                      addItem--;
-                                    });
+                                    if (cartItems[index].quantity > 1) {
+                                      double singleProdPrice =
+                                          cartItems[index].price /
+                                              cartItems[index].quantity;
+                                      setState(() {
+                                        cartItems[index].quantity--;
+                                        cartItems[index].price =
+                                            cartItems[index].price -
+                                                singleProdPrice;
+                                      });
+                                    } else {
+                                      cartItems.removeAt(index);
+                                      setState(() {});
+                                    }
                                   },
                                   child: Image.asset(
                                     "Icons/remove.png",
