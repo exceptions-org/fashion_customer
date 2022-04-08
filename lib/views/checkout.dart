@@ -2,7 +2,6 @@
 
 import 'package:fashion_customer/model/order_model.dart';
 import 'package:fashion_customer/views/product_details.dart';
-import 'package:fashion_customer/views/product_page.dart';
 import 'package:flutter/material.dart';
 
 class Checkout extends StatefulWidget {

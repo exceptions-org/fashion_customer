@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../model/cart_model.dart';
-
-
-
 class ProductPage extends StatefulWidget {
   static const String routeName = "/ProductPage";
   const ProductPage({Key? key}) : super(key: key);

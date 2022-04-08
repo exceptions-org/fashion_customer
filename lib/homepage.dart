@@ -22,10 +22,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   final List<Map<String, dynamic>> categories = [
-    {'image': 'Icons/Bag.png', 'name': 'Lace'},
-    {'image': 'Icons/Bag.png', 'name': 'Lace'},
-    {'image': 'Icons/Bag.png', 'name': 'Lace'},
-    {'image': 'Icons/Bag.png', 'name': 'Lace'},
+    {'image': 'Icons/lace.png', 'name': 'Lace'},
+    {'image': 'Icons/bangle.png', 'name': 'Bangle'},
+    {'image': 'Icons/high-heels.png', 'name': 'High-heels'},
+    {'image': 'Icons/handbag.png', 'name': 'Handbag'},
     {'image': 'Icons/Bag.png', 'name': 'Lace'},
     {'image': 'Icons/Bag.png', 'name': 'Lace'},
   ];
@@ -42,15 +42,15 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         backgroundColor: Color(0XFFFAFAFF),
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
+          backgroundColor: Colors.white,
+          elevation: 1,
           centerTitle: true,
           title: const Text(
             "Fashio",
             style: TextStyle(
-                fontSize: 30,
-                color: Color(0XFF604FCD),
-                fontWeight: FontWeight.w100),
+              color: Color(0XFF604FCD),
+              fontWeight: FontWeight.normal,
+            ),
           ),
           actions: [
             InkWell(
@@ -67,32 +67,78 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(
+                  height: 12,
+                ),
+                Row(
+                  //mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.location_pin,
+                      size: 30,
+                      color: Color(
+                        0xff604FCD,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 12,
+                    ),
+                    Text(
+                      '106 1st Floor Ameen Apartment Tandel\nMohalla Idgah Road Bhiwandi, Maharashtra\n421302',
+                      textScaleFactor: 1.0,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Color(0xff130B43),
+                      ),
+                    )
+                  ],
+                ),
                 const SizedBox(height: 20),
                 const Padding(
                   padding: EdgeInsets.only(left: 10),
                   child: Text(
                     "Categories",
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color(
+                        0xff130B43,
+                      ),
+                    ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
+                SizedBox(
+                  height: 12,
+                ),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Container(
+                    height: 100,
+                    width: 400,
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: categories
-                          .map((e) => Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                child: Column(
-                                  children: [
-                                    CircleAvatar(
-                                      backgroundColor: Colors.white,
-                                      foregroundImage: AssetImage(e['image']),
+                          .map((e) => Column(
+                                children: [
+                                  Container(
+                                    height: 50,
+                                    width: 50,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(4),
+                                      color: Colors.white,
+                                      border: Border.all(
+                                        color: Color(0xff604FCD),
+                                      ),
                                     ),
-                                    Text(e['name'])
-                                  ],
-                                ),
+                                    child: Image.asset(e['image']),
+                                  ),
+                                  SizedBox(
+                                    height: 12,
+                                  ),
+                                  Text(e['name'])
+                                ],
                               ))
                           .toList(),
                     ),
