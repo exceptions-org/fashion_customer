@@ -1,7 +1,5 @@
-import 'package:fashion_customer/model/cart_model.dart';
 import 'package:fashion_customer/views/checkout.dart';
 import 'package:fashion_customer/views/product_details.dart';
-import 'package:fashion_customer/views/product_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
