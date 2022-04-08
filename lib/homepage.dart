@@ -27,8 +27,6 @@ class _HomePageState extends State<HomePage> {
     {'image': 'Icons/bangle.png', 'name': 'Bangle'},
     {'image': 'Icons/high-heels.png', 'name': 'High-heels'},
     {'image': 'Icons/handbag.png', 'name': 'Handbag'},
-    {'image': 'Icons/Bag.png', 'name': 'Lace'},
-    {'image': 'Icons/Bag.png', 'name': 'Lace'},
   ];
   CollectionReference productRefs =
       FirebaseFirestore.instance.collection('products');
@@ -125,6 +123,7 @@ class _HomePageState extends State<HomePage> {
                           .map((e) => Column(
                                 children: [
                                   Container(
+                                    padding: EdgeInsets.all(10),
                                     height: 50,
                                     width: 50,
                                     decoration: BoxDecoration(
