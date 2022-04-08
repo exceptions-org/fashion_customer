@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fashion_customer/views/cart_page.dart';
 import 'package:fashion_customer/views/product_details.dart';
+import 'package:fashion_customer/views/search_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -64,6 +65,7 @@ class _HomePageState extends State<HomePage> {
         body: Padding(
           padding: const EdgeInsets.only(left: 10, right: 10),
           child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -78,6 +80,7 @@ class _HomePageState extends State<HomePage> {
                 Padding(
                   padding: const EdgeInsets.all(20),
                   child: SingleChildScrollView(
+                    physics: BouncingScrollPhysics(),
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: categories
@@ -169,11 +172,28 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 const SizedBox(height: 5),
-                const Padding(
-                  padding: EdgeInsets.only(left: 10),
-                  child: Text(
-                    "Popular Products",
-                    style: TextStyle(fontSize: 18),
+                Padding(
+                  padding: EdgeInsets.only(left: 10, right: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Popular Products",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (context) => SearchPage()));
+                        },
+                        child: Text(
+                          "View More",
+                          style: TextStyle(fontSize: 18, color: Colors.purple),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 5),
@@ -210,6 +230,7 @@ class _HomePageState extends State<HomePage> {
                           fromFirestore: (snapshot, options) =>
                               ProductModel.fromMap(snapshot.data()!),
                           toFirestore: (product, options) => product.toMap())
+                      .limit(6)
                       .snapshots(),
                   builder: (BuildContext context, snapshot) {
                     if (snapshot.hasError) {
@@ -283,7 +304,7 @@ class _HomePageState extends State<HomePage> {
                                             image: DecorationImage(
                                               image: NetworkImage(data
                                                   .images.first.images.first),
-                                              fit: BoxFit.cover,
+                                              fit: BoxFit.contain,
                                             ),
                                           ),
                                         ),

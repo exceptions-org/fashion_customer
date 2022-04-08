@@ -76,12 +76,12 @@ class _CheckoutState extends State<Checkout> {
         minWidth: 100,
         color: Color(0XFF604FCD),
         onPressed: () {
-          OrderModel orderModel = OrderModel(
+         /*  OrderModel orderModel = OrderModel(
             orderId: "123",
             orderName: "orderName",
             orderPrice: 123,
             orderQuantity: "orderQuantity",
-          );
+          ); */
 
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(

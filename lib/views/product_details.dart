@@ -144,7 +144,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 price: price,
                                 quantity: "1",
                                 productId: productModel.id,
-                                color: selectedColor.value));
+                                color: selectedColor.value,
+                                discountPrice: 100
+                                ));
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 content: Text("Product added to the cart")));
                             Navigator.pop(context);

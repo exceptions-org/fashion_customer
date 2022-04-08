@@ -20,6 +20,7 @@ class ProductModel {
   final String sizeUnit;
   final String unit;
   final double quantity;
+  final double discountPrice;
   ProductModel({
     required this.name,
     required this.id,
@@ -36,6 +37,7 @@ class ProductModel {
     required this.sizeUnit,
     required this.unit,
     required this.quantity,
+    required this.discountPrice
   });
 
   ProductModel copyWith({
@@ -71,6 +73,7 @@ class ProductModel {
       sizeUnit: sizeUnit ?? this.sizeUnit,
       unit: unit ?? this.unit,
       quantity: quantity ?? this.quantity,
+      discountPrice: discountPrice,
     );
   }
 
@@ -96,6 +99,7 @@ class ProductModel {
 
   factory ProductModel.fromMap(Map<String, dynamic> map) {
     return ProductModel(
+      discountPrice: map['discountPrice']??0,
       name: map['name'] ?? '',
       id: map['id'] ?? '',
       description: map['description'] ?? '',

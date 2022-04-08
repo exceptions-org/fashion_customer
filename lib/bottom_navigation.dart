@@ -1,4 +1,4 @@
-import 'package:fashion_customer/views/product_page.dart';
+import 'package:fashion_customer/views/cart_page.dart';
 import 'package:flutter/material.dart';
 
 import 'homepage.dart';
@@ -24,7 +24,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
   List routes = [
     const HomePage(),
     const SearchPage(),
-    const ProductPage(),
+    const Cartpage(),
     const ProfilePage(),
   ];
   late double leftPadding;

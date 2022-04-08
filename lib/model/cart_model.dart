@@ -9,7 +9,9 @@ class CartModel {
   String quantity;
   String productId;
   int color; 
+  double discountPrice;
   CartModel({
+    required this.discountPrice,
     required this.image,
     required this.name,
     required this.price,
@@ -33,6 +35,7 @@ class CartModel {
       quantity: quantity ?? this.quantity,
       productId: productId ?? this.productId,
       color: color ?? this.color,
+      discountPrice: discountPrice,
     );
   }
 
@@ -55,6 +58,7 @@ class CartModel {
       quantity: map['quantity'] ?? '',
       productId: map['productId'] ?? '',
       color: map['color']?.toInt() ?? 0,
+      discountPrice: map['discountPrice']??'',
     );
   }
 

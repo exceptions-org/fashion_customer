@@ -1,46 +1,76 @@
 import 'dart:convert';
+import 'dart:core';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
+
+import 'package:fashion_customer/model/cart_model.dart';
+
+enum OrderState{
+    placed,
+    confirmed,
+    delivered,
+    cancel
+  }
 class OrderModel {
+  List<CartModel> products;
+  String totalPrice;
+  Timestamp deliveryDate;
+  double totalDiscountPrice;
   String orderId;
-  String orderName;
-  double orderPrice;
-  String orderQuantity;
+  OrderState orderState;
+  Timestamp createdAt;
   OrderModel({
+    required this.products,
+    required this.totalPrice,
+    required this.deliveryDate,
+    required this.totalDiscountPrice,
     required this.orderId,
-    required this.orderName,
-    required this.orderPrice,
-    required this.orderQuantity,
+    required this.orderState,
+    required this.createdAt,
   });
 
   OrderModel copyWith({
+    List<CartModel>? products,
+    String? totalPrice,
+    Timestamp? deliveryDate,
+    double? totalDiscountPrice,
     String? orderId,
-    String? orderName,
-    double? orderPrice,
-    String? orderQuantity,
+    OrderState? orderState,
+    Timestamp? createdAt,
   }) {
     return OrderModel(
+      products: products ?? this.products,
+      totalPrice: totalPrice ?? this.totalPrice,
+      deliveryDate: deliveryDate ?? this.deliveryDate,
+      totalDiscountPrice: totalDiscountPrice ?? this.totalDiscountPrice,
       orderId: orderId ?? this.orderId,
-      orderName: orderName ?? this.orderName,
-      orderPrice: orderPrice ?? this.orderPrice,
-      orderQuantity: orderQuantity ?? this.orderQuantity,
+      orderState: orderState ?? this.orderState,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
+      'products': products.map((x) => x.toMap()).toList(),
+      'totalPrice': totalPrice,
+      'deliveryDate': deliveryDate,
+      'totalDiscountPrice': totalDiscountPrice,
       'orderId': orderId,
-      'orderName': orderName,
-      'orderPrice': orderPrice,
-      'orderQuantity': orderQuantity,
+      'orderState': orderState.index,
+      'createdAt': createdAt,
     };
   }
 
   factory OrderModel.fromMap(Map<String, dynamic> map) {
     return OrderModel(
+      products: List<CartModel>.from(map['products']?.map((x) => CartModel.fromMap(x))),
+      totalPrice: map['totalPrice'] ?? '',
+      deliveryDate: map['deliveryDate'],
+      totalDiscountPrice: map['totalDiscountPrice']?.toDouble() ?? 0.0,
       orderId: map['orderId'] ?? '',
-      orderName: map['orderName'] ?? '',
-      orderPrice: map['orderPrice']?.toDouble() ?? 0.0,
-      orderQuantity: map['orderQuantity'] ?? '',
+      orderState: OrderState.values[(map['orderState'])],
+      createdAt: map['createdAt'],
     );
   }
 
@@ -50,7 +80,7 @@ class OrderModel {
 
   @override
   String toString() {
-    return 'OrderModel(orderId: $orderId, orderName: $orderName, orderPrice: $orderPrice, orderQuantity: $orderQuantity)';
+    return 'OrderModel(products: $products, totalPrice: $totalPrice, deliveryDate: $deliveryDate, totalDiscountPrice: $totalDiscountPrice, orderId: $orderId, orderState: $orderState, createdAt: $createdAt)';
   }
 
   @override
@@ -58,17 +88,23 @@ class OrderModel {
     if (identical(this, other)) return true;
   
     return other is OrderModel &&
+      listEquals(other.products, products) &&
+      other.totalPrice == totalPrice &&
+      other.deliveryDate == deliveryDate &&
+      other.totalDiscountPrice == totalDiscountPrice &&
       other.orderId == orderId &&
-      other.orderName == orderName &&
-      other.orderPrice == orderPrice &&
-      other.orderQuantity == orderQuantity;
+      other.orderState == orderState &&
+      other.createdAt == createdAt;
   }
 
   @override
   int get hashCode {
-    return orderId.hashCode ^
-      orderName.hashCode ^
-      orderPrice.hashCode ^
-      orderQuantity.hashCode;
+    return products.hashCode ^
+      totalPrice.hashCode ^
+      deliveryDate.hashCode ^
+      totalDiscountPrice.hashCode ^
+      orderId.hashCode ^
+      orderState.hashCode ^
+      createdAt.hashCode;
   }
 }
