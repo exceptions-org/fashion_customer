@@ -14,6 +14,7 @@ class _CartpageState extends State<Cartpage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xffFAFAFF),
       appBar: AppBar(
         leading: IconButton(
           icon: Image.asset(
@@ -22,38 +23,54 @@ class _CartpageState extends State<Cartpage> {
           ),
           onPressed: () {},
         ),
-        elevation: 0,
-        backgroundColor: Colors.transparent,
+        elevation: 1,
+        backgroundColor: Colors.white,
         centerTitle: true,
         title: Text("Cart Page", style: TextStyle(color: Color(0XFF604FCD))),
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: cartItems.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Column(
-                  children: [
-                    Row(
+          ListView.builder(
+            shrinkWrap: true,
+            itemCount: cartItems.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Column(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Color(0XFFC8D5EF))),
+                    //color: Colors.grey,
+                    width: double.infinity,
+                    //margin: EdgeInsets.only(top: 10, bottom: 10),
+                    child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
+                          margin: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Color(0xffC8DFEF))),
                           height: 120,
                           width: 140,
                           // color: Colors.blue,
                           child: Image.network(cartItems[index].image.first),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.only(
+                              top: 10, left: 10, right: 10),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(cartItems[index].name),
-                              SizedBox(height: 10),
-                              Text("Price: ${cartItems[index].price}"),
+                              Text(
+                                cartItems[index].name,
+                                style: TextStyle(fontSize: 18),
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                "Price: ${cartItems[index].price}",
+                                style: TextStyle(
+                                    fontSize: 14, color: Color(0XFF604FCD)),
+                              ),
                             ],
                           ),
                         ),
@@ -117,31 +134,31 @@ class _CartpageState extends State<Cartpage> {
                         )
                       ],
                     ),
-                  ],
-                )
+                  ),
+                ],
+              )
 
-                    /* ListTile(
-                    title: Text(cartItems[index].name),
-                    subtitle: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Price: ${cartItems[index].price}"),
-                        SizedBox(width: 20),
-                        Text("Quantity: ${cartItems[index].quantity}"),
-                        SizedBox(width: 20),
-                        IconButton(
-                            onPressed: () {
-                              cartItems.remove(cartItems[index]);
-                              setState(() {});
-                            },
-                            icon: Icon(Icons.delete))
-                      ],
-                    ),
-                    leading: Text(cartItems[index].productId),
-                  ); */
-                    ;
-              },
-            ),
+                  /* ListTile(
+                  title: Text(cartItems[index].name),
+                  subtitle: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Price: ${cartItems[index].price}"),
+                      SizedBox(width: 20),
+                      Text("Quantity: ${cartItems[index].quantity}"),
+                      SizedBox(width: 20),
+                      IconButton(
+                          onPressed: () {
+                            cartItems.remove(cartItems[index]);
+                            setState(() {});
+                          },
+                          icon: Icon(Icons.delete))
+                    ],
+                  ),
+                  leading: Text(cartItems[index].productId),
+                ); */
+                  ;
+            },
           ),
           Spacer(),
           Container(
