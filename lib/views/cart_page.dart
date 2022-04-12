@@ -1,4 +1,4 @@
-import 'package:fashion_customer/views/checkout.dart';
+import 'package:fashion_customer/views/checkout_page.dart';
 import 'package:fashion_customer/views/product_details.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -69,7 +69,9 @@ class _CartpageState extends State<Cartpage> {
                               Text(
                                 "Price: ${cartItems[index].price}",
                                 style: TextStyle(
-                                    fontSize: 14, color: Color(0XFF604FCD)),
+                                  fontSize: 14,
+                                  color: Color(0XFF604FCD),
+                                ),
                               ),
                             ],
                           ),
@@ -142,7 +144,7 @@ class _CartpageState extends State<Cartpage> {
                 ],
               )
 
-                  /* ListTile(
+                  /* ListTile(  
                   title: Text(cartItems[index].name),
                   subtitle: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -185,8 +187,12 @@ class _CartpageState extends State<Cartpage> {
                   ),
                   InkWell(
                     onTap: () {
-                      Navigator.push(context,
-                          CupertinoPageRoute(builder: (context) => Checkout()));
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => CheckoutPage(),
+                        ),
+                      );
                     },
                     child: Text(
                       "CheckOut",
