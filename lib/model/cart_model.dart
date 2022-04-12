@@ -10,6 +10,7 @@ class CartModel {
   String productId;
   int color; 
   double discountPrice;
+  String selectedSize;
   CartModel({
     required this.image,
     required this.name,
@@ -18,6 +19,7 @@ class CartModel {
     required this.productId,
     required this.color,
     required this.discountPrice,
+    required this.selectedSize
   });
 
   CartModel copyWith({
@@ -37,6 +39,7 @@ class CartModel {
       productId: productId ?? this.productId,
       color: color ?? this.color,
       discountPrice: discountPrice ?? this.discountPrice,
+      selectedSize: selectedSize,
     );
   }
 
@@ -49,6 +52,7 @@ class CartModel {
       'productId': productId,
       'color': color,
       'discountPrice': discountPrice,
+      'selectedSize': selectedSize
     };
   }
 
@@ -61,6 +65,7 @@ class CartModel {
       productId: map['productId'] ?? '',
       color: map['color']?.toInt() ?? 0,
       discountPrice: map['discountPrice']?.toDouble() ?? 0.0,
+      selectedSize: map['selectedSize']??'',
     );
   }
 

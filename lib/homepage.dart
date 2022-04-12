@@ -1,14 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fashion_customer/views/cart_page.dart';
 import 'package:fashion_customer/views/product_details.dart';
-import 'package:fashion_customer/views/search_page.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'model/product_model.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final void Function(int) onChange;
+  const HomePage({Key? key, required this.onChange}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -54,8 +52,9 @@ class _HomePageState extends State<HomePage> {
           actions: [
             InkWell(
                 onTap: () {
-                  Navigator.push(context,
-                      CupertinoPageRoute(builder: (context) => Cartpage()));
+                  widget.onChange(2);
+                  /*  Navigator.push(context,
+                      CupertinoPageRoute(builder: (context) => Cartpage())); */
                 },
                 child: Image.asset("Icons/Bag.png")),
           ],
@@ -227,10 +226,11 @@ class _HomePageState extends State<HomePage> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                  builder: (context) => SearchPage()));
+                          widget.onChange(1);
+                          // Navigator.push(
+                          //     context,
+                          //     CupertinoPageRoute(
+                          //         builder: (context) => SearchPage()));
                         },
                         child: Text(
                           "View More",

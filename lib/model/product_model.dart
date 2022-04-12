@@ -21,6 +21,7 @@ class ProductModel {
   final String unit;
   final double quantity;
   final double discountPrice;
+  final String selectedSize;
   ProductModel({
     required this.name,
     required this.id,
@@ -37,7 +38,8 @@ class ProductModel {
     required this.sizeUnit,
     required this.unit,
     required this.quantity,
-    required this.discountPrice
+    required this.discountPrice,
+    required this.selectedSize,
   });
 
   ProductModel copyWith({
@@ -74,6 +76,7 @@ class ProductModel {
       unit: unit ?? this.unit,
       quantity: quantity ?? this.quantity,
       discountPrice: discountPrice,
+      selectedSize: selectedSize,
     );
   }
 
@@ -94,6 +97,7 @@ class ProductModel {
       'sizeUnit': sizeUnit,
       'unit': unit,
       'quantity': quantity,
+      'selectedSize' : selectedSize,
     };
   }
 
@@ -117,6 +121,7 @@ class ProductModel {
       sizeUnit: map['sizeUnit'] ?? '',
       unit: map['unit'] ?? '',
       quantity: map['quantity']?.toDouble() ?? 0.0,
+      selectedSize: map['selectedSize']?? '',
     );
   }
 

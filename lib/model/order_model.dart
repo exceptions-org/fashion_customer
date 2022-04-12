@@ -15,6 +15,7 @@ enum OrderState{
 class OrderModel {
   List<CartModel> products;
   String totalPrice;
+  String selectedSize;
   Timestamp deliveryDate;
   double totalDiscountPrice;
   String orderId;
@@ -28,6 +29,7 @@ class OrderModel {
     required this.orderId,
     required this.orderState,
     required this.createdAt,
+    required this.selectedSize,
   });
 
   OrderModel copyWith({
@@ -47,6 +49,7 @@ class OrderModel {
       orderId: orderId ?? this.orderId,
       orderState: orderState ?? this.orderState,
       createdAt: createdAt ?? this.createdAt,
+      selectedSize: selectedSize,
     );
   }
 
@@ -59,6 +62,7 @@ class OrderModel {
       'orderId': orderId,
       'orderState': orderState.index,
       'createdAt': createdAt,
+      'selectedSize': selectedSize
     };
   }
 
@@ -71,6 +75,7 @@ class OrderModel {
       orderId: map['orderId'] ?? '',
       orderState: OrderState.values[(map['orderState'])],
       createdAt: map['createdAt'],
+      selectedSize: map['selectedSize']??''
     );
   }
 
