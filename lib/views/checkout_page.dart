@@ -13,20 +13,24 @@ class _CheckoutPageState extends State<CheckoutPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: Container(
-          margin: EdgeInsets.all(20),
-          height: 60,
-          decoration: BoxDecoration(
-            color: Color(0xff604FCD),
-            borderRadius: BorderRadius.circular(6),
+        margin: EdgeInsets.all(20),
+        height: 60,
+        decoration: BoxDecoration(
+          color: Color(0xff604FCD),
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Center(
+          child: Text(
+            "Place Order",
+            style: TextStyle(color: Colors.white, fontSize: 14),
           ),
-          child: Center(
-            child: Text(
-              "Place Order",
-              style: TextStyle(color: Colors.white, fontSize: 14),
-            ),
-          )),
+        ),
+      ),
       backgroundColor: Color(0xffFAFAFF),
       appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Color(0xff604FCD),
+        ),
         centerTitle: true,
         elevation: 1,
         backgroundColor: Colors.white,
@@ -44,7 +48,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
           return Column(
             children: [
               Container(
-                padding: EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(16.0),
                 height: 150,
                 width: double.infinity,
                 decoration: BoxDecoration(
@@ -79,7 +83,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           style: TextStyle(fontSize: 18),
                         ),
                         SizedBox(
-                          height: 8.0,
+                          height: 4.0,
                         ),
                         Text(
                           "Price: ${cartItems[index].price}",
@@ -96,7 +100,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 height: 4,
               ),
               Container(
-                padding: EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(16.0),
                 width: double.infinity,
                 decoration: BoxDecoration(
                   border: Border.all(
@@ -138,6 +142,101 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         color: Colors.black,
                       ),
                     )
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 4.0,
+              ),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(
+                    color: Color(0xffC7D4EE),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Order Summary',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xff130B43),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 8.0,
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          'Subtotal',
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            color: Color(0xff130B43),
+                          ),
+                        ),
+                        Spacer(),
+                        Text(
+                          '20.0',
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            color: Color(0xff130B43),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 4.0,
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          'Delivery Charges',
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            color: Color(0xff130B43),
+                          ),
+                        ),
+                        Spacer(),
+                        Text(
+                          '8.0',
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            color: Color(0xff130B43),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 4.0,
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          'Subtotal',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            color: Color(0xff130B43),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Spacer(),
+                        Text(
+                          'Rs 28.0',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            color: Color(0xff130B43),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               )
