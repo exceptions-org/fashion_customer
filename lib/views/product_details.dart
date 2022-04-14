@@ -221,7 +221,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                                             quantity: 1,
                                             productId: productModel.id,
                                             color: selectedColor.value,
-                                            discountPrice: 100));
+                                            discountPrice: 100,
+                                            selectedSize: ""));
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(SnackBar(
                                                 content: Text(

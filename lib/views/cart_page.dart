@@ -78,9 +78,9 @@ class _CartpageState extends State<Cartpage> {
                         ),
                         Spacer(),
                         Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(10),
                           child: Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(10),
                             child: Column(
                               children: [
                                 InkWell(
@@ -99,12 +99,15 @@ class _CartpageState extends State<Cartpage> {
                                   },
                                   child: Image.asset(
                                     "Icons/add.png",
-                                    height: 20,
+                                    height: 25,
                                     color: Color(0XFF604FCD),
                                   ),
                                 ),
                                 SizedBox(height: 10),
-                                Text("${cartItems[index].quantity}"),
+                                Text(
+                                  "${cartItems[index].quantity}",
+                                  style: TextStyle(fontSize: 18),
+                                ),
                                 // Text(cartItems[index].productId),
                                 SizedBox(height: 10),
                                 InkWell(
@@ -126,7 +129,7 @@ class _CartpageState extends State<Cartpage> {
                                   },
                                   child: Image.asset(
                                     "Icons/remove.png",
-                                    height: 20,
+                                    height: 25,
                                     color: Color(0XFF604FCD),
                                   ),
                                 ),
@@ -137,6 +140,7 @@ class _CartpageState extends State<Cartpage> {
                       ],
                     ),
                   ),
+                  SizedBox(height: 10),
                 ],
               )
 

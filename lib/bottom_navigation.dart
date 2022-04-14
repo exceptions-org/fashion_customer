@@ -21,12 +21,12 @@ class _BottomNavigationState extends State<BottomNavigation> {
   ];
   int index = 0;
 
-  List routes = [
-    const HomePage(),
-    const SearchPage(),
-    const Cartpage(),
-    const ProfilePage(),
-  ];
+  List get routes => [
+        HomePage(onChange: onChange),
+        const SearchPage(),
+        const Cartpage(),
+        const ProfilePage(),
+      ];
   late double leftPadding;
   late double rightPadding;
 
