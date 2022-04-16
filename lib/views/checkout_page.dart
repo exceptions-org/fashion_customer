@@ -74,6 +74,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
           await ref.update(OrderModel(
             products: cartItems,
             orderDocId: ref.id,
+            address:
+                controller.seletedAddress ?? controller.userModel.address.first,
+            userName: controller.userModel.name,
+            userPhone: controller.userModel.number,
             totalPrice: subTotal,
             deliveryDate: Timestamp.now(),
             totalDiscountPrice: 0,

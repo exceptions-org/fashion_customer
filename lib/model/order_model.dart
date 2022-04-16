@@ -2,10 +2,12 @@ import 'dart:convert';
 import 'dart:core';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fashion_customer/model/cart_model.dart';
 import 'package:flutter/foundation.dart';
 
-enum OrderState { placed, confirmed, delivered, cancel }
+import 'package:fashion_customer/model/cart_model.dart';
+import 'package:fashion_customer/model/user_model.dart';
+
+enum OrderState { placed, confirmed, outForDelivery, delivered, cancel }
 
 class OrderModel {
   String orderDocId;
@@ -16,6 +18,9 @@ class OrderModel {
   String orderId;
   OrderState orderState;
   Timestamp createdAt;
+  Address address;
+  String userPhone;
+  String userName;
   OrderModel({
     required this.orderDocId,
     required this.products,
@@ -25,6 +30,9 @@ class OrderModel {
     required this.orderId,
     required this.orderState,
     required this.createdAt,
+    required this.address,
+    required this.userPhone,
+    required this.userName,
   });
 
   OrderModel copyWith({
@@ -36,6 +44,9 @@ class OrderModel {
     String? orderId,
     OrderState? orderState,
     Timestamp? createdAt,
+    Address? address,
+    String? userPhone,
+    String? userName,
   }) {
     return OrderModel(
       orderDocId: orderDocId ?? this.orderDocId,
@@ -46,6 +57,9 @@ class OrderModel {
       orderId: orderId ?? this.orderId,
       orderState: orderState ?? this.orderState,
       createdAt: createdAt ?? this.createdAt,
+      address: address ?? this.address,
+      userPhone: userPhone ?? this.userPhone,
+      userName: userName ?? this.userName,
     );
   }
 
@@ -59,6 +73,9 @@ class OrderModel {
       'orderId': orderId,
       'orderState': orderState.index,
       'createdAt': createdAt,
+      'address': address.toMap(),
+      'userPhone': userPhone,
+      'userName': userName,
     };
   }
 
@@ -73,6 +90,9 @@ class OrderModel {
       orderId: map['orderId'] ?? '',
       orderState: OrderState.values[map['orderState']],
       createdAt: map['createdAt'],
+      address: Address.fromMap(map['address']),
+      userPhone: map['userPhone'] ?? '',
+      userName: map['userName'] ?? '',
     );
   }
 
@@ -83,7 +103,7 @@ class OrderModel {
 
   @override
   String toString() {
-    return 'OrderModel(orderDocId: $orderDocId, products: $products, totalPrice: $totalPrice, deliveryDate: $deliveryDate, totalDiscountPrice: $totalDiscountPrice, orderId: $orderId, orderState: $orderState, createdAt: $createdAt)';
+    return 'OrderModel(orderDocId: $orderDocId, products: $products, totalPrice: $totalPrice, deliveryDate: $deliveryDate, totalDiscountPrice: $totalDiscountPrice, orderId: $orderId, orderState: $orderState, createdAt: $createdAt, address: $address, userPhone: $userPhone, userName: $userName)';
   }
 
   @override
@@ -98,7 +118,10 @@ class OrderModel {
         other.totalDiscountPrice == totalDiscountPrice &&
         other.orderId == orderId &&
         other.orderState == orderState &&
-        other.createdAt == createdAt;
+        other.createdAt == createdAt &&
+        other.address == address &&
+        other.userPhone == userPhone &&
+        other.userName == userName;
   }
 
   @override
@@ -110,6 +133,9 @@ class OrderModel {
         totalDiscountPrice.hashCode ^
         orderId.hashCode ^
         orderState.hashCode ^
-        createdAt.hashCode;
+        createdAt.hashCode ^
+        address.hashCode ^
+        userPhone.hashCode ^
+        userName.hashCode;
   }
 }

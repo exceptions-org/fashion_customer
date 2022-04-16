@@ -29,7 +29,7 @@ class _ProductDetailsState extends State<ProductDetails> {
   late List<String> listOfImage = productModel.images.first.images;
   String size = '';
   ProductModel get productModel => widget.productModel;
-  Color selectedColor = Color(0xffffffff);
+  late Color selectedColor = Color(productModel.images.first.colorCode);
   late List<String> sizes = productModel.sizeUnit.contains(',,')
       ? List.generate(
           int.parse(productModel.sizeUnit.split(',,').last) -
