@@ -23,9 +23,14 @@ class _SplashScreenState extends State<SplashScreen> with AfterLayoutMixin {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              "Fashio",
-              style: TextStyle(color: Colors.purple, fontSize: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Fashio",
+                  style: TextStyle(color: Colors.purple, fontSize: 20),
+                ),
+              ],
             )
           ]),
     );

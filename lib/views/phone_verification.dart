@@ -1,10 +1,12 @@
 import 'package:fashion_customer/bottom_navigation.dart';
 import 'package:fashion_customer/services/auth_service.dart';
+import 'package:fashion_customer/views/contact_details.dart';
 import 'package:flutter/material.dart';
 
 class PhoneVerification extends StatefulWidget {
   final AuthService authService;
-  PhoneVerification({Key? key, required this.authService,}) : super(key: key);
+  String number;
+  PhoneVerification({Key? key, required this.authService,required this.number}) : super(key: key);
 
   @override
   _PhoneVerificationState createState() => _PhoneVerificationState();
@@ -109,13 +111,15 @@ class _PhoneVerificationState extends State<PhoneVerification> {
                 child: GestureDetector(
                   onTap: () async {
                     bool a = await widget.authService.verifySmsCode(
+                      widget.number,
                       smsController.text,
+                      context
                     );
                     if (a == true) {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => BottomNavigation(),
+                          builder: (context) => SignupPage2(number: widget.number),
                         ),
                       );
                     }

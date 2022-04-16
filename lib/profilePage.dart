@@ -11,14 +11,18 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+
+  
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0XFFFAFAFF),
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        elevation: 0,
-        backgroundColor: Colors.transparent,
+        elevation: 1,
+        backgroundColor: Colors.white,
         title: const Text(
           'Profile',
           style: TextStyle(color: Color(0XFF604FCD)),
@@ -36,15 +40,26 @@ class _ProfilePageState extends State<ProfilePage> {
                 foregroundImage: AssetImage("Icons/account.png"),
               ),
               SizedBox(height: 20),
-              Text(
-                "Arif Khan",
-                style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Arif Khan",
+                    style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  IconButton(
+                      onPressed: () {},
+                      icon: Icon(
+                        Icons.edit,
+                        size: 18,
+                      ))
+                ],
               ),
               SizedBox(height: 20),
-              Container(
+              /* Container(
                 margin: const EdgeInsets.symmetric(vertical: 2),
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 width: double.maxFinite,
@@ -66,7 +81,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                 ),
-              ),
+              ), */
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 2),
                 padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -77,17 +92,38 @@ class _ProfilePageState extends State<ProfilePage> {
                       //width: 1,
                       color: Color(0XFFC8DFEF),
                     )),
-                child: ListTile(
+                child: ExpansionTile(
                   leading: Icon(Icons.location_city, color: Colors.green),
                   title: Text("User Address"),
-                  trailing: RotatedBox(
-                    quarterTurns: 2,
-                    child: Image.asset(
-                      "Icons/Arrow.png",
-                      height: 25,
-                      color: Color(0XFF604FCD),
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                            "106 1st Floor Ameen Apartment\nTandel Mohalla Idgah Road\nBhiwandi, Maharashtra 421302'"),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.edit,
+                              size: 18,
+                            ))
+                      ],
                     ),
-                  ),
+                    SizedBox(
+                      height: 10,
+                    )
+                  ],
+                  // trailing: RotatedBox(
+                  //   quarterTurns: 2,
+                  //   child: Image.asset(
+                  //     "Icons/Arrow.png",
+                  //     height: 25,
+                  //     color: Color(0XFF604FCD),
+                  //   ),
+                  // ),
                 ),
               ),
               Container(
@@ -100,20 +136,37 @@ class _ProfilePageState extends State<ProfilePage> {
                       //width: 1,
                       color: Color(0XFFC8DFEF),
                     )),
-                child: ListTile(
+                child: ExpansionTile(
                   leading: Icon(Icons.phone, color: Colors.blue),
                   title: Text("User Contact No"),
-                  trailing: RotatedBox(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("8446062685"),
+                        IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.edit,
+                              size: 18,
+                            ))
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    )
+                  ],
+                  /*  trailing: RotatedBox(
                     quarterTurns: 2,
                     child: Image.asset(
                       "Icons/Arrow.png",
                       height: 25,
                       color: Color(0XFF604FCD),
                     ),
-                  ),
+                  ), */
                 ),
               ),
-              Container(
+              /* Container(
                 margin: const EdgeInsets.symmetric(vertical: 2),
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 width: double.maxFinite,
@@ -135,7 +188,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                 ),
-              ),
+              ), */
               InkWell(
                 onTap: () {
                   FirebaseAuth.instance.signOut();

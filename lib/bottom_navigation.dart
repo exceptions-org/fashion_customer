@@ -32,11 +32,6 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
   double width = 5;
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
   late Size size;
 
   int k = 0;
