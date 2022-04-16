@@ -1,10 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fashion_customer/bottom_navigation.dart';
+import 'package:fashion_customer/controller/controller.dart';
+import 'package:fashion_customer/main.dart';
 import 'package:fashion_customer/model/user_model.dart';
+import 'package:fashion_customer/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SignupPage2 extends StatefulWidget {
-  String number;
+  final String number;
   SignupPage2({required this.number});
 
   @override
@@ -30,16 +34,16 @@ class _SignupPage2State extends State<SignupPage2> {
           final formState = _formKey.currentState;
           if (formState!.validate()) {
             formState.save();
+            addaddress();
           } else {
             return null;
           }
-          addaddress();
         },
         child: Container(
             margin: EdgeInsets.all(20),
             height: 60,
             decoration: BoxDecoration(
-              color: Color(0xff604FCD),
+              color: KConstants.kPrimary100,
               borderRadius: BorderRadius.circular(6),
             ),
             child: Center(
@@ -57,7 +61,7 @@ class _SignupPage2State extends State<SignupPage2> {
         title: const Text(
           'Contact Details',
           style: TextStyle(
-            color: Color(0XFF604FCD),
+            color: KConstants.kPrimary100,
           ),
         ),
         centerTitle: true,
@@ -265,21 +269,29 @@ class _SignupPage2State extends State<SignupPage2> {
   }
 
   void addaddress() async {
-    UserModel userModel =
-        UserModel(name: name.text, number: widget.number,adress: [
-      Address(
-          type: '',
-          actualAddress:
-              "${houseNo.text}, ${area.text}, ${landmark.text}, ${city.text}, ${pincode.text}, ${state.text}}",
-          landMark: landmark.text,
-          latlng: GeoPoint(0, 0),
-          pinCode: pincode.text),
-    ]);
+    UserModel userModel = UserModel(
+        orderCount: 0,
+        name: name.text,
+        number: widget.number,
+        address: [
+          Address(
+              type: '',
+              actualAddress:
+                  "${houseNo.text}, ${area.text}, ${landmark.text}, ${city.text}, ${pincode.text}, ${state.text}}",
+              landMark: landmark.text,
+              latlng: GeoPoint(0, 0),
+              pinCode: pincode.text),
+        ]);
     await FirebaseFirestore.instance
         .collection("users")
         .doc(widget.number)
         .set(userModel.toMap());
-    Navigator.pushReplacement(
-        context, CupertinoPageRoute(builder: (context) => BottomAppBar()));
+
+    await getIt<UserController>().getUser();
+
+    Navigator.pushAndRemoveUntil(
+        context,
+        CupertinoPageRoute(builder: (context) => BottomNavigation()),
+        (r) => false);
   }
 }

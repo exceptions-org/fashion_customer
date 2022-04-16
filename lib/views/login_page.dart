@@ -1,4 +1,5 @@
 import 'package:fashion_customer/services/auth_service.dart';
+import 'package:fashion_customer/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -13,18 +14,25 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController phoneController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
         body: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.only(
+              top: kToolbarHeight,
+              left: kToolbarHeight / 2,
+              right: kToolbarHeight / 2),
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image.asset(
-                  "Icons/OTP.png",
-                  height: 220.0,
+                Hero(
+                  tag: 'img',
+                  child: Image.asset(
+                    "Icons/OTP.png",
+                    height: size.height * 0.25,
+                  ),
                 ),
                 SizedBox(
                   height: 54.0,
@@ -65,6 +73,7 @@ class _LoginPageState extends State<LoginPage> {
                   width: 240,
                   child: TextField(
                     maxLength: 10,
+                    textAlign: TextAlign.center,
                     controller: phoneController,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
@@ -91,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
                         width: 240.0,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(4.0),
-                          color: Color(0xff604FCD),
+                          color: KConstants.kPrimary100,
                         ),
                         child: Center(
                           child: Text(

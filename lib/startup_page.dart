@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'utils/constants.dart';
+
 class StartupPage extends StatefulWidget {
   const StartupPage({Key? key}) : super(key: key);
 
@@ -58,7 +60,7 @@ class _StartupPageState extends State<StartupPage> {
                 "Fashion App",
                 style: TextStyle(
                     fontSize: 30,
-                    color: Color(0XFF604FCD),
+                    color: KConstants.kPrimary100,
                     fontWeight: FontWeight.w400),
               ),
             ),
@@ -76,7 +78,7 @@ class _StartupPageState extends State<StartupPage> {
                       Text(
                         "Welcome",
                         style:
-                            TextStyle(fontSize: 40, color: Color(0XFF604FCD)),
+                            TextStyle(fontSize: 40, color: KConstants.kPrimary100),
                       ),
                       SizedBox(
                         height: 25,
@@ -101,7 +103,7 @@ class _StartupPageState extends State<StartupPage> {
                         "Choose",
                         style: TextStyle(
                           fontSize: 40,
-                          color: Color(0XFF604FCD),
+                          color: KConstants.kPrimary100,
                         ),
                       ),
                       SizedBox(
@@ -127,7 +129,7 @@ class _StartupPageState extends State<StartupPage> {
                         "Order",
                         style: TextStyle(
                           fontSize: 40,
-                          color: Color(0XFF604FCD),
+                          color: KConstants.kPrimary100,
                         ),
                       ),
                       SizedBox(
@@ -157,8 +159,8 @@ class _StartupPageState extends State<StartupPage> {
                           duration: const Duration(milliseconds: 300),
                           decoration: BoxDecoration(
                               color: pageIndex == index
-                                  ? const Color(0XFF604FCD)
-                                  : const Color(0XFF604FCD).withOpacity(0.2),
+                                  ?  KConstants.kPrimary100
+                                  :  KConstants.kPrimary100.withOpacity(0.2),
                               borderRadius: BorderRadius.circular(10)),
                           height: 10,
                           width: pageIndex == index ? 25 : 10,
@@ -181,17 +183,17 @@ class _StartupPageState extends State<StartupPage> {
                   },
                   child: const Text(
                     "Skip",
-                    style: TextStyle(color: Color(0XFF604FCD), fontSize: 18),
+                    style: TextStyle(color: KConstants.kPrimary100, fontSize: 18),
                   ),
                 ),
                 /*  const Text(
                   "Skip",
-                  style: TextStyle(color: Color(0XFF604FCD), fontSize: 15),
+                  style: TextStyle(color: KConstants.kPrimary100, fontSize: 15),
                 ), */
                 MaterialButton(
                   height: 50,
                   minWidth: 150,
-                  color: const Color(0XFF604FCD),
+                  color:  KConstants.kPrimary100,
                   onPressed: () async {
                     if (pageIndex != 2) {
                       onNext(pageIndex + 1);

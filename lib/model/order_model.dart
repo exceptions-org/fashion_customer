@@ -2,26 +2,22 @@ import 'dart:convert';
 import 'dart:core';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fashion_customer/model/cart_model.dart';
 import 'package:flutter/foundation.dart';
 
-import 'package:fashion_customer/model/cart_model.dart';
+enum OrderState { placed, confirmed, delivered, cancel }
 
-enum OrderState{
-    placed,
-    confirmed,
-    delivered,
-    cancel
-  }
 class OrderModel {
+  String orderDocId;
   List<CartModel> products;
-  String totalPrice;
-  String selectedSize;
+  double totalPrice;
   Timestamp deliveryDate;
   double totalDiscountPrice;
   String orderId;
   OrderState orderState;
   Timestamp createdAt;
   OrderModel({
+    required this.orderDocId,
     required this.products,
     required this.totalPrice,
     required this.deliveryDate,
@@ -29,12 +25,12 @@ class OrderModel {
     required this.orderId,
     required this.orderState,
     required this.createdAt,
-    required this.selectedSize,
   });
 
   OrderModel copyWith({
+    String? orderDocId,
     List<CartModel>? products,
-    String? totalPrice,
+    double? totalPrice,
     Timestamp? deliveryDate,
     double? totalDiscountPrice,
     String? orderId,
@@ -42,6 +38,7 @@ class OrderModel {
     Timestamp? createdAt,
   }) {
     return OrderModel(
+      orderDocId: orderDocId ?? this.orderDocId,
       products: products ?? this.products,
       totalPrice: totalPrice ?? this.totalPrice,
       deliveryDate: deliveryDate ?? this.deliveryDate,
@@ -49,12 +46,12 @@ class OrderModel {
       orderId: orderId ?? this.orderId,
       orderState: orderState ?? this.orderState,
       createdAt: createdAt ?? this.createdAt,
-      selectedSize: selectedSize,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
+      'orderDocId': orderDocId,
       'products': products.map((x) => x.toMap()).toList(),
       'totalPrice': totalPrice,
       'deliveryDate': deliveryDate,
@@ -62,54 +59,57 @@ class OrderModel {
       'orderId': orderId,
       'orderState': orderState.index,
       'createdAt': createdAt,
-      'selectedSize': selectedSize
     };
   }
 
   factory OrderModel.fromMap(Map<String, dynamic> map) {
     return OrderModel(
-      products: List<CartModel>.from(map['products']?.map((x) => CartModel.fromMap(x))),
-      totalPrice: map['totalPrice'] ?? '',
+      orderDocId: map['orderDocId'] ?? '',
+      products: List<CartModel>.from(
+          map['products']?.map((x) => CartModel.fromMap(x))),
+      totalPrice: map['totalPrice']?.toDouble() ?? 0.0,
       deliveryDate: map['deliveryDate'],
       totalDiscountPrice: map['totalDiscountPrice']?.toDouble() ?? 0.0,
       orderId: map['orderId'] ?? '',
-      orderState: OrderState.values[(map['orderState'])],
+      orderState: OrderState.values[map['orderState']],
       createdAt: map['createdAt'],
-      selectedSize: map['selectedSize']??''
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory OrderModel.fromJson(String source) => OrderModel.fromMap(json.decode(source));
+  factory OrderModel.fromJson(String source) =>
+      OrderModel.fromMap(json.decode(source));
 
   @override
   String toString() {
-    return 'OrderModel(products: $products, totalPrice: $totalPrice, deliveryDate: $deliveryDate, totalDiscountPrice: $totalDiscountPrice, orderId: $orderId, orderState: $orderState, createdAt: $createdAt)';
+    return 'OrderModel(orderDocId: $orderDocId, products: $products, totalPrice: $totalPrice, deliveryDate: $deliveryDate, totalDiscountPrice: $totalDiscountPrice, orderId: $orderId, orderState: $orderState, createdAt: $createdAt)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-  
+
     return other is OrderModel &&
-      listEquals(other.products, products) &&
-      other.totalPrice == totalPrice &&
-      other.deliveryDate == deliveryDate &&
-      other.totalDiscountPrice == totalDiscountPrice &&
-      other.orderId == orderId &&
-      other.orderState == orderState &&
-      other.createdAt == createdAt;
+        other.orderDocId == orderDocId &&
+        listEquals(other.products, products) &&
+        other.totalPrice == totalPrice &&
+        other.deliveryDate == deliveryDate &&
+        other.totalDiscountPrice == totalDiscountPrice &&
+        other.orderId == orderId &&
+        other.orderState == orderState &&
+        other.createdAt == createdAt;
   }
 
   @override
   int get hashCode {
-    return products.hashCode ^
-      totalPrice.hashCode ^
-      deliveryDate.hashCode ^
-      totalDiscountPrice.hashCode ^
-      orderId.hashCode ^
-      orderState.hashCode ^
-      createdAt.hashCode;
+    return orderDocId.hashCode ^
+        products.hashCode ^
+        totalPrice.hashCode ^
+        deliveryDate.hashCode ^
+        totalDiscountPrice.hashCode ^
+        orderId.hashCode ^
+        orderState.hashCode ^
+        createdAt.hashCode;
   }
 }

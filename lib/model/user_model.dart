@@ -6,22 +6,27 @@ import 'package:flutter/foundation.dart';
 class UserModel {
   String name;
   String number;
-  List<Address> adress;
+  List<Address> address;
+  int orderCount;
   UserModel({
     required this.name,
     required this.number,
-    required this.adress,
+    required this.address,
+    required this.orderCount,
   });
 
   UserModel copyWith({
     String? name,
     String? number,
-    List<Address>? adress,
+    List<Address>? address,
+    int? orderCount,
   }) {
-    return UserModel(
+    return UserModel
+    (
+    orderCount: orderCount ?? this.orderCount,
       name: name ?? this.name,
       number: number ?? this.number,
-      adress: adress ?? this.adress,
+      address: address ?? this.address,
     );
   }
 
@@ -29,7 +34,8 @@ class UserModel {
     return {
       'name': name,
       'number': number,
-      'adress': adress.map((x) => x.toMap()).toList(),
+      'orderCount': orderCount,
+      'address': address.map((x) => x.toMap()).toList(),
     };
   }
 
@@ -37,29 +43,50 @@ class UserModel {
     return UserModel(
       name: map['name'] ?? '',
       number: map['number'] ?? '',
-      adress: List<Address>.from(map['adress']?.map((x) => Address.fromMap(x))),
+      address: List<Address>.from(map['address']?.map((x) => Address.fromMap(x))),
+      orderCount: map['orderCount'] ?? 0,
     );
   }
 
-  String toJson() => json.encode(toMap());
+  Map<String, dynamic> toSF() {
+    return {
+      'name': name,
+      'number': number,
+      'address': address.map((x) => x.toSf()).toList(),
+        'orderCount': orderCount,
+    };
+  }
 
-  factory UserModel.fromJson(String source) => UserModel.fromMap(json.decode(source));
+  factory UserModel.fromSF(Map<String, dynamic> map) {
+    return UserModel(
+      name: map['name'] ?? '',
+      number: map['number'] ?? '',
+      address: List<Address>.from(map['address']?.map((x) => Address.fromSf(x))),
+      orderCount: map['orderCount'] ?? 0,
+    );
+  }
+
+  String toJson() => json.encode(toSF());
+
+  factory UserModel.fromJson(String source) =>
+      UserModel.fromSF(json.decode(source));
 
   @override
-  String toString() => 'UserModel(name: $name, number: $number, adress: $adress)';
+  String toString() =>
+      'UserModel(name: $name, number: $number, address: $address)';
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-  
+
     return other is UserModel &&
-      other.name == name &&
-      other.number == number &&
-      listEquals(other.adress, adress);
+        other.name == name &&
+        other.number == number &&
+        listEquals(other.address, address);
   }
 
   @override
-  int get hashCode => name.hashCode ^ number.hashCode ^ adress.hashCode;
+  int get hashCode => name.hashCode ^ number.hashCode ^ address.hashCode;
 }
 
 class Address {
@@ -101,17 +128,16 @@ class Address {
       'pinCode': pinCode,
     };
   }
-   Map<String, dynamic> toSf() {
+
+  Map<String, dynamic> toSf() {
     return {
       'type': type,
       'actualAddress': actualAddress,
-      'latlng': {'lat': latlng.latitude, 'lng':latlng.longitude},
+      'latlng': {'lat': latlng.latitude, 'lng': latlng.longitude},
       'landMark': landMark,
       'pinCode': pinCode,
     };
   }
-
-
 
   factory Address.fromMap(Map<String, dynamic> map) {
     return Address(
@@ -123,20 +149,20 @@ class Address {
     );
   }
 
-factory Address.fromSf(Map<String, dynamic> map) {
+  factory Address.fromSf(Map<String, dynamic> map) {
     return Address(
       type: map['type'] ?? '',
       actualAddress: map['actualAddress'] ?? '',
-      latlng: GeoPoint(map['latlng']['lat'],map['latlng']['lng']),
+      latlng: GeoPoint(map['latlng']['lat'], map['latlng']['lng']),
       landMark: map['landMark'] ?? '',
       pinCode: map['pinCode'] ?? '',
     );
   }
 
-
   String toJson() => json.encode(toSf());
 
-  factory Address.fromJson(String source) => Address.fromSf(json.decode(source));
+  factory Address.fromJson(String source) =>
+      Address.fromSf(json.decode(source));
 
   @override
   String toString() {
@@ -146,21 +172,21 @@ factory Address.fromSf(Map<String, dynamic> map) {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-  
+
     return other is Address &&
-      other.type == type &&
-      other.actualAddress == actualAddress &&
-      other.latlng == latlng &&
-      other.landMark == landMark &&
-      other.pinCode == pinCode;
+        other.type == type &&
+        other.actualAddress == actualAddress &&
+        other.latlng == latlng &&
+        other.landMark == landMark &&
+        other.pinCode == pinCode;
   }
 
   @override
   int get hashCode {
     return type.hashCode ^
-      actualAddress.hashCode ^
-      latlng.hashCode ^
-      landMark.hashCode ^
-      pinCode.hashCode;
+        actualAddress.hashCode ^
+        latlng.hashCode ^
+        landMark.hashCode ^
+        pinCode.hashCode;
   }
 }

@@ -1,3 +1,4 @@
+import 'package:fashion_customer/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 class ProductPage extends StatefulWidget {
@@ -18,7 +19,7 @@ class _ProductPageState extends State<ProductPage> {
         // leading: IconButton(
         //   icon: Image.asset(
         //     "Icons/Arrow.png",
-        //     color: Color(0XFF604FCD),
+        //     color: KConstants.kPrimary100,
         //   ),
         //   onPressed: () {},
         // ),
@@ -26,7 +27,7 @@ class _ProductPageState extends State<ProductPage> {
         backgroundColor: Colors.transparent,
         title: const Text(
           'Product',
-          style: TextStyle(color: Color(0XFF604FCD)),
+          style: TextStyle(color: KConstants.kPrimary100),
         ),
         centerTitle: true,
       ),
@@ -84,7 +85,7 @@ class _ProductPageState extends State<ProductPage> {
                           "Rs. 1000",
                           style: TextStyle(
                             fontSize: 16,
-                            color: Color(0xFF604FCD),
+                            color: KConstants.kPrimary100,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

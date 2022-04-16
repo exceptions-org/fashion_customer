@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fashion_customer/bottom_navigation.dart';
 import 'package:fashion_customer/controller/controller.dart';
 import 'package:fashion_customer/main.dart';
 import 'package:fashion_customer/model/user_model.dart';
@@ -43,7 +44,7 @@ class AuthService {
       [int? code]) async {
     try {
       verificationId = string;
-      Navigator.pushReplacement(
+      Navigator.push(
         context,
         CupertinoPageRoute(
           builder: (context) =>
@@ -73,9 +74,11 @@ class AuthService {
         (await SharedPreferences.getInstance())
             .setString('user', userModel.toJson());
         UserController userController = getIt<UserController>();
-        userController.getUser();
-        Navigator.pushReplacement(
-            context, CupertinoPageRoute(builder: (context) => BottomAppBar()));
+        await userController.getUser();
+        Navigator.pushAndRemoveUntil(
+            context,
+            CupertinoPageRoute(builder: (context) => BottomNavigation()),
+            (e) => false);
       } else {
         Navigator.pushReplacement(
             context,

@@ -1,12 +1,14 @@
-import 'package:fashion_customer/bottom_navigation.dart';
 import 'package:fashion_customer/services/auth_service.dart';
 import 'package:fashion_customer/views/contact_details.dart';
 import 'package:flutter/material.dart';
 
+import '../utils/constants.dart';
+
 class PhoneVerification extends StatefulWidget {
   final AuthService authService;
   String number;
-  PhoneVerification({Key? key, required this.authService,required this.number}) : super(key: key);
+  PhoneVerification({Key? key, required this.authService, required this.number})
+      : super(key: key);
 
   @override
   _PhoneVerificationState createState() => _PhoneVerificationState();
@@ -17,19 +19,24 @@ class _PhoneVerificationState extends State<PhoneVerification> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(
-          24.0,
-        ),
+        padding: const EdgeInsets.only(
+            top: kToolbarHeight,
+            left: kToolbarHeight / 2,
+            right: kToolbarHeight / 2),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset(
-                "Icons/OTP.png",
-                height: 220.0,
+              Hero(
+                tag: 'img',
+                child: Image.asset(
+                  "Icons/OTP.png",
+                  height: size.height * 0.25,
+                ),
               ),
               SizedBox(
                 height: 54.0,
@@ -58,10 +65,10 @@ class _PhoneVerificationState extends State<PhoneVerification> {
                     width: 4,
                   ),
                   Text(
-                    smsController.text,
+                    widget.number,
                     style: TextStyle(
                         fontSize: 14,
-                        color: Color(0xff604FCD),
+                        color: KConstants.kPrimary100,
                         fontWeight: FontWeight.bold,
                         height: 1.4),
                     textAlign: TextAlign.center,
@@ -76,6 +83,7 @@ class _PhoneVerificationState extends State<PhoneVerification> {
                 width: 240,
                 child: TextField(
                   maxLength: 6,
+                  textAlign: TextAlign.center,
                   controller: smsController,
                   decoration: InputDecoration(
                     labelStyle: TextStyle(
@@ -98,7 +106,7 @@ class _PhoneVerificationState extends State<PhoneVerification> {
                     "Resend OTP",
                     style: TextStyle(
                         fontSize: 14,
-                        color: Color(0xff604FCD),
+                        color: KConstants.kPrimary100,
                         fontWeight: FontWeight.bold,
                         height: 1.4),
                   )
@@ -110,19 +118,9 @@ class _PhoneVerificationState extends State<PhoneVerification> {
               Center(
                 child: GestureDetector(
                   onTap: () async {
-                    bool a = await widget.authService.verifySmsCode(
-                      widget.number,
-                      smsController.text,
-                      context
-                    );
-                    if (a == true) {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SignupPage2(number: widget.number),
-                        ),
-                      );
-                    }
+                  await widget.authService.verifySmsCode(
+                        widget.number, smsController.text, context);
+                 
                   },
                   child: Container(
                     height: 60.0,

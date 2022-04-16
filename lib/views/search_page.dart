@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fashion_customer/utils/constants.dart';
 import 'package:fashion_customer/views/product_details.dart';
 import 'package:flutter/material.dart';
 
@@ -6,7 +7,8 @@ import '../model/product_model.dart';
 
 class SearchPage extends StatefulWidget {
   static const String routeName = "/SearchPage";
-  const SearchPage({Key? key}) : super(key: key);
+  final Function(int) onChange;
+  const SearchPage({Key? key, required this.onChange}) : super(key: key);
 
   @override
   State<SearchPage> createState() => _SearchPageState();
@@ -23,7 +25,7 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       // backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF604FCD),
+        backgroundColor: KConstants.kPrimary100,
         elevation: 0,
         centerTitle: true,
         automaticallyImplyLeading: false,
@@ -39,25 +41,13 @@ class _SearchPageState extends State<SearchPage> {
               "Icons/Bag.png",
               color: Colors.white,
             ),
-            onPressed: () {},
+            onPressed: () {
+              widget.onChange(2);
+            },
           ),
         ],
         bottom: PreferredSize(
-          child: /* TextField(
-              decoration: InputDecoration(
-                hintText: "Search",
-                hintStyle: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                ),
-                border: InputBorder.none,
-                prefixIcon: IconButton(
-                  icon: SvgPicture.asset("assets/icons/Search.svg"),
-                  onPressed: () {},
-                ),
-              ),
-            ) */
-              Container(
+          child: Container(
             alignment: Alignment.center,
             margin: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
             //height: 50,
@@ -235,7 +225,7 @@ class _SearchPageState extends State<SearchPage> {
                                 "Rs. ${data.prices.first.colorPrice.first.price}",
                                 style: const TextStyle(
                                   fontSize: 16,
-                                  color: Color(0xFF604FCD),
+                                  color: KConstants.kPrimary100,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -332,7 +322,7 @@ class _SearchPageState extends State<SearchPage> {
                             "Rs. ${data.prices.first.colorPrice.first.price}",
                             style: const TextStyle(
                               fontSize: 16,
-                              color: Color(0xFF604FCD),
+                              color: KConstants.kPrimary100,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -428,7 +418,7 @@ class _SearchPageState extends State<SearchPage> {
                     "Rs. 1000",
                     style: TextStyle(
                       fontSize: 16,
-                      color: Color(0xFF604FCD),
+                      color: KConstants.kPrimary100,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

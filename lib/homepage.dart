@@ -1,8 +1,13 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fashion_customer/controller/controller.dart';
+import 'package:fashion_customer/main.dart';
+import 'package:fashion_customer/utils/select_address_sheet.dart';
 import 'package:fashion_customer/views/product_details.dart';
 import 'package:flutter/material.dart';
 
 import 'model/product_model.dart';
+import 'utils/constants.dart';
 
 class HomePage extends StatefulWidget {
   final void Function(int) onChange;
@@ -29,6 +34,8 @@ class _HomePageState extends State<HomePage> {
   CollectionReference productRefs =
       FirebaseFirestore.instance.collection('products');
 
+  UserController controller = getIt<UserController>();
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -45,7 +52,7 @@ class _HomePageState extends State<HomePage> {
           title: const Text(
             "Fashio",
             style: TextStyle(
-              color: Color(0XFF604FCD),
+              color: KConstants.kPrimary100,
               fontWeight: FontWeight.normal,
             ),
           ),
@@ -69,29 +76,43 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(
                   height: 12,
                 ),
-                Row(
-                  //mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(
-                      Icons.location_pin,
-                      size: 30,
-                      color: Color(
-                        0xff604FCD,
+                InkWell(
+                  onTap: () async {
+                    await showModalBottomSheet(
+                        context: context, builder: (c) => SelectAddressSheet());
+                    setState(() {});
+                  },
+                  child: Row(
+                    //mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(
+                        Icons.location_pin,
+                        size: 30,
+                        color: Color(
+                          0xff604FCD,
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      width: 12,
-                    ),
-                    Text(
-                      '106 1st Floor Ameen Apartment Tandel\nMohalla Idgah Road Bhiwandi, Maharashtra\n421302',
-                      textScaleFactor: 1.0,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Color(0xff130B43),
+                      SizedBox(
+                        width: 12,
                       ),
-                    )
-                  ],
+                      Container(
+                        width: width * 0.8,
+                        child: AutoSizeText(
+                          controller.seletedAddress != null
+                              ? controller.seletedAddress!.actualAddress
+                              : controller
+                                  .userModel.address.first.actualAddress,
+                          textScaleFactor: 1.0,
+                          maxLines: 3,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Color(0xff130B43),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 20),
                 const Padding(
@@ -129,7 +150,7 @@ class _HomePageState extends State<HomePage> {
                                       borderRadius: BorderRadius.circular(4),
                                       color: Colors.white,
                                       border: Border.all(
-                                        color: Color(0xff604FCD),
+                                        color: KConstants.kPrimary100,
                                       ),
                                     ),
                                     child: Image.asset(e['image']),
@@ -156,7 +177,7 @@ class _HomePageState extends State<HomePage> {
                         child: Container(
                           child: const Center(child: Text("first")),
                           decoration: BoxDecoration(
-                            color: const Color(0XFF604FCD),
+                            color: KConstants.kPrimary100,
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
@@ -166,7 +187,7 @@ class _HomePageState extends State<HomePage> {
                         child: Container(
                           child: const Center(child: Text("second")),
                           decoration: BoxDecoration(
-                            color: const Color(0XFF604FCD),
+                            color: KConstants.kPrimary100,
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
@@ -176,7 +197,7 @@ class _HomePageState extends State<HomePage> {
                         child: Container(
                           child: const Center(child: Text("third")),
                           decoration: BoxDecoration(
-                            color: const Color(0XFF604FCD),
+                            color: KConstants.kPrimary100,
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
@@ -186,7 +207,7 @@ class _HomePageState extends State<HomePage> {
                         child: Container(
                           child: const Center(child: Text("fourth")),
                           decoration: BoxDecoration(
-                            color: const Color(0XFF604FCD),
+                            color: KConstants.kPrimary100,
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
@@ -207,8 +228,8 @@ class _HomePageState extends State<HomePage> {
                         width: pageIndex == index ? 15 : 10,
                         decoration: BoxDecoration(
                             color: pageIndex == index
-                                ? const Color(0XFF604FCD)
-                                : const Color(0XFF604FCD).withOpacity(.2),
+                                ? KConstants.kPrimary100
+                                : KConstants.kPrimary100.withOpacity(.2),
                             borderRadius: BorderRadius.circular(20)),
                       ),
                     ),
@@ -377,7 +398,7 @@ class _HomePageState extends State<HomePage> {
                                             "Rs. ${data.prices.first.colorPrice.first.price}",
                                             style: const TextStyle(
                                               fontSize: 16,
-                                              color: Color(0xFF604FCD),
+                                              color: KConstants.kPrimary100,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
@@ -474,7 +495,7 @@ class _HomePageState extends State<HomePage> {
                               "Rs. ${data.prices.first.colorPrice.first.price}",
                               style: const TextStyle(
                                 fontSize: 16,
-                                color: Color(0xFF604FCD),
+                                color: KConstants.kPrimary100,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),

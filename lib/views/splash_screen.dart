@@ -1,7 +1,12 @@
 import 'package:after_layout/after_layout.dart';
 import 'package:fashion_customer/bottom_navigation.dart';
+import 'package:fashion_customer/controller/controller.dart';
+import 'package:fashion_customer/main.dart';
+import 'package:fashion_customer/model/cart_model.dart';
 import 'package:fashion_customer/startup_page.dart';
+import 'package:fashion_customer/utils/spHelper.dart';
 import 'package:fashion_customer/views/login_page.dart';
+import 'package:fashion_customer/views/product_details.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -41,13 +46,23 @@ class _SplashScreenState extends State<SplashScreen> with AfterLayoutMixin {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     bool? isfirst = sharedPreferences.getBool("first");
     await Future.delayed(Duration(seconds: 2));
-    Navigator.pushReplacement(
-        context,
-        CupertinoPageRoute(
-            builder: (context) => FirebaseAuth.instance.currentUser == null
-                ? isfirst == null
-                    ? StartupPage()
-                    : LoginPage()
-                : BottomNavigation()));
+    if (isfirst != true) {
+      Navigator.pushAndRemoveUntil(context,
+          CupertinoPageRoute(builder: (c) => StartupPage()), (route) => false);
+    } else if (FirebaseAuth.instance.currentUser != null) {
+      UserController controller = getIt<UserController>();
+      List<CartModel>? carts = await SPHelper().getCart();
+      if(carts!=null){
+        cartItems = carts;
+      }
+      await controller.getUser();
+      Navigator.pushAndRemoveUntil(
+          context,
+          CupertinoPageRoute(builder: (c) => BottomNavigation()),
+          (route) => false);
+    } else {
+      Navigator.pushAndRemoveUntil(context,
+          CupertinoPageRoute(builder: (c) => LoginPage()), (route) => false);
+    }
   }
 }

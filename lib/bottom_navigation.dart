@@ -1,3 +1,4 @@
+import 'package:fashion_customer/utils/constants.dart';
 import 'package:fashion_customer/views/cart_page.dart';
 import 'package:flutter/material.dart';
 
@@ -23,8 +24,10 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
   List get routes => [
         HomePage(onChange: onChange),
-        const SearchPage(),
-        const Cartpage(),
+        SearchPage(onChange: onChange),
+        Cartpage(
+          onChange: onChange,
+        ),
         const ProfilePage(),
       ];
   late double leftPadding;
@@ -112,49 +115,59 @@ class _BottomNavigationState extends State<BottomNavigation> {
     }
     //onChange(index);
 
-    return Scaffold(
-      backgroundColor: Color(0XFFFAFAFF),
-      body: routes[index],
-      bottomNavigationBar: SizedBox(
-        height: kBottomNavigationBarHeight * 1.3,
-        width: size.width,
-        child: Column(
-          children: [
-            Row(
-              //mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                for (int i = 0; i < assets.length; i++)
-                  InkWell(
-                    onTap: () {
-                      onChange(i);
-                    },
-                    child: SizedBox(
-                      width: size.width * 0.25,
-                      height: size.width * 0.11,
-                      child: Image.asset(
-                        assets[i],
-                        height: 25,
-                        color:
-                            index == i ? const Color(0XFF604FCD) : Colors.grey,
+    return WillPopScope(
+      onWillPop: () async {
+        if (index != 0) {
+          onChange(0);
+          return false;
+        }
+        return true;
+      },
+      child: Scaffold(
+        backgroundColor: Color(0XFFFAFAFF),
+        body: routes[index],
+        bottomNavigationBar: SizedBox(
+          height: kBottomNavigationBarHeight * 1.3,
+          width: size.width,
+          child: Column(
+            children: [
+              Row(
+                //mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  for (int i = 0; i < assets.length; i++)
+                    InkWell(
+                      onTap: () {
+                        onChange(i);
+                      },
+                      child: SizedBox(
+                        width: size.width * 0.25,
+                        height: size.width * 0.11,
+                        child: Image.asset(
+                          assets[i],
+                          height: 25,
+                          color:
+                              index == i ? KConstants.kPrimary100 : Colors.grey,
+                        ),
                       ),
                     ),
-                  ),
-              ],
-            ),
-            SizedBox(
-              width: size.width,
-              child: AnimatedContainer(
-                //  curve: Curves.fastOutSlowIn,
-                margin: EdgeInsets.only(left: leftPadding, right: rightPadding),
-                duration: Duration(milliseconds: 180),
-                height: 3,
-                width: width,
-                decoration: BoxDecoration(
-                    color: const Color(0XFF604FCD),
-                    borderRadius: BorderRadius.circular(20)),
+                ],
               ),
-            ),
-          ],
+              SizedBox(
+                width: size.width,
+                child: AnimatedContainer(
+                  //  curve: Curves.fastOutSlowIn,
+                  margin:
+                      EdgeInsets.only(left: leftPadding, right: rightPadding),
+                  duration: Duration(milliseconds: 180),
+                  height: 3,
+                  width: width,
+                  decoration: BoxDecoration(
+                      color: KConstants.kPrimary100,
+                      borderRadius: BorderRadius.circular(20)),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
