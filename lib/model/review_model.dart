@@ -3,15 +3,21 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ReviewModel {
+  List<String>images;
   final Timestamp createdAt;
-  final String uid;
+  final String productId;
   final double rating;
+  final String userPhone;
+  final String userName;
   final String review;
   ReviewModel({
     required this.createdAt,
-    required this.uid,
+    required this.productId,
     required this.rating,
     required this.review,
+    required this.images,
+    required this.userName,
+    required this.userPhone
   });
 
   ReviewModel copyWith({
@@ -21,26 +27,36 @@ class ReviewModel {
     String? review,
   }) {
     return ReviewModel(
+      images: images,
       createdAt: createdAt ?? this.createdAt,
-      uid: uid ?? this.uid,
       rating: rating ?? this.rating,
       review: review ?? this.review,
+      productId: productId,
+      userName: userName,
+      userPhone: userPhone,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
+
     //  'createdAt': createdAt.toMap(),
-      'uid': uid,
+    'userName': userName,
+    'userPhone': userPhone,
+      'productId': productId,
       'rating': rating,
       'review': review,
+      'images': images
     };
   }
 
   factory ReviewModel.fromMap(Map<String, dynamic> map) {
     return ReviewModel(
+      images: map['images'],
+      productId: map['productId'],
+      userName: map['userName'],
+      userPhone: map['userPhone'],
       createdAt: map['createdAt'],
-      uid: map['uid'] ?? '',
       rating: map['rating']?.toDouble() ?? 0.0,
       review: map['review'] ?? '',
     );
@@ -52,7 +68,7 @@ class ReviewModel {
 
   @override
   String toString() {
-    return 'ReviewModel(createdAt: $createdAt, uid: $uid, rating: $rating, review: $review)';
+    return 'ReviewModel(createdAt: $createdAt, productId: $productId, rating: $rating, review: $review,userName:$userName,userPhone:$userPhone,images:$images),';
   }
 
   @override
@@ -61,16 +77,22 @@ class ReviewModel {
   
     return other is ReviewModel &&
       other.createdAt == createdAt &&
-      other.uid == uid &&
+      other.productId == productId &&
       other.rating == rating &&
-      other.review == review;
+      other.review == review &&
+      other.images == images &&
+      other.userName == userName &&
+      other.userPhone == userPhone;
   }
 
   @override
   int get hashCode {
     return createdAt.hashCode ^
-      uid.hashCode ^
+      productId.hashCode ^
       rating.hashCode ^
-      review.hashCode;
+      review.hashCode ^
+      images.hashCode^
+      userName.hashCode^
+      userPhone.hashCode;
   }
 }
