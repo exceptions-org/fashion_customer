@@ -517,6 +517,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                 return AnimationLimiter(
                                   child: GridView.count(
                                     shrinkWrap: true,
+                                    childAspectRatio: 1 / 1.1,
                                     physics: BouncingScrollPhysics(),
                                     crossAxisCount: 2,
                                     children: snapshot.data!.docs

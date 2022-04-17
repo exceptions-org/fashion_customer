@@ -1,5 +1,6 @@
 // ignore_for_file: unused_local_variable
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:fashion_customer/bottom_navigation.dart';
 import 'package:fashion_customer/model/cart_model.dart';
@@ -7,9 +8,11 @@ import 'package:fashion_customer/utils/constants.dart';
 import 'package:fashion_customer/utils/spHelper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
 import '../model/image_color_model.dart';
 import '../model/product_model.dart';
+import '../utils/product_card.dart';
 
 List<CartModel> cartItems = [];
 
@@ -485,7 +488,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                     ],
                   ),
                 ),
-
               const SizedBox(
                 height: 10,
               ),
@@ -518,59 +520,68 @@ class _ProductDetailsState extends State<ProductDetails> {
                   ],
                 ),
               ),
-
-              /*   
-              Row(
-                children: [
-                  Text(
-                    "The product comes in : ${productModel.quantity}${productModel.sizeUnit}of ${productModel.unit}",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: height * 0.014,
-                        color: Colors.grey,
-                        letterSpacing: 1),
-                  ),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  // Text(productModel.unit)
-                  // Text(
-                  //   "Free Delivery",
-                  //   style: TextStyle(
-                  //       fontSize: height * 0.02,
-                  //       color: Colors.grey,
-                  //       letterSpacing: 1),
-                  // ),
-                ],
-              ), */
-
-              /*           Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Align(
-                  alignment: Alignment.bottomRight,
-                  child: 
+              Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Related Products',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: height * 0.02,
+                          color: KConstants.txtColor100,
+                          letterSpacing: 1),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    StreamBuilder<QuerySnapshot<ProductModel>>(
+                        stream: FirebaseFirestore.instance
+                            .collection('products')
+                            .where('category.name',
+                                isEqualTo: widget.productModel.category.name)
+                            .withConverter<ProductModel>(
+                                fromFirestore: (snapshot, options) =>
+                                    ProductModel.fromMap(snapshot.data()!),
+                                toFirestore: (product, options) =>
+                                    product.toMap())
+                            .limit(10)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return AnimationLimiter(
+                              child: GridView.count(
+                                childAspectRatio: 1 / 1.1,
+                                shrinkWrap: true,
+                                physics: BouncingScrollPhysics(),
+                                crossAxisCount: 2,
+                                children: snapshot.data!.docs
+                                    .where((element) =>
+                                        element.data().id !=
+                                        widget.productModel.id)
+                                    .mapIndexed((i, element) =>
+                                        AnimationConfiguration.staggeredGrid(
+                                            duration:
+                                                Duration(milliseconds: 300),
+                                            columnCount: 2,
+                                            position: i,
+                                            child: ScaleAnimation(
+                                              child: ProductCard(
+                                                  data: element.data()),
+                                            )))
+                                    .toList(),
+                              ),
+                            );
+                          } else {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                        })
+                  ],
                 ),
-              ), */
-
-              // CustomListTile(
-              //   onTap: () async {
-              //     Navigator.push(
-              //         context,
-              //         MaterialPageRoute(
-              //             builder: (context) => ProductDetails()));
-              //     // doc.data().images.forEach((element) async {
-              //     //   element.images.forEach((el) async {
-              //     //     Reference getRef =
-              //     //         await FirebaseStorage.instance.refFromURL(el);
-              //     //     await getRef.delete();
-              //     //   });
-              //     // });
-              //     // await doc.reference.delete();
-              //   },
-              //   title: doc.data().name,
-              //   subtitle: doc.data().description,
-
-              // ),
+              ),
             ]),
           )),
     );
