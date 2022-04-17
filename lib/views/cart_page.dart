@@ -17,6 +17,9 @@ class Cartpage extends StatefulWidget {
 class _CartpageState extends State<Cartpage> {
   @override
   Widget build(BuildContext context) {
+    double totalAmount = cartItems.isNotEmpty
+        ? cartItems.map((e) => e.price).reduce((a, b) => a + b)
+        : 0;
     return Scaffold(
       backgroundColor: Color(0xffFAFAFF),
       appBar: AppBar(
@@ -238,7 +241,9 @@ class _CartpageState extends State<Cartpage> {
                         Navigator.push(
                           context,
                           CupertinoPageRoute(
-                            builder: (context) => CheckoutPage(),
+                            builder: (context) => CheckoutPage(
+                              totalAmount: totalAmount,
+                            ),
                           ),
                         );
                       },

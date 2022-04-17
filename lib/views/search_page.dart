@@ -1,14 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fashion_customer/utils/constants.dart';
-import 'package:fashion_customer/views/product_details.dart';
+import 'package:fashion_customer/utils/product_card.dart';
 import 'package:flutter/material.dart';
 
 import '../model/product_model.dart';
 
 class SearchPage extends StatefulWidget {
   static const String routeName = "/SearchPage";
+  final bool isCategry;
+  final String category;
   final Function(int) onChange;
-  const SearchPage({Key? key, required this.onChange}) : super(key: key);
+  const SearchPage(
+      {Key? key,
+      required this.onChange,
+      this.isCategry = false,
+      this.category = ''})
+      : super(key: key);
 
   @override
   State<SearchPage> createState() => _SearchPageState();
@@ -29,12 +36,14 @@ class _SearchPageState extends State<SearchPage> {
         elevation: 0,
         centerTitle: true,
         automaticallyImplyLeading: false,
-        // leading: IconButton(
-        //   icon: Image.asset("Icons/Arrow.png"),
-        //   onPressed: () {
-        //     Navigator.of(context);
-        //   },
-        // ),
+        leading: !widget.isCategry
+            ? null
+            : IconButton(
+                icon: Image.asset("Icons/Arrow.png"),
+                onPressed: () {
+                  Navigator.of(context);
+                },
+              ),
         actions: [
           IconButton(
             icon: Image.asset(
@@ -104,7 +113,7 @@ class _SearchPageState extends State<SearchPage> {
           ),
           preferredSize: const Size.fromHeight(kToolbarHeight * 1.4),
         ),
-        title: const Text('Explore'),
+        title: widget.isCategry ? Text(widget.category) : const Text('Explore'),
       ),
       body: StreamBuilder<QuerySnapshot<ProductModel>>(
         stream: productRefs
@@ -149,110 +158,24 @@ class _SearchPageState extends State<SearchPage> {
               childAspectRatio: 1 / 1.1,
               shrinkWrap: true,
               crossAxisCount: 2,
-              children: snapshot.data!.docs
-                  .where((element) => element
-                      .data()
-                      .name
-                      .toLowerCase()
-                      .contains(search.text.toLowerCase()))
-                  .map((e) => e.data())
-                  .map(
-                    (data) => GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                ProductDetails(productModel: data),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(
-                            color: Colors.blueGrey.shade100,
-                            // width: 1,
-                          ),
-                          // color: Colors.white,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        margin: const EdgeInsets.all(10),
-                        // padding: const EdgeInsets.all(8),
-                        height: height * 0.25,
-
-                        width: width * 0.4,
-                        child: Column(
-                          // mainAxisSize: MainAxisSize.max,
-                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              height: height * 0.15,
-                              width: 142,
-                              // padding: const EdgeInsets.only(left: 10),
-                              margin: const EdgeInsets.only(top: 10, left: 15),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(4),
-                                image: DecorationImage(
-                                  image: NetworkImage(
-                                      data.images.first.images.first),
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 15),
-                              child: Text(
-                                data.name,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 15),
-                              child: Text(
-                                "Rs. ${data.prices.first.colorPrice.first.price}",
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  color: KConstants.kPrimary100,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            /* Container(
-                                              height: 50,
-                                              width: 162,
-                                              decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        color: Colors.white,
-                                              ),
-                                              child: const Center(
-                        child: Text(
-                          "NameOfProduct",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                                              ),
-                                            ), */
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
+              children: (widget.isCategry
+                      ? snapshot.data!.docs
+                          .where((element) =>
+                              element.data().category.name == widget.category)
+                          .where((element) => element
+                              .data()
+                              .name
+                              .toLowerCase()
+                              .contains(search.text.toLowerCase()))
+                          .map((e) => e.data())
+                      : snapshot.data!.docs
+                          .where((element) => element
+                              .data()
+                              .name
+                              .toLowerCase()
+                              .contains(search.text.toLowerCase()))
+                          .map((e) => e.data()))
+                  .map((data) => ProductCard(data: data))
                   .toList(), /* (context, index) {
                 ProductModel data = snapshot.data.docs[index].data();
                 return GestureDetector(
