@@ -1,18 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fashion_customer/main.dart';
 import 'package:fashion_customer/model/user_model.dart';
 import 'package:fashion_customer/utils/spHelper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/widgets.dart';
 
 class UserController {
   SPHelper spHelper = SPHelper();
   late UserModel userModel;
-  Address? seletedAddress;
+  AddressModel? seletedAddress;
 
   void setEmptyUser() {
     userModel = UserModel(name: "", number: "", address: [], orderCount: 0);
   }
 
-  Future<void> addAddress(Address address) async {
+  Future<void> addAddress(AddressModel address) async {
     await FirebaseFirestore.instance
         .collection('users')
         .doc(userModel.number)
@@ -27,13 +29,21 @@ class UserController {
       String phone = user.phoneNumber!.substring(3);
       DocumentSnapshot<Map<String, dynamic>> snapshot =
           await FirebaseFirestore.instance.collection('users').doc(phone).get();
-      userModel = UserModel.fromMap(snapshot.data()!);
-      spHelper.setUser(userModel);
-      seletedAddress = await spHelper.getAddress();
+      bool exist = snapshot.exists;
+      if (exist) {
+        userModel = UserModel.fromMap(snapshot.data()!);
+        spHelper.setUser(userModel);
+        seletedAddress = await spHelper.getAddress();
+      } else {
+        FirebaseAuth.instance.signOut();
+        runApp(MyApp(
+          key: UniqueKey(),
+        ));
+      }
     }
   }
 
-  Future<void> setAddress(Address address) async {
+  Future<void> setAddress(AddressModel address) async {
     seletedAddress = address;
     spHelper.setAddress(address);
   }

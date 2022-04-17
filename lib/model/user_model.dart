@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 class UserModel {
   String name;
   String number;
-  List<Address> address;
+  List<AddressModel> address;
   int orderCount;
   UserModel({
     required this.name,
@@ -18,7 +18,7 @@ class UserModel {
   UserModel copyWith({
     String? name,
     String? number,
-    List<Address>? address,
+    List<AddressModel>? address,
     int? orderCount,
   }) {
     return UserModel
@@ -43,7 +43,7 @@ class UserModel {
     return UserModel(
       name: map['name'] ?? '',
       number: map['number'] ?? '',
-      address: List<Address>.from(map['address']?.map((x) => Address.fromMap(x))),
+      address: List<AddressModel>.from(map['address']?.map((x) => AddressModel.fromMap(x))),
       orderCount: map['orderCount'] ?? 0,
     );
   }
@@ -61,7 +61,7 @@ class UserModel {
     return UserModel(
       name: map['name'] ?? '',
       number: map['number'] ?? '',
-      address: List<Address>.from(map['address']?.map((x) => Address.fromSf(x))),
+      address: List<AddressModel>.from(map['address']?.map((x) => AddressModel.fromSf(x))),
       orderCount: map['orderCount'] ?? 0,
     );
   }
@@ -89,13 +89,13 @@ class UserModel {
   int get hashCode => name.hashCode ^ number.hashCode ^ address.hashCode;
 }
 
-class Address {
+class AddressModel {
   String type;
   String actualAddress;
   GeoPoint latlng;
   String landMark;
   String pinCode;
-  Address({
+  AddressModel({
     required this.type,
     required this.actualAddress,
     required this.latlng,
@@ -103,14 +103,14 @@ class Address {
     required this.pinCode,
   });
 
-  Address copyWith({
+  AddressModel copyWith({
     String? type,
     String? actualAddress,
     GeoPoint? latlng,
     String? landMark,
     String? pinCode,
   }) {
-    return Address(
+    return AddressModel(
       type: type ?? this.type,
       actualAddress: actualAddress ?? this.actualAddress,
       latlng: latlng ?? this.latlng,
@@ -139,8 +139,8 @@ class Address {
     };
   }
 
-  factory Address.fromMap(Map<String, dynamic> map) {
-    return Address(
+  factory AddressModel.fromMap(Map<String, dynamic> map) {
+    return AddressModel(
       type: map['type'] ?? '',
       actualAddress: map['actualAddress'] ?? '',
       latlng: map['latlng'],
@@ -149,8 +149,8 @@ class Address {
     );
   }
 
-  factory Address.fromSf(Map<String, dynamic> map) {
-    return Address(
+  factory AddressModel.fromSf(Map<String, dynamic> map) {
+    return AddressModel(
       type: map['type'] ?? '',
       actualAddress: map['actualAddress'] ?? '',
       latlng: GeoPoint(map['latlng']['lat'], map['latlng']['lng']),
@@ -161,8 +161,8 @@ class Address {
 
   String toJson() => json.encode(toSf());
 
-  factory Address.fromJson(String source) =>
-      Address.fromSf(json.decode(source));
+  factory AddressModel.fromJson(String source) =>
+      AddressModel.fromSf(json.decode(source));
 
   @override
   String toString() {
@@ -173,7 +173,7 @@ class Address {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is Address &&
+    return other is AddressModel &&
         other.type == type &&
         other.actualAddress == actualAddress &&
         other.latlng == latlng &&

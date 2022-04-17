@@ -41,7 +41,7 @@ class _SearchPageState extends State<SearchPage> {
             : IconButton(
                 icon: Image.asset("Icons/Arrow.png"),
                 onPressed: () {
-                  Navigator.of(context);
+                  Navigator.of(context).pop();
                 },
               ),
         actions: [
@@ -51,6 +51,9 @@ class _SearchPageState extends State<SearchPage> {
               color: Colors.white,
             ),
             onPressed: () {
+              if (widget.isCategry) {
+                Navigator.of(context).pop();
+              }
               widget.onChange(2);
             },
           ),

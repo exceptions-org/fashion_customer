@@ -146,51 +146,57 @@ class _HomePageState extends State<HomePage> {
                         .get(),
                     builder: (context, snapshot) {
                       if (snapshot.hasData && snapshot.data != null) {
-                        return Wrap(
-                          children: snapshot.data!.docs
-                              .map((e) => Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            CupertinoPageRoute(
-                                                builder: (context) =>
-                                                    SearchPage(
-                                                      onChange: (i) {},
-                                                      category: e
-                                                          .data()
-                                                          .category
-                                                          .name,
-                                                      isCategry: true,
-                                                    )));
-                                      },
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                            padding: EdgeInsets.all(10),
-                                            height: size.height * 0.065,
-                                            width: size.height * 0.065,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(4),
-                                              color: Colors.white,
-                                              border: Border.all(
-                                                color: KConstants.kPrimary100,
+                        return Container(
+                          width: size.width,
+                          child: Wrap(
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            alignment: WrapAlignment.spaceBetween,
+                            children: snapshot.data!.docs
+                                .map((e) => Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              CupertinoPageRoute(
+                                                  builder: (context) =>
+                                                      SearchPage(
+                                                        onChange:
+                                                            widget.onChange,
+                                                        category: e
+                                                            .data()
+                                                            .category
+                                                            .name,
+                                                        isCategry: true,
+                                                      )));
+                                        },
+                                        child: Column(
+                                          children: [
+                                            Container(
+                                              padding: EdgeInsets.all(10),
+                                              height: size.height * 0.065,
+                                              width: size.height * 0.065,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(4),
+                                                color: Colors.white,
+                                                border: Border.all(
+                                                  color: KConstants.kPrimary100,
+                                                ),
                                               ),
+                                              child: Image.network(
+                                                  e.data().category.imageUrl),
                                             ),
-                                            child: Image.network(
-                                                e.data().category.imageUrl),
-                                          ),
-                                          SizedBox(
-                                            height: 12,
-                                          ),
-                                          Text(e.data().category.name),
-                                        ],
+                                            SizedBox(
+                                              height: 12,
+                                            ),
+                                            Text(e.data().category.name),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ))
-                              .toList(),
+                                    ))
+                                .toList(),
+                          ),
                         );
                       }
                       return Container();

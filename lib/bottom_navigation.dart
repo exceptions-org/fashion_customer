@@ -22,7 +22,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
   ];
   int index = 0;
 
-  List get routes => [
+  List<Widget> get routes => [
         HomePage(onChange: onChange),
         SearchPage(onChange: onChange),
         Cartpage(
@@ -39,7 +39,9 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
   int k = 0;
 
-  void onChange(int i) async {
+  void onChange(int i) async {/* 
+    pageController.animateToPage(i,
+        duration: Duration(microseconds: 250), curve: Curves.easeIn); */
     switch (i) {
       case 0:
         setState(() {
@@ -105,6 +107,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
     this.index = i;
   }
 
+  final PageController pageController = PageController();
+
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
@@ -113,8 +117,6 @@ class _BottomNavigationState extends State<BottomNavigation> {
       rightPadding = size.width * 0.86;
       k++;
     }
-    //onChange(index);
-
     return WillPopScope(
       onWillPop: () async {
         if (index != 0) {
@@ -126,6 +128,11 @@ class _BottomNavigationState extends State<BottomNavigation> {
       child: Scaffold(
         backgroundColor: Color(0XFFFAFAFF),
         body: routes[index],
+        /* PageView(
+          controller: pageController,
+          onPageChanged: onChange,
+          children: routes,
+        ), */
         bottomNavigationBar: SizedBox(
           height: kBottomNavigationBarHeight * 1.3,
           width: size.width,
