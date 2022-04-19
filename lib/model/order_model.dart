@@ -18,7 +18,7 @@ class OrderModel {
   String orderId;
   OrderState orderState;
   Timestamp createdAt;
-  Address address;
+  AddressModel address;
   String userPhone;
   String userName;
   OrderModel({
@@ -44,7 +44,7 @@ class OrderModel {
     String? orderId,
     OrderState? orderState,
     Timestamp? createdAt,
-    Address? address,
+    AddressModel? address,
     String? userPhone,
     String? userName,
   }) {
@@ -90,7 +90,7 @@ class OrderModel {
       orderId: map['orderId'] ?? '',
       orderState: OrderState.values[map['orderState']],
       createdAt: map['createdAt'],
-      address: Address.fromMap(map['address']),
+      address: AddressModel.fromMap(map['address']),
       userPhone: map['userPhone'] ?? '',
       userName: map['userName'] ?? '',
     );

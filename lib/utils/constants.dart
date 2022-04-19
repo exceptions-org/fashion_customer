@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class KConstants {
   static const kPrimary100 = Color(0xff604FCD);
@@ -9,4 +10,12 @@ class KConstants {
   static const txtColor75 = Color(0xff4E4872);
   static const kBorderColor = Color(0xffC7D4EE);
   static const textColor50 = Color(0xff8985A1);
+  static const textColor25 = Color(0xffD7D3F3);
+
+  static const greenOrderState = Color(0xff058F13);
+
+  static BoxDecoration defContainerDec = BoxDecoration(
+    color: Colors.white,
+    border: Border.all(color: kBorderColor),
+  );
 }

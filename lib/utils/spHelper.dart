@@ -20,16 +20,16 @@ class SPHelper {
     return cart.map((e) => CartModel.fromJson(e)).toList();
   }
 
-  Future<void> setAddress(Address address) async {
+  Future<void> setAddress(AddressModel address) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(_address, address.toJson());
   }
 
-  Future<Address?> getAddress() async {
+  Future<AddressModel?> getAddress() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? address = prefs.getString(_address);
     if (address != null) {
-      return Address.fromJson(address);
+      return AddressModel.fromJson(address);
     }
     return null;
   }

@@ -2,8 +2,11 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fashion_customer/controller/controller.dart';
 import 'package:fashion_customer/main.dart';
+import 'package:fashion_customer/model/category_model.dart';
+import 'package:fashion_customer/utils/product_card.dart';
 import 'package:fashion_customer/utils/select_address_sheet.dart';
-import 'package:fashion_customer/views/product_details.dart';
+import 'package:fashion_customer/views/search_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'model/product_model.dart';
@@ -131,7 +134,74 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(
                   height: 12,
                 ),
-                SingleChildScrollView(
+                FutureBuilder<QuerySnapshot<FetchCategoryModel>>(
+                    future: FirebaseFirestore.instance
+                        .collection('admin')
+                        .doc('categories')
+                        .collection('categories')
+                        .withConverter(
+                            fromFirestore: (snapshot, options) =>
+                                FetchCategoryModel.fromMap(snapshot.data()!),
+                            toFirestore: (FetchCategoryModel v, s) => v.toMap())
+                        .get(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData && snapshot.data != null) {
+                        return Container(
+                          width: size.width,
+                          child: Wrap(
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            alignment: WrapAlignment.spaceBetween,
+                            children: snapshot.data!.docs
+                                .map((e) => Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              CupertinoPageRoute(
+                                                  builder: (context) =>
+                                                      SearchPage(
+                                                        onChange:
+                                                            widget.onChange,
+                                                        category: e
+                                                            .data()
+                                                            .category
+                                                            .name,
+                                                        isCategry: true,
+                                                      )));
+                                        },
+                                        child: Column(
+                                          children: [
+                                            Container(
+                                              padding: EdgeInsets.all(10),
+                                              height: size.height * 0.065,
+                                              width: size.height * 0.065,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(4),
+                                                color: Colors.white,
+                                                border: Border.all(
+                                                  color: KConstants.kPrimary100,
+                                                ),
+                                              ),
+                                              child: Image.network(
+                                                  e.data().category.imageUrl),
+                                            ),
+                                            SizedBox(
+                                              height: 12,
+                                            ),
+                                            Text(e.data().category.name),
+                                          ],
+                                        ),
+                                      ),
+                                    ))
+                                .toList(),
+                          ),
+                        );
+                      }
+                      return Container();
+                    }),
+                /*  SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Container(
                     height: 100,
@@ -164,7 +234,7 @@ class _HomePageState extends State<HomePage> {
                           .toList(),
                     ),
                   ),
-                ),
+                ), */
                 SizedBox(
                   height: 160,
                   child: PageView(
@@ -324,108 +394,7 @@ class _HomePageState extends State<HomePage> {
                           crossAxisCount: 2,
                           children: snapshot.data!.docs
                               .map((e) => e.data())
-                              .map(
-                                (data) => GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            ProductDetails(productModel: data),
-                                      ),
-                                    );
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      border: Border.all(
-                                        color: Colors.blueGrey.shade100,
-                                        // width: 1,
-                                      ),
-                                      // color: Colors.white,
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    margin: const EdgeInsets.all(10),
-                                    // padding: const EdgeInsets.all(8),
-                                    height: height * 0.25,
-
-                                    width: width * 0.4,
-                                    child: Column(
-                                      // mainAxisSize: MainAxisSize.max,
-                                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          height: height * 0.15,
-                                          width: 142,
-                                          // padding: const EdgeInsets.only(left: 10),
-                                          margin: const EdgeInsets.only(
-                                              top: 10, left: 15),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(4),
-                                            image: DecorationImage(
-                                              image: NetworkImage(data
-                                                  .images.first.images.first),
-                                              fit: BoxFit.contain,
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 15),
-                                          child: Text(
-                                            data.name,
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 15),
-                                          child: Text(
-                                            "Rs. ${data.prices.first.colorPrice.first.price}",
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              color: KConstants.kPrimary100,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                        /* Container(
-                                                height: 50,
-                                                width: 162,
-                                                decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            color: Colors.white,
-                                                ),
-                                                child: const Center(
-                            child: Text(
-                              "NameOfProduct",
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                                                ),
-                                              ), */
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              )
+                              .map((data) => ProductCard(data: data))
                               .toList(), /* (context, index) {
                   ProductModel data = snapshot.data.docs[index].data();
                   return GestureDetector(
