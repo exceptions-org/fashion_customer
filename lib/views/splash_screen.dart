@@ -1,12 +1,10 @@
 import 'package:after_layout/after_layout.dart';
 import 'package:fashion_customer/bottom_navigation.dart';
+import 'package:fashion_customer/controller/cart_controller.dart';
 import 'package:fashion_customer/controller/controller.dart';
 import 'package:fashion_customer/main.dart';
-import 'package:fashion_customer/model/cart_model.dart';
 import 'package:fashion_customer/startup_page.dart';
-import 'package:fashion_customer/utils/spHelper.dart';
 import 'package:fashion_customer/views/login_page.dart';
-import 'package:fashion_customer/views/product_details.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -51,10 +49,7 @@ class _SplashScreenState extends State<SplashScreen> with AfterLayoutMixin {
           CupertinoPageRoute(builder: (c) => StartupPage()), (route) => false);
     } else if (FirebaseAuth.instance.currentUser != null) {
       UserController controller = getIt<UserController>();
-      List<CartModel>? carts = await SPHelper().getCart();
-      if(carts!=null){
-        cartItems = carts;
-      }
+      getIt<CartController>().init();
       await controller.getUser();
       Navigator.pushAndRemoveUntil(
           context,

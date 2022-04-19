@@ -1,3 +1,5 @@
+import 'package:fashion_customer/controller/cart_controller.dart';
+import 'package:fashion_customer/main.dart';
 import 'package:fashion_customer/utils/constants.dart';
 import 'package:fashion_customer/views/checkout_page.dart';
 import 'package:fashion_customer/views/product_details.dart';
@@ -15,11 +17,11 @@ class Cartpage extends StatefulWidget {
 }
 
 class _CartpageState extends State<Cartpage> {
+  CartController cartController = getIt<CartController>();
+
   @override
   Widget build(BuildContext context) {
-    double totalAmount = cartItems.isNotEmpty
-        ? cartItems.map((e) => e.price).reduce((a, b) => a + b)
-        : 0;
+    double totalAmount = cartController.getTotal();
     return Scaffold(
       backgroundColor: Color(0xffFAFAFF),
       appBar: AppBar(
@@ -40,144 +42,107 @@ class _CartpageState extends State<Cartpage> {
       ),
       body: Column(
         children: [
-          if (cartItems.isNotEmpty)
-            ListView.builder(
+          if (cartController.cartItems.isNotEmpty)
+            ListView(
               shrinkWrap: true,
-              itemCount: cartItems.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Column(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(color: Color(0XFFC8D5EF))),
-                      //color: Colors.grey,
-                      width: double.infinity,
-                      //margin: EdgeInsets.only(top: 10, bottom: 10),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+              children: cartController.cartItems
+                  .map((e) => Column(
                         children: [
                           Container(
-                            margin: EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                                border: Border.all(color: Color(0xffC8DFEF))),
-                            height: 120,
-                            width: 140,
-                            // color: Colors.blue,
-                            child: Image.network(cartItems[index].image.first),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 10, left: 10, right: 10),
-                            child: Column(
+                                color: Colors.white,
+                                border: Border.all(color: Color(0XFFC8D5EF))),
+                            //color: Colors.grey,
+                            width: double.infinity,
+                            //margin: EdgeInsets.only(top: 10, bottom: 10),
+                            child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  cartItems[index].name,
-                                  style: TextStyle(fontSize: 18),
+                                Container(
+                                  margin: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                      border:
+                                          Border.all(color: Color(0xffC8DFEF))),
+                                  height: 120,
+                                  width: 140,
+                                  // color: Colors.blue,
+                                  child: Image.network(e.image.first),
                                 ),
-                                SizedBox(height: 8),
-                                Text(
-                                  "Price: ${cartItems[index].price}",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: KConstants.kPrimary100,
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 10, left: 10, right: 10),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        e.name,
+                                        style: TextStyle(fontSize: 18),
+                                      ),
+                                      SizedBox(height: 8),
+                                      Text(
+                                        "Price: ${e.price}",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: KConstants.kPrimary100,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
+                                Spacer(),
+                                Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10),
+                                    child: Column(
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            cartController.increment(
+                                                e.productId,
+                                                e.selectedSize,
+                                                e.color);
+                                            setState(() {});
+                                          },
+                                          child: Image.asset(
+                                            "Icons/add.png",
+                                            height: 25,
+                                            color: KConstants.kPrimary100,
+                                          ),
+                                        ),
+                                        SizedBox(height: 10),
+                                        Text(
+                                          "${e.quantity}",
+                                          style: TextStyle(fontSize: 18),
+                                        ),
+                                        // Text(cartController.cartItems[index].productId),
+                                        SizedBox(height: 10),
+                                        InkWell(
+                                          onTap: () {
+                                            cartController.increment(
+                                                e.productId,
+                                                e.selectedSize,
+                                                e.color);
+                                            setState(() {});
+                                          },
+                                          child: Image.asset(
+                                            "Icons/remove.png",
+                                            height: 25,
+                                            color: KConstants.kPrimary100,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )
                               ],
                             ),
                           ),
-                          Spacer(),
-                          Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: Padding(
-                              padding: const EdgeInsets.all(10),
-                              child: Column(
-                                children: [
-                                  InkWell(
-                                    onTap: () {
-                                      double singleProdPrice =
-                                          cartItems[index].price /
-                                              cartItems[index].quantity;
-
-                                      setState(() {
-                                        cartItems[index].quantity++;
-                                        cartItems[index]
-                                            .price = cartItems[index]
-                                                .price +
-                                            singleProdPrice; /* cartItems[index].price +
-                                          cartItems[index].price; */
-                                      });
-                                      SPHelper().setCart(cartItems);
-                                    },
-                                    child: Image.asset(
-                                      "Icons/add.png",
-                                      height: 25,
-                                      color: KConstants.kPrimary100,
-                                    ),
-                                  ),
-                                  SizedBox(height: 10),
-                                  Text(
-                                    "${cartItems[index].quantity}",
-                                    style: TextStyle(fontSize: 18),
-                                  ),
-                                  // Text(cartItems[index].productId),
-                                  SizedBox(height: 10),
-                                  InkWell(
-                                    onTap: () {
-                                      if (cartItems[index].quantity > 1) {
-                                        double singleProdPrice =
-                                            cartItems[index].price /
-                                                cartItems[index].quantity;
-                                        setState(() {
-                                          cartItems[index].quantity--;
-                                          cartItems[index].price =
-                                              cartItems[index].price -
-                                                  singleProdPrice;
-                                        });
-                                      } else {
-                                        cartItems.removeAt(index);
-                                        setState(() {});
-                                      }
-                                      SPHelper().setCart(cartItems);
-                                    },
-                                    child: Image.asset(
-                                      "Icons/remove.png",
-                                      height: 25,
-                                      color: KConstants.kPrimary100,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          )
+                          SizedBox(height: 10),
                         ],
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                  ],
-                )
-                    /* ListTile(  
-                  title: Text(cartItems[index].name),
-                  subtitle: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text("Price: ${cartItems[index].price}"),
-                      SizedBox(width: 20),
-                      Text("Quantity: ${cartItems[index].quantity}"),
-                      SizedBox(width: 20),
-                      IconButton(
-                          onPressed: () {
-                            cartItems.remove(cartItems[index]);
-                            setState(() {});
-                          },
-                          icon: Icon(Icons.delete))
-                    ],
-                  ),
-                  leading: Text(cartItems[index].productId),
-                ); */
-                    ;
-              },
+                      ))
+                  .toList(),
             )
           else
             Expanded(
@@ -217,7 +182,7 @@ class _CartpageState extends State<Cartpage> {
                   ),
                 )),
           Spacer(flex: 1),
-          if (cartItems.isNotEmpty)
+          if (cartController.cartItems.isNotEmpty)
             Container(
               height: 50,
               width: double.maxFinite,
@@ -228,7 +193,7 @@ class _CartpageState extends State<Cartpage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Total Price: ${cartItems.map((e) => e.price).reduce((a, b) => a + b)}",
+                      "Total Price: ${cartController.cartItems.map((e) => e.price).reduce((a, b) => a + b)}",
                       style: TextStyle(fontSize: 20, color: Colors.white),
                     ),
                     Container(

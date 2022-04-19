@@ -3,6 +3,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:fashion_customer/bottom_navigation.dart';
+import 'package:fashion_customer/controller/cart_controller.dart';
+import 'package:fashion_customer/main.dart';
 import 'package:fashion_customer/model/cart_model.dart';
 import 'package:fashion_customer/utils/constants.dart';
 import 'package:fashion_customer/utils/spHelper.dart';
@@ -13,8 +15,6 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../model/image_color_model.dart';
 import '../model/product_model.dart';
 import '../utils/product_card.dart';
-
-List<CartModel> cartItems = [];
 
 class ProductDetails extends StatefulWidget {
   final ProductModel productModel;
@@ -33,6 +33,9 @@ class ProductDetails extends StatefulWidget {
 
 class _ProductDetailsState extends State<ProductDetails> {
   late List<String> listOfImage = productModel.images.first.images;
+
+  CartController cartController = getIt<CartController>();
+
   String size = '';
   ProductModel get productModel => widget.productModel;
   late Color selectedColor = Color(productModel.images.first.colorCode);
@@ -81,11 +84,15 @@ class _ProductDetailsState extends State<ProductDetails> {
             child: FittedBox(
               child: AnimatedSwitcher(
                 duration: Duration(milliseconds: 200),
-                child: cartItems
-                        .any((element) => element.productId == productModel.id)
+                child: cartController.cartItems.any((element) =>
+                        element.productId == productModel.id &&
+                        element.color == selectedColor.value &&
+                        size == element.selectedSize)
                     ? FloatingActionButton.extended(
-                        key: ValueKey(cartItems.any(
-                            (element) => element.productId == productModel.id)),
+                        key: ValueKey(cartController.cartItems.any((element) =>
+                            element.productId == productModel.id &&
+                            element.color == selectedColor.value &&
+                            size == element.selectedSize)),
                         onPressed: () {},
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
@@ -95,31 +102,15 @@ class _ProductDetailsState extends State<ProductDetails> {
                           children: [
                             IconButton(
                                 onPressed: () {
-                                  int index = cartItems.indexOf(
-                                      cartItems.firstWhere((element) =>
-                                          element.productId ==
-                                          productModel.id));
-                                  if (cartItems[index].quantity > 1) {
-                                    double singleProdPrice =
-                                        cartItems[index].price /
-                                            cartItems[index].quantity;
-                                    setState(() {
-                                      cartItems[index].quantity--;
-                                      cartItems[index].price =
-                                          cartItems[index].price -
-                                              singleProdPrice;
-                                    });
-                                  } else {
-                                    cartItems.removeAt(index);
-                                    setState(() {});
-                                  }
-                                  SPHelper().setCart(cartItems);
+                                  cartController.decrement(productModel.id,
+                                      size, selectedColor.value);
+                                  setState(() {});
                                 },
                                 icon: Icon(Icons.remove, color: Colors.white)),
                             Text(
-                              cartItems
-                                  .firstWhere((element) =>
-                                      element.productId == productModel.id)
+                              cartController
+                                  .getCart(productModel.id, size,
+                                      selectedColor.value)
                                   .quantity
                                   .toString(),
                               style: TextStyle(
@@ -129,46 +120,33 @@ class _ProductDetailsState extends State<ProductDetails> {
                             ),
                             IconButton(
                                 onPressed: () {
-                                  int index = cartItems.indexOf(
-                                      cartItems.firstWhere((element) =>
-                                          element.productId ==
-                                          productModel.id));
-                                  double singleProdPrice =
-                                      cartItems[index].price /
-                                          cartItems[index].quantity;
-
-                                  setState(() {
-                                    cartItems[index].quantity++;
-                                    cartItems[index].price = cartItems[index]
-                                            .price +
-                                        singleProdPrice; /* cartItems[index].price +
-                                        cartItems[index].price; */
-                                  });
-                                  SPHelper().setCart(cartItems);
+                                  cartController.increment(productModel.id,
+                                      size, selectedColor.value);
+                                  setState(() {});
                                 },
                                 icon: Icon(Icons.add, color: Colors.white)),
                           ],
                         ),
                       )
                     : FloatingActionButton.extended(
-                        key: ValueKey(cartItems.any(
-                            (element) => element.productId == productModel.id)),
+                        key: ValueKey(cartController.cartItems.any((element) =>
+                            element.productId == productModel.id &&
+                            element.color == selectedColor.value &&
+                            size == element.selectedSize)),
                         onPressed: () {
                           if (sizes.isNotEmpty && size == '') {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 content: Text('Please select a size')));
                             return;
                           }
-                          cartItems.add(CartModel(
-                              image: listOfImage,
-                              name: productModel.name,
-                              price: double.parse(price),
-                              quantity: 1,
-                              productId: productModel.id,
-                              color: selectedColor.value,
-                              discountPrice: 100,
-                              selectedSize: size));
-                          SPHelper().setCart(cartItems);
+                          cartController.addToCart(
+                              productModel.id,
+                              size,
+                              selectedColor.value,
+                              listOfImage,
+                              productModel.name,
+                              price);
+                          SPHelper().setCart(cartController.cartItems);
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               duration: Duration(seconds: 1),
                               content: Text("Product added to the cart")));
@@ -193,7 +171,7 @@ class _ProductDetailsState extends State<ProductDetails> {
           /* Container(
             height: 70,
             width: width * 0.5,
-            child: cartItems
+            child: cartController.cartItems
                     .any((element) => element.productId == productModel.id)
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -201,26 +179,26 @@ class _ProductDetailsState extends State<ProductDetails> {
                     children: [
                       IconButton(
                           onPressed: () {
-                            int index = cartItems.indexOf(cartItems.firstWhere(
+                            int index = cartController.cartItems.indexOf(cartController.cartItems.firstWhere(
                                 (element) =>
                                     element.productId == productModel.id));
-                            if (cartItems[index].quantity > 1) {
-                              double singleProdPrice = cartItems[index].price /
-                                  cartItems[index].quantity;
+                            if (cartController.cartItems[index].quantity > 1) {
+                              double singleProdPrice = cartController.cartItems[index].price /
+                                  cartController.cartItems[index].quantity;
                               setState(() {
-                                cartItems[index].quantity--;
-                                cartItems[index].price =
-                                    cartItems[index].price - singleProdPrice;
+                                cartController.cartItems[index].quantity--;
+                                cartController.cartItems[index].price =
+                                    cartController.cartItems[index].price - singleProdPrice;
                               });
                             } else {
-                              cartItems.removeAt(index);
+                              cartController.cartItems.removeAt(index);
                               setState(() {});
                             }
-                            SPHelper().setCart(cartItems);
+                            SPHelper().setCart(cartController.cartItems);
                           },
                           icon: Icon(Icons.remove, color: Colors.white)),
                       Text(
-                        cartItems
+                        cartController.cartItems
                             .firstWhere(
                                 (element) => element.productId == productModel.id)
                             .quantity
@@ -232,19 +210,19 @@ class _ProductDetailsState extends State<ProductDetails> {
                       ),
                       IconButton(
                           onPressed: () {
-                            int index = cartItems.indexOf(cartItems.firstWhere(
+                            int index = cartController.cartItems.indexOf(cartController.cartItems.firstWhere(
                                 (element) =>
                                     element.productId == productModel.id));
-                            double singleProdPrice = cartItems[index].price /
-                                cartItems[index].quantity;
+                            double singleProdPrice = cartController.cartItems[index].price /
+                                cartController.cartItems[index].quantity;
     
                             setState(() {
-                              cartItems[index].quantity++;
-                              cartItems[index].price = cartItems[index].price +
-                                  singleProdPrice; /* cartItems[index].price +
-                                    cartItems[index].price; */
+                              cartController.cartItems[index].quantity++;
+                              cartController.cartItems[index].price = cartController.cartItems[index].price +
+                                  singleProdPrice; /* cartController.cartItems[index].price +
+                                    cartController.cartItems[index].price; */
                             });
-                            SPHelper().setCart(cartItems);
+                            SPHelper().setCart(cartController.cartItems);
                           },
                           icon: Icon(Icons.add, color: Colors.white)),
                     ],
@@ -256,7 +234,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                             SnackBar(content: Text('Please select a size')));
                         return;
                       }
-                      cartItems.add(CartModel(
+                      cartController.cartItems.add(CartModel(
                           image: listOfImage,
                           name: productModel.name,
                           price: double.parse(price),
@@ -265,7 +243,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                           color: selectedColor.value,
                           discountPrice: 100,
                           selectedSize: size));
-                      SPHelper().setCart(cartItems);
+                      SPHelper().setCart(cartController.cartItems);
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           duration: Duration(seconds: 1),
                           content: Text("Product added to the cart")));

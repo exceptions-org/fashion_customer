@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:fashion_customer/bottom_navigation.dart';
+import 'package:fashion_customer/controller/cart_controller.dart';
 import 'package:fashion_customer/controller/controller.dart';
 import 'package:fashion_customer/main.dart';
 import 'package:fashion_customer/model/order_model.dart';
@@ -30,8 +31,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
     border: Border.all(color: KConstants.kBorderColor),
   );
 
+  CartController cartController = getIt<CartController>();
+
   late OrderModel orderModel = OrderModel(
-    products: cartItems,
+    products: cartController.cartItems,
     orderDocId: '',
     address: controller.seletedAddress ?? controller.userModel.address.first,
     userName: controller.userModel.name,
@@ -168,7 +171,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           .add({});
                       await ref.update(orderModel
                           .copyWith(
-                            products: cartItems,
+                            products: cartController.cartItems,
                             orderDocId: ref.id,
                             address: controller.seletedAddress ??
                                 controller.userModel.address.first,
@@ -183,7 +186,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           )
                           .toMap());
                       Navigator.pop(context);
-                      cartItems.clear();
+                      cartController.cartItems.clear();
                       setState(() {
                         orderPlaced = true;
                       });
@@ -240,7 +243,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
           children: [
             if (!orderPlaced)
               ListView.builder(
-                itemCount: cartItems.length,
+                itemCount: cartController.cartItems.length,
                 shrinkWrap: true,
                 itemBuilder: (BuildContext context, int index) {
                   return Column(
@@ -266,7 +269,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                 ),
                               ),
                               child: Image.network(
-                                cartItems[index].image.first,
+                                cartController.cartItems[index].image.first,
                                 fit: BoxFit.contain,
                               ),
                             ),
@@ -277,24 +280,24 @@ class _CheckoutPageState extends State<CheckoutPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  cartItems[index].name,
+                                  cartController.cartItems[index].name,
                                   style: TextStyle(fontSize: 18),
                                 ),
                                 SizedBox(
                                   height: 4.0,
                                 ),
                                 Text(
-                                  "Price: ${cartItems[index].price}",
+                                  "Price: ${cartController.cartItems[index].price}",
                                   style: TextStyle(
                                       color: Color(0xff604FCC),
                                       fontWeight: FontWeight.bold),
                                 ),
-                                if (cartItems[index].selectedSize != '') ...[
+                                if (cartController.cartItems[index].selectedSize != '') ...[
                                   SizedBox(
                                     height: 4.0,
                                   ),
                                   Text(
-                                    "Selected Size: ${cartItems[index].selectedSize}",
+                                    "Selected Size: ${cartController.cartItems[index].selectedSize}",
                                     style: TextStyle(
                                         color: Color(0xff604FCC),
                                         fontWeight: FontWeight.bold),
