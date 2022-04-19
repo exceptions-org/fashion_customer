@@ -9,7 +9,8 @@ class UserController {
   Address? seletedAddress;
 
   void setEmptyUser() {
-    userModel = UserModel(name: "", number: "", address: [], orderCount: 0);
+    UserModel userModel =
+        UserModel(name: "", number: "", address: [], orderCount: 0);
   }
 
   Future<void> addAddress(Address address) async {
