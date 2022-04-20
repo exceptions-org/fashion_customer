@@ -10,17 +10,21 @@ import 'package:fashion_customer/model/user_model.dart';
 enum OrderState { placed, confirmed, outForDelivery, delivered, cancel }
 
 class OrderModel {
-  String orderDocId;
-  List<CartModel> products;
-  double totalPrice;
-  Timestamp deliveryDate;
-  double totalDiscountPrice;
-  String orderId;
-  OrderState orderState;
-  Timestamp createdAt;
-  AddressModel address;
-  String userPhone;
-  String userName;
+  final String orderDocId;
+  final List<CartModel> products;
+  final double totalPrice;
+  final Timestamp deliveryDate;
+  final double totalDiscountPrice;
+  final String orderId;
+  final OrderState orderState;
+  final Timestamp createdAt;
+  final AddressModel address;
+  final String userPhone;
+  final String userName;
+  final String pushToken;
+  final Timestamp deliveredDate;
+  final bool cancelledByUser;
+  final String cancellationReason;
   OrderModel({
     required this.orderDocId,
     required this.products,
@@ -33,6 +37,10 @@ class OrderModel {
     required this.address,
     required this.userPhone,
     required this.userName,
+    required this.pushToken,
+    required this.deliveredDate,
+    required this.cancelledByUser,
+    required this.cancellationReason,
   });
 
   OrderModel copyWith({
@@ -47,6 +55,10 @@ class OrderModel {
     AddressModel? address,
     String? userPhone,
     String? userName,
+    String? pushToken,
+    Timestamp? deliveredDate,
+    bool? cancelledByUser,
+    String? cancellationReason,
   }) {
     return OrderModel(
       orderDocId: orderDocId ?? this.orderDocId,
@@ -60,6 +72,10 @@ class OrderModel {
       address: address ?? this.address,
       userPhone: userPhone ?? this.userPhone,
       userName: userName ?? this.userName,
+      pushToken: pushToken ?? this.pushToken,
+      deliveredDate: deliveredDate ?? this.deliveredDate,
+      cancelledByUser: cancelledByUser ?? this.cancelledByUser,
+      cancellationReason: cancellationReason ?? this.cancellationReason,
     );
   }
 
@@ -76,6 +92,10 @@ class OrderModel {
       'address': address.toMap(),
       'userPhone': userPhone,
       'userName': userName,
+      'pushToken': pushToken,
+      'deliveredDate': deliveredDate,
+      'cancelledByUser': cancelledByUser,
+      'cancellationReason': cancellationReason,
     };
   }
 
@@ -93,6 +113,10 @@ class OrderModel {
       address: AddressModel.fromMap(map['address']),
       userPhone: map['userPhone'] ?? '',
       userName: map['userName'] ?? '',
+      pushToken: map['pushToken'] ?? '',
+      deliveredDate: map['deliveredDate'],
+      cancelledByUser: map['cancelledByUser'] ?? false,
+      cancellationReason: map['cancellationReason'] ?? '',
     );
   }
 
@@ -103,7 +127,7 @@ class OrderModel {
 
   @override
   String toString() {
-    return 'OrderModel(orderDocId: $orderDocId, products: $products, totalPrice: $totalPrice, deliveryDate: $deliveryDate, totalDiscountPrice: $totalDiscountPrice, orderId: $orderId, orderState: $orderState, createdAt: $createdAt, address: $address, userPhone: $userPhone, userName: $userName)';
+    return 'OrderModel(orderDocId: $orderDocId, products: $products, totalPrice: $totalPrice, deliveryDate: $deliveryDate, totalDiscountPrice: $totalDiscountPrice, orderId: $orderId, orderState: $orderState, createdAt: $createdAt, address: $address, userPhone: $userPhone, userName: $userName, pushToken: $pushToken, deliveredDate: $deliveredDate, cancelledByUser: $cancelledByUser, cancellationReason: $cancellationReason)';
   }
 
   @override
@@ -121,7 +145,11 @@ class OrderModel {
         other.createdAt == createdAt &&
         other.address == address &&
         other.userPhone == userPhone &&
-        other.userName == userName;
+        other.userName == userName &&
+        other.pushToken == pushToken &&
+        other.deliveredDate == deliveredDate &&
+        other.cancelledByUser == cancelledByUser &&
+        other.cancellationReason == cancellationReason;
   }
 
   @override
@@ -136,6 +164,10 @@ class OrderModel {
         createdAt.hashCode ^
         address.hashCode ^
         userPhone.hashCode ^
-        userName.hashCode;
+        userName.hashCode ^
+        pushToken.hashCode ^
+        deliveredDate.hashCode ^
+        cancelledByUser.hashCode ^
+        cancellationReason.hashCode;
   }
 }

@@ -8,7 +8,7 @@ import 'package:fashion_customer/model/order_model.dart';
 import 'package:fashion_customer/utils/constants.dart';
 import 'package:fashion_customer/utils/product_card.dart';
 import 'package:fashion_customer/utils/select_address_sheet.dart';
-import 'package:fashion_customer/views/product_details.dart';
+import 'package:fashion_customer/utils/spHelper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -34,18 +34,21 @@ class _CheckoutPageState extends State<CheckoutPage> {
   CartController cartController = getIt<CartController>();
 
   late OrderModel orderModel = OrderModel(
-    products: cartController.cartItems,
-    orderDocId: '',
-    address: controller.seletedAddress ?? controller.userModel.address.first,
-    userName: controller.userModel.name,
-    userPhone: controller.userModel.number,
-    totalPrice: widget.totalAmount,
-    deliveryDate: Timestamp.now(),
-    totalDiscountPrice: 0,
-    orderId: '',
-    orderState: OrderState.placed,
-    createdAt: Timestamp.now(),
-  );
+      deliveredDate: Timestamp.now(),
+      products: cartController.cartItems,
+      pushToken: controller.userModel.pushToken,
+      orderDocId: '',
+      address: controller.seletedAddress ?? controller.userModel.address.first,
+      userName: controller.userModel.name,
+      userPhone: controller.userModel.number,
+      totalPrice: widget.totalAmount,
+      deliveryDate: Timestamp.now(),
+      totalDiscountPrice: 0,
+      orderId: '',
+      orderState: OrderState.placed,
+      createdAt: Timestamp.now(),
+      cancellationReason: '',
+      cancelledByUser: false);
 
   @override
   Widget build(BuildContext context) {
@@ -185,8 +188,17 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             createdAt: Timestamp.now(),
                           )
                           .toMap());
+                      List<String>? tokens = await SPHelper().getAdminToken();
+
+                      if (tokens != null) {
+                        for (var token in tokens) {
+                          KConstants.sendFCMMessage(
+                              'New Order', 'New Order Received', token);
+                        }
+                      }
+
                       Navigator.pop(context);
-                      cartController.cartItems.clear();
+                      cartController.clearCart();
                       setState(() {
                         orderPlaced = true;
                       });
@@ -292,7 +304,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                       color: Color(0xff604FCC),
                                       fontWeight: FontWeight.bold),
                                 ),
-                                if (cartController.cartItems[index].selectedSize != '') ...[
+                                if (cartController
+                                        .cartItems[index].selectedSize !=
+                                    '') ...[
                                   SizedBox(
                                     height: 4.0,
                                   ),

@@ -4,6 +4,7 @@ import 'package:fashion_customer/controller/cart_controller.dart';
 import 'package:fashion_customer/controller/controller.dart';
 import 'package:fashion_customer/main.dart';
 import 'package:fashion_customer/startup_page.dart';
+import 'package:fashion_customer/utils/fcm_service.dart';
 import 'package:fashion_customer/views/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -41,6 +42,8 @@ class _SplashScreenState extends State<SplashScreen> with AfterLayoutMixin {
 
   @override
   void afterFirstLayout(BuildContext context) async {
+    UserController controller = getIt<UserController>();
+    controller.setEmptyUser();
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     bool? isfirst = sharedPreferences.getBool("first");
     await Future.delayed(Duration(seconds: 2));
@@ -48,9 +51,10 @@ class _SplashScreenState extends State<SplashScreen> with AfterLayoutMixin {
       Navigator.pushAndRemoveUntil(context,
           CupertinoPageRoute(builder: (c) => StartupPage()), (route) => false);
     } else if (FirebaseAuth.instance.currentUser != null) {
-      UserController controller = getIt<UserController>();
+      FirebaseMessagingService();
       getIt<CartController>().init();
       await controller.getUser();
+      controller.saveAdminToken();
       Navigator.pushAndRemoveUntil(
           context,
           CupertinoPageRoute(builder: (c) => BottomNavigation()),

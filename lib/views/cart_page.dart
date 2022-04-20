@@ -2,11 +2,8 @@ import 'package:fashion_customer/controller/cart_controller.dart';
 import 'package:fashion_customer/main.dart';
 import 'package:fashion_customer/utils/constants.dart';
 import 'package:fashion_customer/views/checkout_page.dart';
-import 'package:fashion_customer/views/product_details.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../utils/spHelper.dart';
 
 class Cartpage extends StatefulWidget {
   final Function(int) onChange;
@@ -86,6 +83,30 @@ class _CartpageState extends State<Cartpage> {
                                           fontSize: 14,
                                           color: KConstants.kPrimary100,
                                         ),
+                                      ),
+                                      SizedBox(height: 8),
+                                      Text(
+                                        "Size: ${e.selectedSize}",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: KConstants.kPrimary100,
+                                        ),
+                                      ),
+                                      SizedBox(height: 8),
+                                      Text.rich(
+                                        TextSpan(
+                                            text: 'Color: ',
+                                            children: [
+                                              TextSpan(
+                                                text: e.colorName,
+                                                style: TextStyle(
+                                                    color: Color(e.color)),
+                                              ),
+                                            ],
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: KConstants.kPrimary100,
+                                            )),
                                       ),
                                     ],
                                   ),

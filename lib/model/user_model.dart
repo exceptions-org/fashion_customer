@@ -8,11 +8,13 @@ class UserModel {
   String number;
   List<AddressModel> address;
   int orderCount;
+  String pushToken;
   UserModel({
     required this.name,
     required this.number,
     required this.address,
     required this.orderCount,
+    required this.pushToken
   });
 
   UserModel copyWith({
@@ -21,9 +23,9 @@ class UserModel {
     List<AddressModel>? address,
     int? orderCount,
   }) {
-    return UserModel
-    (
-    orderCount: orderCount ?? this.orderCount,
+    return UserModel(
+      pushToken: pushToken,
+      orderCount: orderCount ?? this.orderCount,
       name: name ?? this.name,
       number: number ?? this.number,
       address: address ?? this.address,
@@ -34,8 +36,10 @@ class UserModel {
     return {
       'name': name,
       'number': number,
+
       'orderCount': orderCount,
       'address': address.map((x) => x.toMap()).toList(),
+      'pushToken': pushToken,
     };
   }
 
@@ -43,8 +47,10 @@ class UserModel {
     return UserModel(
       name: map['name'] ?? '',
       number: map['number'] ?? '',
-      address: List<AddressModel>.from(map['address']?.map((x) => AddressModel.fromMap(x))),
+      address: List<AddressModel>.from(
+          map['address']?.map((x) => AddressModel.fromMap(x))),
       orderCount: map['orderCount'] ?? 0,
+      pushToken: map['pushToken'] ?? '',
     );
   }
 
@@ -53,7 +59,8 @@ class UserModel {
       'name': name,
       'number': number,
       'address': address.map((x) => x.toSf()).toList(),
-        'orderCount': orderCount,
+      'orderCount': orderCount,
+      'pushToken': pushToken,
     };
   }
 
@@ -61,8 +68,10 @@ class UserModel {
     return UserModel(
       name: map['name'] ?? '',
       number: map['number'] ?? '',
-      address: List<AddressModel>.from(map['address']?.map((x) => AddressModel.fromSf(x))),
+      address: List<AddressModel>.from(
+          map['address']?.map((x) => AddressModel.fromSf(x))),
       orderCount: map['orderCount'] ?? 0,
+      pushToken: map['pushToken'] ?? '',
     );
   }
 

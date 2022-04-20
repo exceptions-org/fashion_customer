@@ -345,6 +345,7 @@ class _SignupPage2State extends State<SignupPage2> {
         orderCount: 0,
         name: name.text,
         number: widget.number,
+        pushToken: '',
         address: [
           AddressModel(
               type: '',

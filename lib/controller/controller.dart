@@ -11,8 +11,8 @@ class UserController {
   AddressModel? seletedAddress;
 
   void setEmptyUser() {
-    UserModel userModel =
-        UserModel(name: "", number: "", address: [], orderCount: 0);
+    userModel = UserModel(
+        name: "", number: "", address: [], orderCount: 0, pushToken: '');
   }
 
   Future<void> addAddress(AddressModel address) async {
@@ -22,6 +22,21 @@ class UserController {
         .update({
       'address': FieldValue.arrayUnion([address.toMap()])
     });
+  }
+
+  Future<void> saveAdminToken() async {
+    DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
+        .instance
+        .collection('admin')
+        .doc('tokens')
+        .get();
+    if (snapshot.exists && snapshot.data() != null) {
+      List<dynamic>? data = snapshot.data()?['pushToken'];
+      if (data != null) {
+        List<String>? tokens = List.from(data);
+        spHelper.setAdminToken(tokens);
+      }
+    }
   }
 
   Future<void> getUser() async {

@@ -1,7 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 import 'package:fashion_customer/controller/controller.dart';
 import 'package:fashion_customer/main.dart';
+import 'package:fashion_customer/model/user_model.dart';
 import 'package:fashion_customer/views/add_address.dart';
 import 'package:fashion_customer/views/login_page.dart';
 import 'package:fashion_customer/views/view_order.dart';
@@ -9,7 +11,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'model/user_model.dart';
 import 'utils/constants.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -199,10 +200,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   title: Text("User Address"),
                   expandedCrossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ...controller.userModel.address.map(
-                      (e) => InkWell(
+                    ...controller.userModel.address.mapIndexed(
+                      (i, e) => InkWell(
                         onTap: () async {
                           await controller.setAddress(e);
+                          setState(() {});
                         },
                         child: Container(
                           padding:
@@ -223,11 +225,51 @@ class _ProfilePageState extends State<ProfilePage> {
                                 width: 20,
                               ),
                               IconButton(
-                                  onPressed: () {},
+                                onPressed: () {
+                                  showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      isDismissible: false,
+                                      context: context,
+                                      builder: (c) {
+                                        return AddAdress(
+                                          addressModel: e,
+                                          editIndex: i,
+                                          isEdit: true,
+                                          onTap: () {
+                                            setState(() {});
+                                          },
+                                        );
+                                      });
+                                },
+                                icon: Icon(
+                                  Icons.edit,
+                                  size: 18,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              if (controller.userModel.address.length > 1)
+                                IconButton(
+                                  onPressed: () async {
+                                    List<AddressModel> list =
+                                        controller.userModel.address;
+                                    list.removeAt(i);
+                                    await FirebaseFirestore.instance
+                                        .collection('users')
+                                        .doc(controller.userModel.number)
+                                        .update({
+                                      'address':
+                                          list.map((e) => e.toMap()).toList()
+                                    });
+                                    await controller.getUser();
+                                    setState(() {});
+                                  },
                                   icon: Icon(
-                                    Icons.edit,
+                                    Icons.delete,
                                     size: 18,
-                                  ))
+                                  ),
+                                )
                             ],
                           ),
                         ),
@@ -244,7 +286,12 @@ class _ProfilePageState extends State<ProfilePage> {
                               isDismissible: false,
                               context: context,
                               builder: (c) {
-                                return AddAdress();
+                                return AddAdress(
+                                  isEdit: false,
+                                  onTap: () {
+                                    setState(() {});
+                                  },
+                                );
                               });
                         },
                         label: Text("Add New Address"),

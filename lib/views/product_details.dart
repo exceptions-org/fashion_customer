@@ -5,7 +5,6 @@ import 'package:collection/collection.dart';
 import 'package:fashion_customer/bottom_navigation.dart';
 import 'package:fashion_customer/controller/cart_controller.dart';
 import 'package:fashion_customer/main.dart';
-import 'package:fashion_customer/model/cart_model.dart';
 import 'package:fashion_customer/utils/constants.dart';
 import 'package:fashion_customer/utils/spHelper.dart';
 import 'package:flutter/cupertino.dart';
@@ -145,7 +144,11 @@ class _ProductDetailsState extends State<ProductDetails> {
                               selectedColor.value,
                               listOfImage,
                               productModel.name,
-                              price);
+                              price,
+                              widget.productModel.images
+                                  .firstWhere((element) =>
+                                      element.colorCode == selectedColor.value)
+                                  .colorName);
                           SPHelper().setCart(cartController.cartItems);
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               duration: Duration(seconds: 1),
@@ -446,18 +449,28 @@ class _ProductDetailsState extends State<ProductDetails> {
                                         size = e;
                                       });
                                     },
-                                    child: Container(
+                                    child: AnimatedContainer(
+                                      duration: Duration(milliseconds: 200),
                                       margin: EdgeInsets.all(4),
                                       padding: EdgeInsets.all(12),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
+                                        color: size == e
+                                            ? KConstants.kPrimary100
+                                            : Colors.white,
                                         border: Border.all(
-                                            color: size == e
-                                                ? KConstants.kPrimary100
-                                                : Colors.grey.shade600),
+                                          color: size == e
+                                              ? KConstants.kPrimary100
+                                              : Colors.grey.shade600,
+                                        ),
                                       ),
                                       child: Text(e,
-                                          style: TextStyle(fontSize: 20)),
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            color: size == e
+                                                ? KConstants.textColor25
+                                                : Colors.grey.shade600,
+                                          )),
                                     ),
                                   ))
                               .toList(),

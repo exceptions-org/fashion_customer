@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fashion_customer/model/order_model.dart';
 import 'package:fashion_customer/utils/constants.dart';
@@ -25,167 +27,166 @@ class _ViewOrdersState extends State<ViewOrders>
     super.initState();
   }
 
-  PageController pageController = PageController(initialPage: 0);
-
   OrderModel? orderModel;
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        if (pageController.page == 1) {
-          pageController.animateToPage(0,
-              duration: Duration(milliseconds: 300), curve: Curves.ease);
-          return false;
-        }
-        return true;
-      },
-      child: Scaffold(
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            elevation: 1,
-            backgroundColor: Colors.white,
-            title: Text(
-              'Your Orders',
-              style: GoogleFonts.montserratAlternates(
-                  color: KConstants.kPrimary100),
-            ),
-            leading: IconButton(
-              icon: Image.asset(
-                "Icons/Arrow.png",
-                color: KConstants.kPrimary100,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            centerTitle: true,
-            bottom: TabBar(
-              indicatorColor: Colors.transparent,
-              indicator: BoxDecoration(
-                color: Colors.transparent,
-              ),
-              indicatorWeight: 0,
-              labelPadding: EdgeInsets.zero,
-              indicatorPadding: EdgeInsets.zero,
-              indicatorSize: TabBarIndicatorSize.tab,
-              tabs: [
-                AnimatedContainer(
-                  duration: Duration(milliseconds: 300),
-                  width: double.infinity,
-                  color: KConstants.textColor25,
-                  alignment: Alignment.center,
-                  height: kTextTabBarHeight,
-                  child: Text(
-                    'Ongoing',
-                    style: GoogleFonts.montserrat(
-                        color: _tabController.index == 0
-                            ? KConstants.kPrimary100
-                            : KConstants.kPrimary75,
-                        fontWeight: _tabController.index == 0
-                            ? FontWeight.bold
-                            : FontWeight.normal),
-                  ),
-                ),
-                AnimatedContainer(
-                  duration: Duration(milliseconds: 300),
-                  width: double.infinity,
-                  color: KConstants.textColor25,
-                  alignment: Alignment.center,
-                  height: kTextTabBarHeight,
-                  child: Text(
-                    'Completed',
-                    style: GoogleFonts.montserrat(
-                        color: _tabController.index == 1
-                            ? KConstants.kPrimary100
-                            : KConstants.kPrimary75,
-                        fontWeight: _tabController.index == 1
-                            ? FontWeight.bold
-                            : FontWeight.normal),
-                  ),
-                ),
-              ],
-              controller: _tabController,
-            ),
+    return Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          elevation: 1,
+          backgroundColor: Colors.white,
+          title: Text(
+            'Your Orders',
+            style:
+                GoogleFonts.montserratAlternates(color: KConstants.kPrimary100),
           ),
-          body: StreamBuilder<QuerySnapshot<OrderModel>>(
-            stream: FirebaseFirestore.instance
-                .collection('orders')
-                .where('userPhone', isEqualTo: widget.userPhone)
-                .orderBy('createdAt', descending: true)
-                .withConverter(
-                    fromFirestore: (snapshot, options) =>
-                        OrderModel.fromMap(snapshot.data()!),
-                    toFirestore: (OrderModel document, options) =>
-                        document.toMap())
-                .snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Center(
-                  child: Text('Error: ${snapshot.error}'),
-                );
-              }
-              if (!snapshot.hasData) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              return TabBarView(
-                physics: NeverScrollableScrollPhysics(),
-                controller: _tabController,
-                children: [
-                  PageView(
-                    allowImplicitScrolling: false,
-                    controller: pageController,
-                    physics: NeverScrollableScrollPhysics(),
-                    children: [
-                      ListView(
-                        shrinkWrap: true,
-                        children: snapshot.data!.docs
-                            .where((element) =>
-                                element.data().orderState !=
-                                    OrderState.delivered &&
-                                element.data().orderState != OrderState.cancel)
-                            .map((element) => OrderCard(
-                                  order: element.data(),
-                                  viewDetails: (order) {
-                                    setState(() {
-                                      orderModel = order;
-                                    });
-                                    pageController.animateToPage(1,
-                                        duration: Duration(milliseconds: 300),
-                                        curve: Curves.easeIn);
-                                  },
-                                ))
-                            .toList(),
-                      ),
-                      if (orderModel != null)
-                        OrderDetails(
-                          order: orderModel!,
-                          goBack: () {
-                            pageController.jumpToPage(0);
-                          },
-                        )
-                    ],
-                  ),
+          leading: IconButton(
+            icon: Image.asset(
+              "Icons/Arrow.png",
+              color: KConstants.kPrimary100,
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          centerTitle: true,
+          bottom: TabBar(
+            indicatorColor: Colors.transparent,
+            indicator: BoxDecoration(
+              color: Colors.transparent,
+            ),
+            indicatorWeight: 0,
+            labelPadding: EdgeInsets.zero,
+            indicatorPadding: EdgeInsets.zero,
+            indicatorSize: TabBarIndicatorSize.tab,
+            tabs: [
+              AnimatedContainer(
+                duration: Duration(milliseconds: 300),
+                width: double.infinity,
+                color: KConstants.textColor25,
+                alignment: Alignment.center,
+                height: kTextTabBarHeight,
+                child: Text(
+                  'Ongoing',
+                  style: GoogleFonts.montserrat(
+                      color: _tabController.index == 0
+                          ? KConstants.kPrimary100
+                          : KConstants.kPrimary75,
+                      fontWeight: _tabController.index == 0
+                          ? FontWeight.bold
+                          : FontWeight.normal),
+                ),
+              ),
+              AnimatedContainer(
+                duration: Duration(milliseconds: 300),
+                width: double.infinity,
+                color: KConstants.textColor25,
+                alignment: Alignment.center,
+                height: kTextTabBarHeight,
+                child: Text(
+                  'Completed',
+                  style: GoogleFonts.montserrat(
+                      color: _tabController.index == 1
+                          ? KConstants.kPrimary100
+                          : KConstants.kPrimary75,
+                      fontWeight: _tabController.index == 1
+                          ? FontWeight.bold
+                          : FontWeight.normal),
+                ),
+              ),
+            ],
+            controller: _tabController,
+          ),
+        ),
+        body: StreamBuilder<QuerySnapshot<OrderModel>>(
+          stream: FirebaseFirestore.instance
+              .collection('orders')
+              .where('userPhone', isEqualTo: widget.userPhone)
+              .orderBy('createdAt', descending: true)
+              .withConverter(
+                  fromFirestore: (snapshot, options) =>
+                      OrderModel.fromMap(snapshot.data()!),
+                  toFirestore: (OrderModel document, options) =>
+                      document.toMap())
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Center(
+                child: Text('Error: ${snapshot.error}'),
+              );
+            }
+            if (!snapshot.hasData) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (snapshot.data!.docs.isEmpty) {
+              return Center(
+                child: Text('No Orders Yet'),
+              );
+            }
+            List<OrderModel> ongoing = snapshot.data!.docs
+                .where((element) =>
+                    element.data().orderState != OrderState.delivered &&
+                    element.data().orderState != OrderState.cancel)
+                .map((e) => e.data())
+                .toList();
+            List<OrderModel> completed = snapshot.data!.docs
+                .where((element) =>
+                    element.data().orderState == OrderState.delivered ||
+                    element.data().orderState == OrderState.cancel)
+                .map((e) => e.data())
+                .toList();
+            return TabBarView(
+              physics: NeverScrollableScrollPhysics(),
+              controller: _tabController,
+              children: [
+                if (ongoing.isEmpty)
+                  Center(
+                    child: Text('No Orders Yet'),
+                  )
+                else
                   ListView(
                     shrinkWrap: true,
-                    children: snapshot.data!.docs
-                        .where((element) =>
-                            element.data().orderState == OrderState.delivered ||
-                            element.data().orderState == OrderState.cancel)
+                    children: ongoing
                         .map((element) => OrderCard(
-                              order: element.data(),
+                              order: element,
                               viewDetails: (order) {
-                                orderModel = order;
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        OrderDetails(order: order),
+                                  ),
+                                );
+                              },
+                            ))
+                        .toList(),
+                  ),
+                if (completed.isEmpty)
+                  Center(
+                    child: Text('No Orders Yet'),
+                  )
+                else
+                  ListView(
+                    shrinkWrap: true,
+                    children: completed
+                        .map((element) => OrderCard(
+                              order: element,
+                              viewDetails: (order) {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        OrderDetails(order: order),
+                                  ),
+                                );
                               },
                             ))
                         .toList(),
                   )
-                ],
-              );
-            },
-          )),
-    );
+              ],
+            );
+          },
+        ));
   }
 }
 
@@ -219,8 +220,9 @@ class OrderCard extends StatelessWidget {
       case OrderState.confirmed:
       case OrderState.outForDelivery:
       case OrderState.delivered:
-      case OrderState.cancel:
         return KConstants.greenOrderState;
+      case OrderState.cancel:
+        return Colors.red;
       default:
         return KConstants.greenOrderState;
     }
@@ -258,7 +260,23 @@ class OrderCard extends StatelessWidget {
                 Text(
                   orderState(),
                   style: TextStyle(color: getStateColor()),
-                )
+                ),
+                if ([OrderState.confirmed, OrderState.outForDelivery]
+                    .contains(order.orderState)) ...[
+                  SizedBox(
+                    height: 7,
+                  ),
+                  Text(
+                    'Expected Delivery by: ' +
+                        DateFormat(
+                                (order.orderState == OrderState.outForDelivery
+                                        ? 'hh:mm a,'
+                                        : '') +
+                                    'dd MMMM, yyyy')
+                            .format(order.deliveryDate.toDate()),
+                    style: TextStyle(color: KConstants.textColor50),
+                  ),
+                ]
               ],
             ),
             Icon(
@@ -272,14 +290,29 @@ class OrderCard extends StatelessWidget {
   }
 }
 
-class OrderDetails extends StatelessWidget {
+class OrderDetails extends StatefulWidget {
   final OrderModel order;
-  final Function() goBack;
-  const OrderDetails({Key? key, required this.order, required this.goBack})
-      : super(key: key);
+  const OrderDetails({Key? key, required this.order}) : super(key: key);
+
+  @override
+  State<OrderDetails> createState() => _OrderDetailsState();
+}
+
+class _OrderDetailsState extends State<OrderDetails> {
+  bool isCancellation = false;
+
+  List<String> cancellationReasons = [
+    'Want to change the order',
+    'High Price',
+    'Other'
+  ];
+
+  TextEditingController rController = TextEditingController();
+
+  String reason = '';
 
   String orderState() {
-    switch (order.orderState) {
+    switch (widget.order.orderState) {
       case OrderState.placed:
         return 'Order Placed';
       case OrderState.confirmed:
@@ -297,264 +330,540 @@ class OrderDetails extends StatelessWidget {
   }
 
   Color getStateColor() {
-    switch (order.orderState) {
+    switch (widget.order.orderState) {
       case OrderState.placed:
       case OrderState.confirmed:
       case OrderState.outForDelivery:
       case OrderState.delivered:
-      case OrderState.cancel:
         return KConstants.greenOrderState;
+
+      case OrderState.cancel:
+        return Colors.red;
       default:
         return KConstants.greenOrderState;
     }
   }
 
+  Widget loadinWidget(String text) {
+    return AbsorbPointer(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+        child: Center(
+          child: Column(
+            children: [
+              CircularProgressIndicator(),
+              Text(
+                text,
+                style: TextStyle(color: KConstants.textColor50),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  String loadingText = '';
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        goBack();
-        return true;
-      },
-      child: Scaffold(
-        body: Column(
-          children: [
-            Container(
-              decoration: KConstants.defContainerDec,
-              padding: EdgeInsets.all(16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Order ID ${order.orderId}', textScaleFactor: 1.1),
-                  Text(
-                    DateFormat('hh:mm a, dd MMMM, yyyy')
-                        .format(order.createdAt.toDate()),
-                    style: TextStyle(color: KConstants.textColor50),
+    return Stack(
+      children: [
+        WillPopScope(
+          onWillPop: () async {
+            if (!isCancellation)
+              return true;
+            else {
+              setState(() {
+                isCancellation = false;
+              });
+              return false;
+            }
+          },
+          child: Scaffold(
+            bottomNavigationBar: [OrderState.cancel, OrderState.delivered]
+                    .contains(widget.order.orderState)
+                ? null
+                : Container(
+                    height: kBottomNavigationBarHeight * 1.5,
+                    decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                      BoxShadow(
+                          offset: Offset(0, -0.5),
+                          blurRadius: 4,
+                          color: Colors.grey.withOpacity(0.25)),
+                    ]),
+                    child: Row(
+                      children: [
+                        Spacer(),
+                        InkWell(
+                          onTap: () async {
+                            if (!isCancellation) {
+                              setState(() {
+                                isCancellation = true;
+                              });
+                            } else {
+                              setState(() {
+                                loadingText = 'Cancelling Order';
+                                isLoading = true;
+                              });
+                              DocumentSnapshot<OrderModel> orderModel =
+                                  await FirebaseFirestore.instance
+                                      .collection('orders')
+                                      .doc(widget.order.orderDocId)
+                                      .withConverter(
+                                          fromFirestore: (snapshot, options) =>
+                                              OrderModel.fromMap(
+                                                  snapshot.data()!),
+                                          toFirestore: (v, s) => {})
+                                      .get();
+                              if (orderModel.data()!.orderState.index <
+                                  OrderState.outForDelivery.index) {
+                                FirebaseFirestore.instance
+                                    .collection('orders')
+                                    .doc(widget.order.orderDocId)
+                                    .update({
+                                  'orderState': OrderState.cancel.index,
+                                  'cancelledByUser': true,
+                                  'cancellationReason':
+                                      reason == cancellationReasons.last
+                                          ? rController.text
+                                          : reason
+                                });
+                                setState(() {
+                                  loadingText = '';
+                                  isLoading = false;
+                                });
+                                Navigator.pop(context);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('Order Cancelled')));
+                              } else {
+                                setState(() {
+                                  loadingText = '';
+                                  isLoading = false;
+                                  isCancellation = false;
+                                });
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text(
+                                            'Order Cannot be cancelled now')));
+                              }
+                            }
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(20),
+                            margin: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: KConstants.kPrimary100,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
+                              'Cancel Order',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                ],
+            appBar: AppBar(
+              automaticallyImplyLeading: false,
+              elevation: 1,
+              backgroundColor: Colors.white,
+              title: Text(
+                'Your Orders',
+                style: GoogleFonts.montserratAlternates(
+                    color: KConstants.kPrimary100),
               ),
+              leading: IconButton(
+                icon: Image.asset(
+                  "Icons/Arrow.png",
+                  color: KConstants.kPrimary100,
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              centerTitle: true,
             ),
-            ListView.builder(
-              itemCount: order.products.length,
-              shrinkWrap: true,
-              itemBuilder: (BuildContext context, int index) {
-                return Column(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(16.0),
-                      height: 150,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(
-                          color: Color(0xffC8D5EF),
+            body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Container(
+                    decoration: KConstants.defContainerDec,
+                    padding: EdgeInsets.all(16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Order ID ${widget.order.orderId}',
+                            textScaleFactor: 1.1),
+                        Text(
+                          DateFormat('hh:mm a, dd MMMM, yyyy')
+                              .format(widget.order.createdAt.toDate()),
+                          style: TextStyle(color: KConstants.textColor50),
                         ),
-                      ),
-                      child: Row(
+                      ],
+                    ),
+                  ),
+                  ListView.builder(
+                    itemCount: widget.order.products.length,
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemBuilder: (BuildContext context, int index) {
+                      return Column(
                         children: [
                           Container(
-                            height: 120,
-                            width: 140,
+                            padding: EdgeInsets.all(16.0),
+                            height: 150,
+                            width: double.infinity,
                             decoration: BoxDecoration(
+                              color: Colors.white,
                               border: Border.all(
                                 color: Color(0xffC8D5EF),
                               ),
                             ),
-                            child: Image.network(
-                              order.products[index].image.first,
-                              fit: BoxFit.contain,
+                            child: Row(
+                              children: [
+                                Container(
+                                  height: 120,
+                                  width: 140,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Color(0xffC8D5EF),
+                                    ),
+                                  ),
+                                  child: Image.network(
+                                    widget.order.products[index].image.first,
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 8.0,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      widget.order.products[index].name,
+                                      style: TextStyle(fontSize: 18),
+                                    ),
+                                    SizedBox(
+                                      height: 4.0,
+                                    ),
+                                    Text(
+                                      "Price: ${widget.order.products[index].price}",
+                                      style: TextStyle(
+                                          color: Color(0xff604FCC),
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    if (widget.order.products[index]
+                                            .selectedSize !=
+                                        '') ...[
+                                      SizedBox(
+                                        height: 4.0,
+                                      ),
+                                      Text(
+                                        "Selected Size: ${widget.order.products[index].selectedSize}",
+                                        style: TextStyle(
+                                            color: Color(0xff604FCC),
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ]
+                                  ],
+                                )
+                              ],
                             ),
                           ),
                           SizedBox(
-                            width: 8.0,
+                            height: 4,
                           ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                        ],
+                      );
+                    },
+                  ),
+                  if (!isCancellation) ...[
+                    Container(
+                      padding: EdgeInsets.all(16.0),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Color(0xffC7D4EE),
+                        ),
+                        color: Colors.white,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
                             children: [
                               Text(
-                                order.products[index].name,
-                                style: TextStyle(fontSize: 18),
-                              ),
-                              SizedBox(
-                                height: 4.0,
-                              ),
-                              Text(
-                                "Price: ${order.products[index].price}",
+                                'Deliver to',
                                 style: TextStyle(
-                                    color: Color(0xff604FCC),
-                                    fontWeight: FontWeight.bold),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                              if (order.products[index].selectedSize != '') ...[
-                                SizedBox(
-                                  height: 4.0,
-                                ),
-                                Text(
-                                  "Selected Size: ${order.products[index].selectedSize}",
-                                  style: TextStyle(
-                                      color: Color(0xff604FCC),
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ]
+                              Spacer(),
                             ],
+                          ),
+                          SizedBox(
+                            height: 8.0,
+                          ),
+                          Text(
+                            widget.order.address.actualAddress,
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.black,
+                            ),
                           )
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 4.0,
+                    ),
+                    Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(
+                          color: Color(0xffC7D4EE),
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Order Summary',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xff130B43),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 8.0,
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                'Subtotal',
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                  color: Color(0xff130B43),
+                                ),
+                              ),
+                              Spacer(),
+                              Text(
+                                widget.order.totalPrice.toString(),
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                  color: Color(0xff130B43),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 4.0,
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                'Delivery Charges',
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                  color: Color(0xff130B43),
+                                ),
+                              ),
+                              Spacer(),
+                              Text(
+                                'Free',
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                  color: Color(0xff130B43),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 4.0,
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                'Total',
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  color: Color(0xff130B43),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Spacer(),
+                              Text(
+                                widget.order.totalPrice.toString(),
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  color: Color(0xff130B43),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ),
                     SizedBox(
                       height: 4,
                     ),
-                  ],
-                );
-              },
-            ),
-            Container(
-              padding: EdgeInsets.all(16.0),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Color(0xffC7D4EE),
-                ),
-                color: Colors.white,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        'Deliver to',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    Container(
+                      decoration: KConstants.defContainerDec,
+                      padding: EdgeInsets.all(16),
+                      width: double.infinity,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            orderState(),
+                            style: TextStyle(color: getStateColor()),
+                          ),
+                          SizedBox(
+                            height: 7,
+                          ),
+                          if ([OrderState.confirmed, OrderState.outForDelivery]
+                              .contains(widget.order.orderState))
+                            Text(
+                              'Expected Delivery by: ' +
+                                  DateFormat((widget.order.orderState ==
+                                                  OrderState.outForDelivery
+                                              ? 'hh:mm a,'
+                                              : '') +
+                                          'dd MMMM, yyyy')
+                                      .format(
+                                          widget.order.deliveryDate.toDate()),
+                              style: TextStyle(color: KConstants.textColor50),
+                            )
+                          else if (widget.order.orderState ==
+                              OrderState.delivered)
+                            Text(
+                                'Delivered on: ' +
+                                    DateFormat('hh:mm a, dd MMMM, yyyy').format(
+                                        widget.order.deliveredDate.toDate()),
+                                style:
+                                    TextStyle(color: KConstants.textColor50)),
+                        ],
                       ),
-                      Spacer(),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 8.0,
-                  ),
-                  Text(
-                    order.address.actualAddress,
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.black,
                     ),
-                  )
+                    if (widget.order.orderState == OrderState.cancel)
+                      Container(
+                        width: double.infinity,
+                        margin: EdgeInsets.only(top: 7),
+                        padding: EdgeInsets.all(16.0),
+                        decoration: KConstants.defContainerDec,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Cancellation Details',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xff130B43),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 8.0,
+                            ),
+                            Text(
+                              'Cancelled By: ${widget.order.cancelledByUser ? 'You' : 'Admin'}',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              'Reason: ${widget.order.cancellationReason}',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                  ] else ...[
+                    Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.all(16.0),
+                      decoration: KConstants.defContainerDec,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Your Reason to cancel the order',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xff130B43),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 8.0,
+                          ),
+                          ...cancellationReasons
+                              .map((e) => RadioListTile<String>(
+                                  value: e,
+                                  groupValue: reason,
+                                  activeColor: KConstants.kPrimary100,
+                                  title: Text(e),
+                                  onChanged: (b) {
+                                    setState(() {
+                                      reason = b!;
+                                    });
+                                  }))
+                        ],
+                      ),
+                    ),
+                    if (cancellationReasons.last == reason)
+                      Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.all(16.0),
+                        decoration: KConstants.defContainerDec,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Give us more specific reason ( Optional )',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xff130B43),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 8.0,
+                            ),
+                            Text('Tell Us More'),
+                            TextField(
+                              controller: rController,
+                            )
+                          ],
+                        ),
+                      )
+                  ]
                 ],
               ),
             ),
-            SizedBox(
-              height: 4.0,
-            ),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(
-                  color: Color(0xffC7D4EE),
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    'Order Summary',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xff130B43),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 8.0,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        'Subtotal',
-                        style: TextStyle(
-                          fontSize: 14.0,
-                          color: Color(0xff130B43),
-                        ),
-                      ),
-                      Spacer(),
-                      Text(
-                        order.totalPrice.toString(),
-                        style: TextStyle(
-                          fontSize: 14.0,
-                          color: Color(0xff130B43),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 4.0,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        'Delivery Charges',
-                        style: TextStyle(
-                          fontSize: 14.0,
-                          color: Color(0xff130B43),
-                        ),
-                      ),
-                      Spacer(),
-                      Text(
-                        'Free',
-                        style: TextStyle(
-                          fontSize: 14.0,
-                          color: Color(0xff130B43),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 4.0,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        'Total',
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          color: Color(0xff130B43),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Spacer(),
-                      Text(
-                        order.totalPrice.toString(),
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          color: Color(0xff130B43),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 4,
-            ),
-            Container(
-              decoration: KConstants.defContainerDec,
-              padding: EdgeInsets.all(16),
-              width: double.infinity,
-              child: Text(
-                orderState(),
-                style: TextStyle(color: getStateColor()),
-              ),
-            )
-          ],
+          ),
         ),
-      ),
+        if (isLoading) loadinWidget(loadingText)
+      ],
     );
   }
 }

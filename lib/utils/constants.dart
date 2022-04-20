@@ -1,4 +1,6 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 class KConstants {
@@ -18,4 +20,25 @@ class KConstants {
     color: Colors.white,
     border: Border.all(color: kBorderColor),
   );
+
+  static Future<void> sendFCMMessage(
+      String title, String body, String pushToken,
+      {Map<String, dynamic>? data}) async {
+    HttpClient client = HttpClient();
+    HttpClientRequest request =
+        await client.postUrl(Uri.parse("https://fcm.googleapis.com/fcm/send"));
+    request.headers.add('Content-Type', "application/json; charset=utf-8");
+    request.headers.add('Authorization',
+        "key=	AAAAe9W6Ez0:APA91bFuikZhaWYXvfh9rG6dVuF0HZ-aLyK827Z-eb_knCAxl2DSgdiP7OhVRcO79UMEK4VHzmp5y6eHhG_Yd81MKMehMRJ9-8lJoKltyA8Uj5kVYQVdf70W6BAPQfmnTmkiAe-qb5EM");
+    request.write(jsonEncode({
+      'to': pushToken,
+      'notification': {
+        'title': title,
+        'body': body,
+      },
+      'data': data,
+    }));
+    var response = await request.close();
+    print(response.statusCode);
+  }
 }

@@ -5,6 +5,11 @@ class CartController {
   SPHelper spHelper = SPHelper();
   List<CartModel> cartItems = [];
 
+  void clearCart() {
+    cartItems.clear();
+    spHelper.setCart(cartItems);
+  }
+
   void init() async {
     cartItems = await spHelper.getCart() ?? [];
   }
@@ -56,10 +61,11 @@ class CartController {
   }
 
   void addToCart(String prodId, String size, int color,
-      List<String> selectedImage, String name, String price) {
+      List<String> selectedImage, String name, String price, String colorName) {
     cartItems.add(CartModel(
         image: selectedImage,
         name: name,
+        colorName: colorName,
         price: double.parse(price),
         quantity: 1,
         productId: prodId,

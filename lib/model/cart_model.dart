@@ -3,12 +3,13 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 
 class CartModel {
- List<String> image;
-  String name;
+  final List<String> image;
+  final String name;
   double price;
   int quantity;
   String productId;
-  int color; 
+  final int color;
+  final String colorName;
   double discountPrice;
   String selectedSize;
   CartModel({
@@ -18,6 +19,7 @@ class CartModel {
     required this.quantity,
     required this.productId,
     required this.color,
+    required this.colorName,
     required this.discountPrice,
     required this.selectedSize
   });
@@ -29,7 +31,9 @@ class CartModel {
     int? quantity,
     String? productId,
     int? color,
+    String? colorName,
     double? discountPrice,
+    String? selectedSize,
   }) {
     return CartModel(
       image: image ?? this.image,
@@ -38,8 +42,9 @@ class CartModel {
       quantity: quantity ?? this.quantity,
       productId: productId ?? this.productId,
       color: color ?? this.color,
+      colorName: colorName ?? this.colorName,
       discountPrice: discountPrice ?? this.discountPrice,
-      selectedSize: selectedSize,
+      selectedSize: selectedSize ?? this.selectedSize,
     );
   }
 
@@ -51,8 +56,9 @@ class CartModel {
       'quantity': quantity,
       'productId': productId,
       'color': color,
+      'colorName': colorName,
       'discountPrice': discountPrice,
-      'selectedSize': selectedSize
+      'selectedSize': selectedSize,
     };
   }
 
@@ -64,18 +70,20 @@ class CartModel {
       quantity: map['quantity']?.toInt() ?? 0,
       productId: map['productId'] ?? '',
       color: map['color']?.toInt() ?? 0,
+      colorName: map['colorName'] ?? '',
       discountPrice: map['discountPrice']?.toDouble() ?? 0.0,
-      selectedSize: map['selectedSize']??'',
+      selectedSize: map['selectedSize'] ?? '',
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory CartModel.fromJson(String source) => CartModel.fromMap(json.decode(source));
+  factory CartModel.fromJson(String source) =>
+      CartModel.fromMap(json.decode(source));
 
   @override
   String toString() {
-    return 'CartModel(image: $image, name: $name, price: $price, quantity: $quantity, productId: $productId, color: $color, discountPrice: $discountPrice)';
+    return 'CartModel(image: $image, name: $name, price: $price, quantity: $quantity, productId: $productId, color: $color, colorName: $colorName, discountPrice: $discountPrice, selectedSize: $selectedSize)';
   }
 
   @override
@@ -89,7 +97,9 @@ class CartModel {
       other.quantity == quantity &&
       other.productId == productId &&
       other.color == color &&
-      other.discountPrice == discountPrice;
+      other.colorName == colorName &&
+      other.discountPrice == discountPrice &&
+      other.selectedSize == selectedSize;
   }
 
   @override
@@ -100,6 +110,8 @@ class CartModel {
       quantity.hashCode ^
       productId.hashCode ^
       color.hashCode ^
-      discountPrice.hashCode;
+      colorName.hashCode ^
+      discountPrice.hashCode ^
+      selectedSize.hashCode;
   }
 }

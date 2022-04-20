@@ -12,7 +12,17 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'contact_details.dart';
 
 class AddAdress extends StatefulWidget {
-  AddAdress({Key? key}) : super(key: key);
+  final Function() onTap;
+  final bool isEdit;
+  final int? editIndex;
+  final AddressModel? addressModel;
+  AddAdress(
+      {Key? key,
+      required this.onTap,
+      required this.isEdit,
+      this.addressModel,
+      this.editIndex})
+      : super(key: key);
 
   @override
   State<AddAdress> createState() => _AddAdressState();
@@ -23,16 +33,42 @@ class _AddAdressState extends State<AddAdress> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  TextEditingController houseNo = TextEditingController();
-  TextEditingController area = TextEditingController();
-  TextEditingController pincode = TextEditingController();
-  TextEditingController city = TextEditingController();
-  TextEditingController state = TextEditingController();
-  TextEditingController landmark = TextEditingController();
+  late TextEditingController houseNo = TextEditingController(
+      text: widget.isEdit
+          ? widget.addressModel!.actualAddress.split(', ')[0]
+          : "");
+  late TextEditingController area = TextEditingController(
+      text: widget.isEdit
+          ? widget.addressModel!.actualAddress.split(', ')[1]
+          : "");
+  late TextEditingController pincode = TextEditingController(
+      text: widget.isEdit ? widget.addressModel!.pinCode : "");
+  late TextEditingController city = TextEditingController(
+      text: widget.isEdit
+          ? widget.addressModel!.actualAddress.split(
+              ', ')[widget.addressModel!.actualAddress.split(', ').length - 3]
+          : "");
+  late TextEditingController state = TextEditingController(
+      text: widget.isEdit
+          ? widget.addressModel!.actualAddress.split(
+              ', ')[widget.addressModel!.actualAddress.split(', ').length - 1]
+          : "");
+  late TextEditingController landmark = TextEditingController(
+      text: widget.isEdit ? widget.addressModel!.landMark : "");
 
   LatLng? selectedLatLng;
   GoogleMapController? controller;
   Completer<GoogleMapController> completer = Completer<GoogleMapController>();
+
+  @override
+  void initState() {
+    if (widget.isEdit) {
+      selectedLatLng = LatLng(widget.addressModel!.latlng.latitude,
+          widget.addressModel!.latlng.longitude);
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,16 +77,34 @@ class _AddAdressState extends State<AddAdress> {
           final formState = _formKey.currentState;
           if (formState!.validate()) {
             formState.save();
-            ucontroller.addAddress(AddressModel(
-                type: '',
-                actualAddress:
-                    "${houseNo.text}, ${area.text}, ${landmark.text}, ${city.text}, ${pincode.text}, ${state.text}}",
-                landMark: landmark.text,
-                latlng: selectedLatLng != null
-                    ? GeoPoint(
-                        selectedLatLng!.latitude, selectedLatLng!.longitude)
-                    : GeoPoint(0, 0),
-                pinCode: pincode.text));
+            if (widget.isEdit) {
+              List<AddressModel> addresses = ucontroller.userModel.address;
+              addresses[widget.editIndex!] = AddressModel(
+                  type: '',
+                  actualAddress:
+                      "${houseNo.text}, ${area.text}, ${landmark.text}, ${city.text}, ${pincode.text}, ${state.text}}",
+                  landMark: landmark.text,
+                  latlng: selectedLatLng != null
+                      ? GeoPoint(
+                          selectedLatLng!.latitude, selectedLatLng!.longitude)
+                      : GeoPoint(0, 0),
+                  pinCode: pincode.text);
+              FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(ucontroller.userModel.number)
+                  .update({'address': addresses});
+            } else {
+              ucontroller.addAddress(AddressModel(
+                  type: '',
+                  actualAddress:
+                      "${houseNo.text}, ${area.text}, ${landmark.text}, ${city.text}, ${pincode.text}, ${state.text}}",
+                  landMark: landmark.text,
+                  latlng: selectedLatLng != null
+                      ? GeoPoint(
+                          selectedLatLng!.latitude, selectedLatLng!.longitude)
+                      : GeoPoint(0, 0),
+                  pinCode: pincode.text));
+            }
             ucontroller.getUser();
             landmark.clear();
             houseNo.clear();
@@ -60,6 +114,7 @@ class _AddAdressState extends State<AddAdress> {
             state.clear();
 
             Navigator.pop(context);
+            widget.onTap();
           } else {
             return null;
           }
@@ -277,18 +332,40 @@ class _AddAdressState extends State<AddAdress> {
                                   onMapCreated: (c) {
                                     controller = c;
                                     completer.complete(c);
+                                    if (widget.isEdit) {
+                                      controller?.animateCamera(
+                                          CameraUpdate.newLatLng(LatLng(
+                                              widget.addressModel!.latlng
+                                                  .latitude,
+                                              widget.addressModel!.latlng
+                                                  .longitude)));
+                                    }
                                   },
                                   initialCameraPosition: CameraPosition(
                                     target: selectedLatLng ??
-                                        LatLng(19.283872311756532,
-                                            73.0539163835629),
-                                    zoom: 14,
+                                        (widget.isEdit
+                                            ? LatLng(
+                                                widget.addressModel!.latlng
+                                                    .latitude,
+                                                widget.addressModel!.latlng
+                                                    .longitude)
+                                            : LatLng(19.283872311756532,
+                                                73.0539163835629)),
+                                    zoom: 17,
                                   ),
                                   markers: Set<Marker>.of([
                                     if (selectedLatLng != null)
                                       Marker(
                                           markerId: MarkerId('0'),
                                           position: selectedLatLng!)
+                                    else
+                                      Marker(
+                                          markerId: MarkerId('0'),
+                                          position: LatLng(
+                                              widget.addressModel!.latlng
+                                                  .latitude,
+                                              widget.addressModel!.latlng
+                                                  .longitude)),
                                   ]),
                                 ),
                               ),
