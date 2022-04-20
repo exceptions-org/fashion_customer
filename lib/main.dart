@@ -1,3 +1,4 @@
+import 'package:fashion_customer/controller/cart_controller.dart';
 import 'package:fashion_customer/controller/controller.dart';
 import 'package:fashion_customer/views/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -11,6 +12,7 @@ GetIt getIt = GetIt.instance;
 
 void main() async {
   getIt.registerLazySingleton(() => UserController());
+  getIt.registerLazySingleton(() => CartController());
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -33,7 +35,6 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         textTheme: GoogleFonts.montserratTextTheme(Theme.of(context).textTheme),
         scaffoldBackgroundColor: KConstants.kBgColor,
-        
         inputDecorationTheme: InputDecorationTheme(
             focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: KConstants.kPrimary100))),
