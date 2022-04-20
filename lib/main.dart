@@ -1,6 +1,6 @@
 import 'package:fashion_customer/controller/cart_controller.dart';
+import 'package:fashion_customer/bottom_navigation.dart';
 import 'package:fashion_customer/controller/controller.dart';
-import 'package:fashion_customer/views/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -43,7 +43,7 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      home: const SplashScreen(),
+      home: BottomNavigation(),
     );
   }
 }
