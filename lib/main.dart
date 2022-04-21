@@ -1,5 +1,4 @@
 import 'package:fashion_customer/controller/cart_controller.dart';
-import 'package:fashion_customer/bottom_navigation.dart';
 import 'package:fashion_customer/controller/controller.dart';
 import 'package:fashion_customer/views/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -35,6 +34,13 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       theme: ThemeData(
         textTheme: GoogleFonts.montserratTextTheme(Theme.of(context).textTheme),
+        appBarTheme: AppBarTheme(
+            backgroundColor: Colors.white,
+            toolbarTextStyle: GoogleFonts.montserratAlternates(
+              color: KConstants.kPrimary100,
+            ),
+            elevation: 1,
+            centerTitle: true),
         scaffoldBackgroundColor: KConstants.kBgColor,
         inputDecorationTheme: InputDecorationTheme(
             focusedBorder: UnderlineInputBorder(

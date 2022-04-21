@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fashion_customer/model/user_model.dart';
 import 'package:fashion_customer/utils/spHelper.dart';
@@ -23,6 +21,7 @@ class FirebaseMessagingService {
       FlutterLocalNotificationsPlugin();
 
   static Future<void> showMessage(RemoteMessage message) async {
+    print('On Background message');
     print(message.data);
     print(message.notification?.body);
     print(message.notification?.title);

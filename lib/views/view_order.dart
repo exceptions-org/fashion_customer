@@ -3,6 +3,9 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fashion_customer/model/order_model.dart';
 import 'package:fashion_customer/utils/constants.dart';
+import 'package:fashion_customer/utils/spHelper.dart';
+import 'package:fashion_customer/views/add_review.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -382,91 +385,122 @@ class _OrderDetailsState extends State<OrderDetails> {
             }
           },
           child: Scaffold(
-            bottomNavigationBar: [OrderState.cancel, OrderState.delivered]
-                    .contains(widget.order.orderState)
-                ? null
-                : Container(
-                    height: kBottomNavigationBarHeight * 1.5,
-                    decoration: BoxDecoration(color: Colors.white, boxShadow: [
-                      BoxShadow(
-                          offset: Offset(0, -0.5),
-                          blurRadius: 4,
-                          color: Colors.grey.withOpacity(0.25)),
-                    ]),
-                    child: Row(
-                      children: [
-                        Spacer(),
-                        InkWell(
-                          onTap: () async {
-                            if (!isCancellation) {
-                              setState(() {
-                                isCancellation = true;
-                              });
-                            } else {
-                              setState(() {
-                                loadingText = 'Cancelling Order';
-                                isLoading = true;
-                              });
-                              DocumentSnapshot<OrderModel> orderModel =
-                                  await FirebaseFirestore.instance
-                                      .collection('orders')
-                                      .doc(widget.order.orderDocId)
-                                      .withConverter(
-                                          fromFirestore: (snapshot, options) =>
-                                              OrderModel.fromMap(
-                                                  snapshot.data()!),
-                                          toFirestore: (v, s) => {})
-                                      .get();
-                              if (orderModel.data()!.orderState.index <
-                                  OrderState.outForDelivery.index) {
-                                FirebaseFirestore.instance
-                                    .collection('orders')
-                                    .doc(widget.order.orderDocId)
-                                    .update({
-                                  'orderState': OrderState.cancel.index,
-                                  'cancelledByUser': true,
-                                  'cancellationReason':
-                                      reason == cancellationReasons.last
-                                          ? rController.text
-                                          : reason
-                                });
-                                setState(() {
-                                  loadingText = '';
-                                  isLoading = false;
-                                });
-                                Navigator.pop(context);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text('Order Cancelled')));
-                              } else {
-                                setState(() {
-                                  loadingText = '';
-                                  isLoading = false;
-                                  isCancellation = false;
-                                });
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text(
-                                            'Order Cannot be cancelled now')));
+            bottomNavigationBar: Container(
+              height: kBottomNavigationBarHeight * 1.5,
+              decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                BoxShadow(
+                    offset: Offset(0, -0.5),
+                    blurRadius: 4,
+                    color: Colors.grey.withOpacity(0.25)),
+              ]),
+              child: Row(
+                children: [
+                  Spacer(),
+                  if (![OrderState.cancel, OrderState.delivered]
+                      .contains(widget.order.orderState))
+                    InkWell(
+                      onTap: () async {
+                        if (!isCancellation) {
+                          setState(() {
+                            isCancellation = true;
+                          });
+                        } else {
+                          setState(() {
+                            loadingText = 'Cancelling Order';
+                            isLoading = true;
+                          });
+                          DocumentSnapshot<OrderModel> orderModel =
+                              await FirebaseFirestore.instance
+                                  .collection('orders')
+                                  .doc(widget.order.orderDocId)
+                                  .withConverter(
+                                      fromFirestore: (snapshot, options) =>
+                                          OrderModel.fromMap(snapshot.data()!),
+                                      toFirestore: (v, s) => {})
+                                  .get();
+                          if (orderModel.data()!.orderState.index <
+                              OrderState.outForDelivery.index) {
+                            String finalReason =
+                                reason == cancellationReasons.last
+                                    ? rController.text
+                                    : reason;
+                            FirebaseFirestore.instance
+                                .collection('orders')
+                                .doc(widget.order.orderDocId)
+                                .update({
+                              'orderState': OrderState.cancel.index,
+                              'cancelledByUser': true,
+                              'cancellationReason': finalReason
+                            });
+
+                            List<String>? tokens =
+                                await SPHelper().getAdminToken();
+
+                            if (tokens != null) {
+                              for (String token in tokens) {
+                                KConstants.sendFCMMessage(
+                                    'Order Cancelled',
+                                    'Order ${orderModel.data()!.orderId} was cancelled by user because $finalReason',
+                                    token);
                               }
                             }
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(20),
-                            margin: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: KConstants.kPrimary100,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Text(
-                              'Cancel Order',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
-                            ),
+
+                            setState(() {
+                              loadingText = '';
+                              isLoading = false;
+                            });
+                            Navigator.pop(context);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Order Cancelled')));
+                          } else {
+                            setState(() {
+                              loadingText = '';
+                              isLoading = false;
+                              isCancellation = false;
+                            });
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content:
+                                    Text('Order Cannot be cancelled now')));
+                          }
+                        }
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(20),
+                        margin: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: KConstants.kPrimary100,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          'Cancel Order',
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        ),
+                      ),
+                    )
+                  else if (widget.order.orderState == OrderState.delivered)
+                    InkWell(
+                        onTap: () async {
+                          Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (context) =>
+                                      AddReview(orderModel: widget.order)));
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(20),
+                          margin: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: KConstants.kPrimary100,
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                        )
-                      ],
-                    ),
-                  ),
+                          child: Text(
+                            'Review',
+                            style: TextStyle(color: Colors.white, fontSize: 20),
+                          ),
+                        ))
+                ],
+              ),
+            ),
             appBar: AppBar(
               automaticallyImplyLeading: false,
               elevation: 1,

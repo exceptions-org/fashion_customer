@@ -40,130 +40,132 @@ class _CartpageState extends State<Cartpage> {
       body: Column(
         children: [
           if (cartController.cartItems.isNotEmpty)
-            ListView(
-              shrinkWrap: true,
-              children: cartController.cartItems
-                  .map((e) => Column(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                border: Border.all(color: Color(0XFFC8D5EF))),
-                            //color: Colors.grey,
-                            width: double.infinity,
-                            //margin: EdgeInsets.only(top: 10, bottom: 10),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  margin: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                      border:
-                                          Border.all(color: Color(0xffC8DFEF))),
-                                  height: 120,
-                                  width: 140,
-                                  // color: Colors.blue,
-                                  child: Image.network(e.image.first),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 10, left: 10, right: 10),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        e.name,
-                                        style: TextStyle(fontSize: 18),
-                                      ),
-                                      SizedBox(height: 8),
-                                      Text(
-                                        "Price: ${e.price}",
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: KConstants.kPrimary100,
-                                        ),
-                                      ),
-                                      SizedBox(height: 8),
-                                      Text(
-                                        "Size: ${e.selectedSize}",
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: KConstants.kPrimary100,
-                                        ),
-                                      ),
-                                      SizedBox(height: 8),
-                                      Text.rich(
-                                        TextSpan(
-                                            text: 'Color: ',
-                                            children: [
-                                              TextSpan(
-                                                text: e.colorName,
-                                                style: TextStyle(
-                                                    color: Color(e.color)),
-                                              ),
-                                            ],
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              color: KConstants.kPrimary100,
-                                            )),
-                                      ),
-                                    ],
+            Expanded(
+              child: ListView(
+                shrinkWrap: true,
+                children: cartController.cartItems
+                    .map((e) => Column(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(color: Color(0XFFC8D5EF))),
+                              //color: Colors.grey,
+                              width: double.infinity,
+                              //margin: EdgeInsets.only(top: 10, bottom: 10),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Color(0xffC8DFEF))),
+                                    height: 120,
+                                    width: 140,
+                                    // color: Colors.blue,
+                                    child: Image.network(e.image.first),
                                   ),
-                                ),
-                                Spacer(),
-                                Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 10, left: 10, right: 10),
                                     child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        InkWell(
-                                          onTap: () {
-                                            cartController.increment(
-                                                e.productId,
-                                                e.selectedSize,
-                                                e.color);
-                                            setState(() {});
-                                          },
-                                          child: Image.asset(
-                                            "Icons/add.png",
-                                            height: 25,
-                                            color: KConstants.kPrimary100,
-                                          ),
-                                        ),
-                                        SizedBox(height: 10),
                                         Text(
-                                          "${e.quantity}",
+                                          e.name,
                                           style: TextStyle(fontSize: 18),
                                         ),
-                                        // Text(cartController.cartItems[index].productId),
-                                        SizedBox(height: 10),
-                                        InkWell(
-                                          onTap: () {
-                                            cartController.increment(
-                                                e.productId,
-                                                e.selectedSize,
-                                                e.color);
-                                            setState(() {});
-                                          },
-                                          child: Image.asset(
-                                            "Icons/remove.png",
-                                            height: 25,
+                                        SizedBox(height: 8),
+                                        Text(
+                                          "Price: ${e.price}",
+                                          style: TextStyle(
+                                            fontSize: 14,
                                             color: KConstants.kPrimary100,
                                           ),
+                                        ),
+                                        SizedBox(height: 8),
+                                        Text(
+                                          "Size: ${e.selectedSize}",
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: KConstants.kPrimary100,
+                                          ),
+                                        ),
+                                        SizedBox(height: 8),
+                                        Text.rich(
+                                          TextSpan(
+                                              text: 'Color: ',
+                                              children: [
+                                                TextSpan(
+                                                  text: e.colorName,
+                                                  style: TextStyle(
+                                                      color: Color(e.color)),
+                                                ),
+                                              ],
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: KConstants.kPrimary100,
+                                              )),
                                         ),
                                       ],
                                     ),
                                   ),
-                                )
-                              ],
+                                  Spacer(),
+                                  Padding(
+                                    padding: const EdgeInsets.all(10),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: Column(
+                                        children: [
+                                          InkWell(
+                                            onTap: () {
+                                              cartController.increment(
+                                                  e.productId,
+                                                  e.selectedSize,
+                                                  e.color);
+                                              setState(() {});
+                                            },
+                                            child: Image.asset(
+                                              "Icons/add.png",
+                                              height: 25,
+                                              color: KConstants.kPrimary100,
+                                            ),
+                                          ),
+                                          SizedBox(height: 10),
+                                          Text(
+                                            "${e.quantity}",
+                                            style: TextStyle(fontSize: 18),
+                                          ),
+                                          // Text(cartController.cartItems[index].productId),
+                                          SizedBox(height: 10),
+                                          InkWell(
+                                            onTap: () {
+                                              cartController.increment(
+                                                  e.productId,
+                                                  e.selectedSize,
+                                                  e.color);
+                                              setState(() {});
+                                            },
+                                            child: Image.asset(
+                                              "Icons/remove.png",
+                                              height: 25,
+                                              color: KConstants.kPrimary100,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                          SizedBox(height: 10),
-                        ],
-                      ))
-                  .toList(),
+                            SizedBox(height: 10),
+                          ],
+                        ))
+                    .toList(),
+              ),
             )
           else
             Expanded(
@@ -202,7 +204,7 @@ class _CartpageState extends State<Cartpage> {
                     ],
                   ),
                 )),
-          Spacer(flex: 1),
+          if (cartController.cartItems.isEmpty) Spacer(flex: 1),
           if (cartController.cartItems.isNotEmpty)
             Container(
               height: 50,

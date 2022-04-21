@@ -197,6 +197,19 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         }
                       }
 
+                      await FirebaseFirestore.instance
+                          .runTransaction((transaction) async {
+                        for (var item in cartController.cartItems) {
+                          DocumentReference reference = FirebaseFirestore
+                              .instance
+                              .collection('products')
+                              .doc(item.productId);
+                          transaction.update(reference, {
+                            'orderCount': FieldValue.increment(1),
+                          });
+                        }
+                      });
+
                       Navigator.pop(context);
                       cartController.clearCart();
                       setState(() {
@@ -254,80 +267,83 @@ class _CheckoutPageState extends State<CheckoutPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (!orderPlaced)
-              ListView.builder(
-                itemCount: cartController.cartItems.length,
-                shrinkWrap: true,
-                itemBuilder: (BuildContext context, int index) {
-                  return Column(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(16.0),
-                        height: 150,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(
-                            color: Color(0xffC8D5EF),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: cartController.cartItems.length,
+                  shrinkWrap: true,
+                  physics: BouncingScrollPhysics(),
+                  itemBuilder: (BuildContext context, int index) {
+                    return Column(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(16.0),
+                          height: 150,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(
+                              color: Color(0xffC8D5EF),
+                            ),
                           ),
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              height: 120,
-                              width: 140,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Color(0xffC8D5EF),
+                          child: Row(
+                            children: [
+                              Container(
+                                height: 120,
+                                width: 140,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Color(0xffC8D5EF),
+                                  ),
+                                ),
+                                child: Image.network(
+                                  cartController.cartItems[index].image.first,
+                                  fit: BoxFit.contain,
                                 ),
                               ),
-                              child: Image.network(
-                                cartController.cartItems[index].image.first,
-                                fit: BoxFit.contain,
+                              SizedBox(
+                                width: 8.0,
                               ),
-                            ),
-                            SizedBox(
-                              width: 8.0,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  cartController.cartItems[index].name,
-                                  style: TextStyle(fontSize: 18),
-                                ),
-                                SizedBox(
-                                  height: 4.0,
-                                ),
-                                Text(
-                                  "Price: ${cartController.cartItems[index].price}",
-                                  style: TextStyle(
-                                      color: Color(0xff604FCC),
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                if (cartController
-                                        .cartItems[index].selectedSize !=
-                                    '') ...[
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    cartController.cartItems[index].name,
+                                    style: TextStyle(fontSize: 18),
+                                  ),
                                   SizedBox(
                                     height: 4.0,
                                   ),
                                   Text(
-                                    "Selected Size: ${cartController.cartItems[index].selectedSize}",
+                                    "Price: ${cartController.cartItems[index].price}",
                                     style: TextStyle(
                                         color: Color(0xff604FCC),
                                         fontWeight: FontWeight.bold),
                                   ),
-                                ]
-                              ],
-                            )
-                          ],
+                                  if (cartController
+                                          .cartItems[index].selectedSize !=
+                                      '') ...[
+                                    SizedBox(
+                                      height: 4.0,
+                                    ),
+                                    Text(
+                                      "Selected Size: ${cartController.cartItems[index].selectedSize}",
+                                      style: TextStyle(
+                                          color: Color(0xff604FCC),
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ]
+                                ],
+                              )
+                            ],
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 4,
-                      ),
-                    ],
-                  );
-                },
+                        SizedBox(
+                          height: 4,
+                        ),
+                      ],
+                    );
+                  },
+                ),
               )
             else
               Container(

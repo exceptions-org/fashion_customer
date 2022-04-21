@@ -1,20 +1,44 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fashion_customer/model/category_model.dart';
 import 'package:fashion_customer/utils/constants.dart';
 import 'package:fashion_customer/utils/product_card.dart';
 import 'package:flutter/material.dart';
 
 import '../model/product_model.dart';
 
+enum SortBy { priceHighToLow, priceLowToHigh, newest, oldest, aToZ, popularity }
+
+String getSorting(SortBy sortBy) {
+  switch (sortBy) {
+    case SortBy.priceHighToLow:
+      return 'Price: High To Low';
+    case SortBy.priceLowToHigh:
+      return 'Price: Low To High';
+    case SortBy.newest:
+      return 'Newest';
+    case SortBy.oldest:
+      return 'Oldest';
+    case SortBy.aToZ:
+      return 'A to Z';
+    case SortBy.popularity:
+      return 'Popularity';
+    default:
+      return '';
+  }
+}
+
 class SearchPage extends StatefulWidget {
   static const String routeName = "/SearchPage";
   final bool isCategry;
   final String category;
   final Function(int) onChange;
+  final List<CategoryModel> subcategories;
   const SearchPage(
       {Key? key,
       required this.onChange,
       this.isCategry = false,
-      this.category = ''})
+      this.category = '',
+      this.subcategories = const []})
       : super(key: key);
 
   @override
@@ -25,6 +49,10 @@ class _SearchPageState extends State<SearchPage> {
   TextEditingController search = TextEditingController();
   CollectionReference productRefs =
       FirebaseFirestore.instance.collection('products');
+
+  CategoryModel? subcategory;
+  SortBy? sortBy;
+
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
@@ -59,62 +87,107 @@ class _SearchPageState extends State<SearchPage> {
           ),
         ],
         bottom: PreferredSize(
-          child: Container(
-            alignment: Alignment.center,
-            margin: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
-            //height: 50,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.white30,
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Row(
-              children: [
-                const SizedBox(
-                  width: 16,
+          child: Column(
+            children: [
+              Container(
+                alignment: Alignment.center,
+                margin: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
+                //height: 50,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.white30,
+                  borderRadius: BorderRadius.circular(4),
                 ),
-                Image.asset(
-                  "Icons/Search.png",
-                  color: Colors.white60,
-                ),
-                const SizedBox(
-                  width: 8,
-                ),
-                SizedBox(
-                  width: width * 0.7,
-                  child: TextField(
-                    onChanged: (value) {
-                      print(value);
-                      setState(() {});
-                    },
-                    controller: search,
-                    decoration: InputDecoration(
-                      hintText: "search footwear, dress & dresses",
-                      hintStyle: TextStyle(
-                        color: Colors.white60,
-                        fontSize: 16,
+                child: Row(
+                  children: [
+                    const SizedBox(
+                      width: 16,
+                    ),
+                    Image.asset(
+                      "Icons/Search.png",
+                      color: Colors.white60,
+                    ),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    SizedBox(
+                      width: width * 0.7,
+                      child: TextField(
+                        onChanged: (value) {
+                          print(value);
+                          setState(() {});
+                        },
+                        controller: search,
+                        decoration: InputDecoration(
+                          hintText: "search footwear, dress & dresses",
+                          hintStyle: TextStyle(
+                            color: Colors.white60,
+                            fontSize: 16,
+                          ),
+                          border: InputBorder.none,
+                        ),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
                       ),
-                      border: InputBorder.none,
                     ),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                    ),
-                  ),
+                  ],
                 ),
-                /* const Text(
-                  "search footwear, dress & dresses",
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.white60,
-                    // fontWeight: FontWeight.bold,
-                  ),
-                ), */
-              ],
-            ),
-            // color: Colors.grey,
+                // color: Colors.grey,
+              ),
+              Container(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: DropdownButtonHideUnderline(
+                          child: DropdownButton<CategoryModel>(
+                              alignment: Alignment.center,
+                              value: subcategory,
+                              hint: Text(
+                                'Select Sub-Category',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              items: widget.subcategories
+                                  .map((e) => DropdownMenuItem(
+                                      child: Text(e.name), value: e))
+                                  .toList(),
+                              onChanged: (c) {
+                                setState(() {
+                                  subcategory = c;
+                                });
+                              })),
+                    ),
+                    Expanded(
+                      child: DropdownButtonHideUnderline(
+                          child: DropdownButton<SortBy>(
+                        alignment: Alignment.center,
+                        style: TextStyle(color: Colors.black),
+                        value: sortBy,
+                        hint: Text(
+                          'Sort By',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        items: SortBy.values
+                            .map((e) => DropdownMenuItem(
+                                child: Text(
+                                  getSorting(e),
+                                ),
+                                value: e))
+                            .toList(),
+                        onChanged: (c) {
+                          setState(() {
+                            sortBy = c;
+                          });
+                        },
+                      )),
+                    )
+                  ],
+                ),
+              )
+            ],
           ),
-          preferredSize: const Size.fromHeight(kToolbarHeight * 1.4),
+          preferredSize: const Size.fromHeight(kToolbarHeight * 2.5),
         ),
         title: widget.isCategry ? Text(widget.category) : const Text('Explore'),
       ),
@@ -156,28 +229,67 @@ class _SearchPageState extends State<SearchPage> {
                 ),
               );
             }
+
+            List<ProductModel> products = [];
+
+            if (widget.isCategry) {
+              products = snapshot.data!.docs
+                  .where((element) => element
+                      .data()
+                      .name
+                      .toLowerCase()
+                      .contains(search.text.toLowerCase()))
+                  .where(
+                      (element) => element.data().category == widget.category)
+                  .map((e) => e.data())
+                  .toList();
+            } else {
+              products = snapshot.data!.docs
+                  .where((element) => element
+                      .data()
+                      .name
+                      .toLowerCase()
+                      .contains(search.text.toLowerCase()))
+                  .map((e) => e.data())
+                  .toList();
+            }
+
+            if (subcategory != null) {
+              products = products
+                  .where((element) =>
+                      element.subCategory.name == subcategory!.name)
+                  .toList();
+            }
+            if (sortBy != null) {
+              switch (sortBy) {
+                case SortBy.aToZ:
+                  products.sort((a, b) => a.name.compareTo(b.name));
+                  break;
+                case SortBy.priceHighToLow:
+                  products.sort((a, b) => double.parse(
+                          b.prices.first.colorPrice.first.price)
+                      .compareTo(
+                          double.parse(a.prices.first.colorPrice.first.price)));
+                  break;
+                case SortBy.priceLowToHigh:
+                  products.sort((a, b) => double.parse(
+                          a.prices.first.colorPrice.first.price)
+                      .compareTo(
+                          double.parse(b.prices.first.colorPrice.first.price)));
+                  break;
+                case SortBy.popularity:
+                  products.sort((a, b) => b.orderCount.compareTo(a.orderCount));
+                  break;
+                default:
+              }
+            }
+
             return GridView.count(
               physics: BouncingScrollPhysics(),
               childAspectRatio: 1 / 1.1,
               shrinkWrap: true,
               crossAxisCount: 2,
-              children: (widget.isCategry
-                      ? snapshot.data!.docs
-                          .where((element) =>
-                              element.data().category.name == widget.category)
-                          .where((element) => element
-                              .data()
-                              .name
-                              .toLowerCase()
-                              .contains(search.text.toLowerCase()))
-                          .map((e) => e.data())
-                      : snapshot.data!.docs
-                          .where((element) => element
-                              .data()
-                              .name
-                              .toLowerCase()
-                              .contains(search.text.toLowerCase()))
-                          .map((e) => e.data()))
+              children: products
                   .map((data) => ProductCard(data: data))
                   .toList(), /* (context, index) {
                 ProductModel data = snapshot.data.docs[index].data();

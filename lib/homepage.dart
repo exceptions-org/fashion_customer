@@ -168,6 +168,9 @@ class _HomePageState extends State<HomePage> {
                                                             .category
                                                             .name,
                                                         isCategry: true,
+                                                        subcategories: e
+                                                            .data()
+                                                            .subcategory,
                                                       )));
                                         },
                                         child: Column(

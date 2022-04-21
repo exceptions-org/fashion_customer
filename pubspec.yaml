@@ -35,7 +35,7 @@ dependencies:
   firebase_auth: ^3.3.11
   firebase_core: ^1.13.1
   firebase_messaging: ^11.2.13
-  firebase_storage: ^10.2.9
+  firebase_storage: ^10.2.12
   flutter:
     sdk: flutter
   flutter_local_notifications: ^9.4.0
@@ -45,8 +45,11 @@ dependencies:
   get_it: ^7.2.0
   google_fonts: ^2.3.1
   google_maps_flutter: ^2.1.3
+  image_cropper: ^1.5.1
+  image_picker: ^0.8.5
   intl: ^0.17.0
   shared_preferences: ^2.0.13
+  smooth_star_rating_null_safety: ^1.0.4+2
 
 dev_dependencies:
   flutter_lints: ^1.0.0
