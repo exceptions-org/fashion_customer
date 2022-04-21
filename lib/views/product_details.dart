@@ -545,7 +545,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                               child: GridView.count(
                                 childAspectRatio: 1 / 1.1,
                                 shrinkWrap: true,
-                                physics: BouncingScrollPhysics(),
+                                physics: NeverScrollableScrollPhysics(),
                                 crossAxisCount: 2,
                                 children: snapshot.data!.docs
                                     .where((element) =>
@@ -580,19 +580,19 @@ class _ProductDetailsState extends State<ProductDetails> {
                     .withConverter<ReviewModel>(
                         fromFirestore: (snapshot, options) =>
                             ReviewModel.fromMap(snapshot.data()!),
-                        toFirestore: (product, options) => product.toMap())
+                        toFirestore: (review, options) => review.toMap())
                     .limit(4)
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    return ListView.builder(
-                      itemCount: snapshot.data?.docs.length,
-                      itemBuilder: (snapshot, inde) {
-                        return Column(
-                          children: [],
-                        );
-                      },
-                    );
+                    return ListView(
+                      shrinkWrap: true,
+                        children: snapshot.data!.docs
+                            .map((e) => e.data())
+                            .map((e) => Container(
+                              child: Text(e.userName),
+                            ))
+                            .toList());
                   } else {
                     return Center(
                       child: CircularProgressIndicator(),
