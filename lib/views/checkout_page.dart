@@ -52,6 +52,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
   @override
   Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+
     var media = MediaQuery.of(context);
     return WillPopScope(
       onWillPop: () async {
@@ -267,7 +270,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (!orderPlaced)
-              Expanded(
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                    minHeight: height * 0.1, maxHeight: height * 0.5),
                 child: ListView.builder(
                   itemCount: cartController.cartItems.length,
                   shrinkWrap: true,
@@ -331,6 +336,18 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                           color: Color(0xff604FCC),
                                           fontWeight: FontWeight.bold),
                                     ),
+                                    Text(
+                                      "Quantity: ${cartController.cartItems[index].quantity}",
+                                      style: TextStyle(
+                                          color: Color(0xff604FCC),
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                      "Selected Colour: ${cartController.cartItems[index].colorName}",
+                                      style: TextStyle(
+                                          color: Color(0xff604FCC),
+                                          fontWeight: FontWeight.bold),
+                                    )
                                   ]
                                 ],
                               )
@@ -368,159 +385,163 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   ],
                 ),
               ),
-            Container(
-              padding: EdgeInsets.all(16.0),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Color(0xffC7D4EE),
-                ),
-                color: Colors.white,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+            Column(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(16.0),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Color(0xffC7D4EE),
+                    ),
+                    color: Colors.white,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Deliver to',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Spacer(),
-                      if (!orderPlaced)
-                        TextButton(
-                          onPressed: () async {
-                            await showModalBottomSheet(
-                                context: context,
-                                builder: (c) {
-                                  return SelectAddressSheet();
-                                });
-                            setState(() {});
-                          },
-                          child: Text(
-                            'Edit',
+                      Row(
+                        children: [
+                          Text(
+                            'Deliver to',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
-                              color: KConstants.kPrimary100,
                             ),
                           ),
+                          Spacer(),
+                          if (!orderPlaced)
+                            TextButton(
+                              onPressed: () async {
+                                await showModalBottomSheet(
+                                    context: context,
+                                    builder: (c) {
+                                      return SelectAddressSheet();
+                                    });
+                                setState(() {});
+                              },
+                              child: Text(
+                                'Edit',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: KConstants.kPrimary100,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 8.0,
+                      ),
+                      Text(
+                        controller.seletedAddress == null
+                            ? controller.userModel.address.first.actualAddress
+                            : controller.seletedAddress!.actualAddress,
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
                         ),
+                      )
                     ],
                   ),
-                  SizedBox(
-                    height: 8.0,
-                  ),
-                  Text(
-                    controller.seletedAddress == null
-                        ? controller.userModel.address.first.actualAddress
-                        : controller.seletedAddress!.actualAddress,
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.black,
-                    ),
-                  )
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 4.0,
-            ),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(
-                  color: Color(0xffC7D4EE),
                 ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    'Order Summary',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xff130B43),
+                SizedBox(
+                  height: 4.0,
+                ),
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(
+                      color: Color(0xffC7D4EE),
                     ),
                   ),
-                  SizedBox(
-                    height: 8.0,
-                  ),
-                  Row(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        'Subtotal',
+                        'Order Summary',
                         style: TextStyle(
-                          fontSize: 14.0,
-                          color: Color(0xff130B43),
-                        ),
-                      ),
-                      Spacer(),
-                      Text(
-                        widget.totalAmount.toString(),
-                        style: TextStyle(
-                          fontSize: 14.0,
-                          color: Color(0xff130B43),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 4.0,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        'Delivery Charges',
-                        style: TextStyle(
-                          fontSize: 14.0,
-                          color: Color(0xff130B43),
-                        ),
-                      ),
-                      Spacer(),
-                      Text(
-                        'Free',
-                        style: TextStyle(
-                          fontSize: 14.0,
-                          color: Color(0xff130B43),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 4.0,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        'Total',
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          color: Color(0xff130B43),
+                          fontSize: 14,
                           fontWeight: FontWeight.bold,
+                          color: Color(0xff130B43),
                         ),
                       ),
-                      Spacer(),
-                      Text(
-                        widget.totalAmount.toString(),
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          color: Color(0xff130B43),
-                          fontWeight: FontWeight.bold,
-                        ),
+                      SizedBox(
+                        height: 8.0,
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            'Subtotal',
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              color: Color(0xff130B43),
+                            ),
+                          ),
+                          Spacer(),
+                          Text(
+                            widget.totalAmount.toString(),
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              color: Color(0xff130B43),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 4.0,
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            'Delivery Charges',
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              color: Color(0xff130B43),
+                            ),
+                          ),
+                          Spacer(),
+                          Text(
+                            'Free',
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              color: Color(0xff130B43),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 4.0,
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            'Total',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              color: Color(0xff130B43),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Spacer(),
+                          Text(
+                            widget.totalAmount.toString(),
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              color: Color(0xff130B43),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             if (orderPlaced)
               Expanded(

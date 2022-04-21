@@ -142,7 +142,7 @@ class _CartpageState extends State<Cartpage> {
                                           SizedBox(height: 10),
                                           InkWell(
                                             onTap: () {
-                                              cartController.increment(
+                                              cartController.decrement(
                                                   e.productId,
                                                   e.selectedSize,
                                                   e.color);
