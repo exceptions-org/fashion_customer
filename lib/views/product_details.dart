@@ -1,10 +1,10 @@
 // ignore_for_file: unused_local_variable
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:fashion_customer/bottom_navigation.dart';
 import 'package:fashion_customer/controller/cart_controller.dart';
 import 'package:fashion_customer/main.dart';
+import 'package:fashion_customer/model/review_model.dart';
 import 'package:fashion_customer/utils/constants.dart';
 import 'package:fashion_customer/utils/spHelper.dart';
 import 'package:flutter/cupertino.dart';
@@ -573,6 +573,33 @@ class _ProductDetailsState extends State<ProductDetails> {
                   ],
                 ),
               ),
+              StreamBuilder<QuerySnapshot<ReviewModel>>(
+                stream: FirebaseFirestore.instance
+                    .collection("reviews")
+                    .where("productId", arrayContains: productModel.id)
+                    .withConverter<ReviewModel>(
+                        fromFirestore: (snapshot, options) =>
+                            ReviewModel.fromMap(snapshot.data()!),
+                        toFirestore: (product, options) => product.toMap())
+                    .limit(4)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                      itemCount: snapshot.data?.docs.length,
+                      itemBuilder: (snapshot, inde) {
+                        return Column(
+                          children: [],
+                        );
+                      },
+                    );
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                },
+              )
             ]),
           )),
     );

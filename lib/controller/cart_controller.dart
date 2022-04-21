@@ -16,7 +16,7 @@ class CartController {
 
   double getTotal() {
     return cartItems.fold(0, (total, cartItem) {
-      return total + cartItem.price * cartItem.quantity;
+      return total + cartItem.price;
     });
   }
 
