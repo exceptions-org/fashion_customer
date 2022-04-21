@@ -123,3 +123,40 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+
+class Loading extends StatelessWidget {
+  static const String routeName = "Loading";
+  const Loading({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Hero(
+              tag: 'img',
+              child: Image.asset("Icons/OTP.png"),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              'Sending OTP...',
+              style: TextStyle(
+                fontSize: 18,
+                color: KConstants.kPrimary75,
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            CircularProgressIndicator(),
+          ],
+        ),
+      ),
+    );
+  }
+}

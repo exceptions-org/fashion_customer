@@ -23,20 +23,23 @@ class _SplashScreenState extends State<SplashScreen> with AfterLayoutMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       //backgroundColor: Colors.purple,
-      body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Fashio",
-                  style: TextStyle(color: Colors.purple, fontSize: 20),
+      body: Center(
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Hero(
+                tag: 'title',
+                child: Material(
+                  type: MaterialType.transparency,
+                  child: Text(
+                    "Fashio",
+                    style: TextStyle(color: Colors.purple, fontSize: 25),
+                  ),
                 ),
-              ],
-            )
-          ]),
+              )
+            ]),
+      ),
     );
   }
 

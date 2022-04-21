@@ -71,46 +71,50 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 decoration: defContainerDec,
                 height: kBottomNavigationBarHeight * 2,
                 width: media.size.width,
-                alignment: Alignment.centerRight,
-                child: SizedBox(
-                  width: media.size.width * 0.5,
-                  child: InkWell(
-                    onTap: () async {
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          CupertinoPageRoute(
-                              builder: (c) => BottomNavigation()),
-                          (route) => false);
-                    },
-                    child: Container(
-                      margin: EdgeInsets.all(20),
-                      height: 60,
-                      decoration: BoxDecoration(
-                        color: KConstants.kPrimary100,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Center(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              'Icons/Home.png',
-                              color: Colors.white,
+                child: Row(
+                  children: [
+                    Spacer(),
+                    SizedBox(
+                      width: media.size.width * 0.5,
+                      child: InkWell(
+                        onTap: () async {
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (c) => BottomNavigation()),
+                              (route) => false);
+                        },
+                        child: Container(
+                          margin: EdgeInsets.all(20),
+                          height: 60,
+                          decoration: BoxDecoration(
+                            color: KConstants.kPrimary100,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Center(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  'Icons/Home.png',
+                                  color: Colors.white,
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  "Home",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 14),
+                                ),
+                              ],
                             ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              "Home",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 14),
-                            ),
-                          ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
               )
             : Container(

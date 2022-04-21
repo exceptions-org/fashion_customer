@@ -2,18 +2,22 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fashion_customer/controller/controller.dart';
 import 'package:fashion_customer/main.dart';
+import 'package:fashion_customer/model/carousel_model.dart';
 import 'package:fashion_customer/model/category_model.dart';
 import 'package:fashion_customer/utils/product_card.dart';
 import 'package:fashion_customer/utils/select_address_sheet.dart';
+import 'package:fashion_customer/views/product_details.dart';
 import 'package:fashion_customer/views/search_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'model/product_model.dart';
 import 'utils/constants.dart';
 
 class HomePage extends StatefulWidget {
   final void Function(int) onChange;
+
   const HomePage({Key? key, required this.onChange}) : super(key: key);
 
   @override
@@ -39,6 +43,78 @@ class _HomePageState extends State<HomePage> {
 
   UserController controller = getIt<UserController>();
 
+  Widget carouselContainer(CarouselModel carouselModel) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: InkWell(
+        onTap: () async {
+          if (carouselModel.navigate.isNotEmpty) {
+            List<String> data = carouselModel.navigate.split('|');
+            if (data[0] == 'product') {
+              DocumentSnapshot<ProductModel?> snap = await FirebaseFirestore
+                  .instance
+                  .collection('products')
+                  .withConverter(
+                      fromFirestore: (snapshot, options) =>
+                          (snapshot.data() == null
+                              ? null
+                              : ProductModel.fromMap(snapshot.data()!)),
+                      toFirestore: (ProductModel? v, o) => v?.toMap() ?? {})
+                  .doc(data[1])
+                  .get();
+              if (snap.exists && snap.data() != null) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProductDetails(
+                      productModel: snap.data()!,
+                      notFromHome: false,
+                    ),
+                  ),
+                );
+              }
+            } else {
+              DocumentSnapshot<FetchCategoryModel?> snap =
+                  await FirebaseFirestore.instance
+                      .collection('admin')
+                      .doc('categories')
+                      .collection('categories')
+                      .withConverter(
+                          fromFirestore: (snapshot, options) => snapshot
+                                      .data() ==
+                                  null
+                              ? null
+                              : FetchCategoryModel.fromMap(snapshot.data()!),
+                          toFirestore: (FetchCategoryModel? v, s) =>
+                              v?.toMap() ?? {})
+                      .doc(data[1])
+                      .get();
+              if (snap.exists && snap.data() != null) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SearchPage(
+                      category: data[1],
+                      isCategry: true,
+                      subcategories: snap.data()!.subcategory,
+                      onChange: (int) {},
+                    ),
+                  ),
+                );
+              }
+            }
+          }
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(image: NetworkImage(carouselModel.imageUrl)),
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -51,22 +127,32 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 1,
-          centerTitle: true,
-          title: const Text(
-            "Fashio",
-            style: TextStyle(
-              color: KConstants.kPrimary100,
-              fontWeight: FontWeight.normal,
+          centerTitle: false,
+          title: Hero(
+            tag: 'title',
+            child: Material(
+              type: MaterialType.transparency,
+              child: Text(
+                "Fashio",
+                style: GoogleFonts.montserratAlternates(
+                  fontSize: 25,
+                  color: KConstants.kPrimary100,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
             ),
           ),
           actions: [
             InkWell(
                 onTap: () {
                   widget.onChange(2);
-                  /*  Navigator.push(context,
-                      CupertinoPageRoute(builder: (context) => Cartpage())); */
                 },
                 child: Image.asset("Icons/Bag.png")),
+            InkWell(
+                onTap: () {
+                  widget.onChange(3);
+                },
+                child: Image.asset("Icons/User.png")),
           ],
         ),
         body: Padding(
@@ -204,110 +290,64 @@ class _HomePageState extends State<HomePage> {
                       }
                       return Container();
                     }),
-                /*  SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Container(
-                    height: 100,
-                    width: 400,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: categories
-                          .map((e) => Column(
+                FutureBuilder<QuerySnapshot<CarouselModel>>(
+                    future: FirebaseFirestore.instance
+                        .collection('carousel')
+                        .withConverter(
+                            fromFirestore: (snapshot, options) =>
+                                CarouselModel.fromMap(snapshot.data()!),
+                            toFirestore: (CarouselModel v, s) => v.toMap())
+                        .get(),
+                    builder: (context, snapshot) {
+                      return SizedBox(
+                        height: 200,
+                        width: double.infinity,
+                        child: snapshot.hasData && snapshot.data != null
+                            ? Column(
                                 children: [
-                                  Container(
-                                    padding: EdgeInsets.all(10),
-                                    height: 50,
-                                    width: 50,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(4),
-                                      color: Colors.white,
-                                      border: Border.all(
-                                        color: KConstants.kPrimary100,
+                                  SizedBox(
+                                      height: 160,
+                                      child: PageView(
+                                        onPageChanged: onPageChange,
+                                        controller: pageController,
+                                        scrollDirection: Axis.horizontal,
+                                        children: snapshot.data!.docs
+                                            .map((e) =>
+                                                carouselContainer(e.data()))
+                                            .toList(),
+                                      )),
+                                  const SizedBox(height: 5),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: List.generate(
+                                      snapshot.data!.docs.length,
+                                      (index) => Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: AnimatedContainer(
+                                          duration:
+                                              const Duration(milliseconds: 300),
+                                          height: 10,
+                                          width: pageIndex == index ? 15 : 10,
+                                          decoration: BoxDecoration(
+                                              color: pageIndex == index
+                                                  ? KConstants.kPrimary100
+                                                  : KConstants.kPrimary100
+                                                      .withOpacity(.2),
+                                              borderRadius:
+                                                  BorderRadius.circular(20)),
+                                        ),
                                       ),
                                     ),
-                                    child: Image.asset(e['image']),
                                   ),
-                                  SizedBox(
-                                    height: 12,
-                                  ),
-                                  Text(e['name'])
                                 ],
-                              ))
-                          .toList(),
-                    ),
-                  ),
-                ), */
-                SizedBox(
-                  height: 160,
-                  child: PageView(
-                    onPageChanged: onPageChange,
-                    controller: pageController,
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          child: const Center(child: Text("first")),
-                          decoration: BoxDecoration(
-                            color: KConstants.kPrimary100,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          child: const Center(child: Text("second")),
-                          decoration: BoxDecoration(
-                            color: KConstants.kPrimary100,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          child: const Center(child: Text("third")),
-                          decoration: BoxDecoration(
-                            color: KConstants.kPrimary100,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          child: const Center(child: Text("fourth")),
-                          decoration: BoxDecoration(
-                            color: KConstants.kPrimary100,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 5),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(
-                    4,
-                    (index) => Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 300),
-                        height: 10,
-                        width: pageIndex == index ? 15 : 10,
-                        decoration: BoxDecoration(
-                            color: pageIndex == index
-                                ? KConstants.kPrimary100
-                                : KConstants.kPrimary100.withOpacity(.2),
-                            borderRadius: BorderRadius.circular(20)),
-                      ),
-                    ),
-                  ),
-                ),
+                              )
+                            : Center(
+                                child: CircularProgressIndicator(
+                                  color: KConstants.kPrimary100,
+                                ),
+                              ),
+                      );
+                    }),
                 const SizedBox(height: 5),
                 Padding(
                   padding: EdgeInsets.only(left: 10, right: 10),
@@ -335,32 +375,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 const SizedBox(height: 5),
-                /* GridView(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 5,
-                      childAspectRatio: 1),
-                  children: productModel
-                      .map((e) => Container(
-                            child: Column(
-                              children: [
-                                Image.network(
-                                    'https://picsum.photos/250?image=1'),
-                                Image.network(
-                                    'https://picsum.photos/250?image=2'),
-                                Image.network(
-                                    'https://picsum.photos/250?image=3'),
-                                Image.network(
-                                    'https://picsum.photos/250?image=4'),
-                                Text(e.name),
-                                Text(e.price),
-                              ],
-                            ),
-                          ))
-                      .toList(),
-                ) */
                 StreamBuilder<QuerySnapshot<ProductModel>>(
                   stream: productRefs
                       .orderBy("orderCount")
