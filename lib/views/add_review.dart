@@ -138,6 +138,7 @@ class _AddReviewState extends State<AddReview> {
 
                 ReviewModel reviewModel = ReviewModel(
                     createdAt: Timestamp.fromDate(dt),
+                    heading: '',
                     productId: order.products.map((e) => e.productId).toList(),
                     rating: rating,
                     review: reviewController.text,

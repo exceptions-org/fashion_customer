@@ -10,14 +10,17 @@ class ReviewModel {
   final String userPhone;
   final String userName;
   final String review;
-  ReviewModel(
-      {required this.createdAt,
-      required this.productId,
-      required this.rating,
-      required this.review,
-      required this.images,
-      required this.userName,
-      required this.userPhone});
+  final String heading;
+  ReviewModel({
+    required this.createdAt,
+    required this.productId,
+    required this.rating,
+    required this.review,
+    required this.images,
+    required this.userName,
+    required this.userPhone,
+    required this.heading,
+  });
 
   Map<String, dynamic> toMap() {
     return {
@@ -27,7 +30,8 @@ class ReviewModel {
       'productId': productId,
       'rating': rating,
       'review': review,
-      'images': images
+      'images': images,
+      'heading': heading,
     };
   }
 
@@ -42,6 +46,7 @@ class ReviewModel {
       createdAt: map['createdAt'],
       rating: map['rating']?.toDouble() ?? 0.0,
       review: map['review'] ?? '',
+      heading: map['heading'] ?? '',
     );
   }
 

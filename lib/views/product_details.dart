@@ -6,7 +6,9 @@ import 'package:fashion_customer/controller/cart_controller.dart';
 import 'package:fashion_customer/main.dart';
 import 'package:fashion_customer/model/review_model.dart';
 import 'package:fashion_customer/utils/constants.dart';
+import 'package:fashion_customer/utils/review_card.dart';
 import 'package:fashion_customer/utils/spHelper.dart';
+import 'package:fashion_customer/views/reviews.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -511,127 +513,140 @@ class _ProductDetailsState extends State<ProductDetails> {
                   ],
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 10,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 15.0,
                     ),
-                    Text(
-                      'Review',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: height * 0.02,
-                          color: KConstants.txtColor100,
-                          letterSpacing: 1),
+                    child: Row(
+                      children: [
+                        Text(
+                          'Reviews',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: height * 0.02,
+                              color: KConstants.txtColor100,
+                              letterSpacing: 1),
+                        ),
+                        Spacer(),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                    builder: (context) =>
+                                        ReviewScreen(productModel.id)));
+                          },
+                          child: Row(
+                            children: [
+                              Text('View All'),
+                              RotatedBox(
+                                quarterTurns: 2,
+                                child: Image.asset(
+                                  'Icons/Arrow.png',
+                                  color: KConstants.txtColor75,
+                                ),
+                              )
+                            ],
+                          ),
+                        )
+                      ],
                     ),
-                    SizedBox(
-                      height: 04,
-                    ),
-                    StreamBuilder<QuerySnapshot<ReviewModel>>(
+                  ),
+                  SizedBox(
+                    height: 04,
+                  ),
+                  StreamBuilder<QuerySnapshot<ReviewModel>>(
+                    stream: FirebaseFirestore.instance
+                        .collection("reviews")
+                        .orderBy('createdAt', descending: true)
+                        .where("productId", arrayContains: productModel.id)
+                        .withConverter<ReviewModel>(
+                            fromFirestore: (snapshot, options) =>
+                                ReviewModel.fromMap(snapshot.data()!),
+                            toFirestore: (reviews, options) => reviews.toMap())
+                        .limit(3)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        if (snapshot.data!.docs.isEmpty) {
+                          return Text('No Reviews Yet');
+                        }
+
+                        return Column(
+                            // shrinkWrap: true,
+                            children: snapshot.data!.docs
+                                .map((e) => ReviewCard(reviewModel: e.data()))
+                                .toList());
+                      } else {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                    },
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Text(
+                    'Related Products',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: height * 0.02,
+                        color: KConstants.txtColor100,
+                        letterSpacing: 1),
+                  ),
+                  SizedBox(
+                    height: 04,
+                  ),
+                  StreamBuilder<QuerySnapshot<ProductModel>>(
                       stream: FirebaseFirestore.instance
-                          .collection("reviews")
-                          .where("productId", arrayContains: productModel.id)
-                          .withConverter<ReviewModel>(
+                          .collection('products')
+                          .where('category.name',
+                              isEqualTo: widget.productModel.category.name)
+                          .withConverter<ProductModel>(
                               fromFirestore: (snapshot, options) =>
-                                  ReviewModel.fromMap(snapshot.data()!),
-                              toFirestore: (reviews, options) =>
-                                  reviews.toMap())
-                          //.limit(4)
+                                  ProductModel.fromMap(snapshot.data()!),
+                              toFirestore: (product, options) =>
+                                  product.toMap())
+                          .limit(10)
                           .snapshots(),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
-                          if (snapshot.data!.docs.isEmpty) {
-                            return Text('No Reviews Yet');
-                          }
-
-                          return Column(
-                              // shrinkWrap: true,
+                          return AnimationLimiter(
+                            child: GridView.count(
+                              childAspectRatio: 1 / 1.3,
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              crossAxisCount: 2,
                               children: snapshot.data!.docs
-                                  .map((e) => Container(
-                                        child: Column(
-                                          children: [
-                                            Text(e.data().userName),
-                                            if (e.data().images.isNotEmpty)
-                                              Container(
-                                                height: 100,
-                                                width: 100,
-                                                child: Image.network(
-                                                    e.data().images.first),
-                                              ),
-                                            Text(e.data().review),
-                                          ],
-                                        ),
-                                      ))
-                                  .toList());
+                                  .where((element) =>
+                                      element.data().id !=
+                                      widget.productModel.id)
+                                  .mapIndexed((i, element) =>
+                                      AnimationConfiguration.staggeredGrid(
+                                          duration: Duration(milliseconds: 300),
+                                          columnCount: 2,
+                                          position: i,
+                                          child: ScaleAnimation(
+                                            child: ProductCard(
+                                                data: element.data()),
+                                          )))
+                                  .toList(),
+                            ),
+                          );
                         } else {
                           return Center(
                             child: CircularProgressIndicator(),
                           );
                         }
-                      },
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Text(
-                      'Related Products',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: height * 0.02,
-                          color: KConstants.txtColor100,
-                          letterSpacing: 1),
-                    ),
-                    SizedBox(
-                      height: 04,
-                    ),
-                    StreamBuilder<QuerySnapshot<ProductModel>>(
-                        stream: FirebaseFirestore.instance
-                            .collection('products')
-                            .where('category.name',
-                                isEqualTo: widget.productModel.category.name)
-                            .withConverter<ProductModel>(
-                                fromFirestore: (snapshot, options) =>
-                                    ProductModel.fromMap(snapshot.data()!),
-                                toFirestore: (product, options) =>
-                                    product.toMap())
-                            .limit(10)
-                            .snapshots(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return AnimationLimiter(
-                              child: GridView.count(
-                                childAspectRatio: 1 / 1.3,
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
-                                crossAxisCount: 2,
-                                children: snapshot.data!.docs
-                                    .where((element) =>
-                                        element.data().id !=
-                                        widget.productModel.id)
-                                    .mapIndexed((i, element) =>
-                                        AnimationConfiguration.staggeredGrid(
-                                            duration:
-                                                Duration(milliseconds: 300),
-                                            columnCount: 2,
-                                            position: i,
-                                            child: ScaleAnimation(
-                                              child: ProductCard(
-                                                  data: element.data()),
-                                            )))
-                                    .toList(),
-                              ),
-                            );
-                          } else {
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
-                        }),
-                  ],
-                ),
+                      }),
+                ],
               ),
             ]),
           )),

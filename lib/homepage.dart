@@ -65,7 +65,7 @@ class _HomePageState extends State<HomePage> {
               if (snap.exists && snap.data() != null) {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
+                  CupertinoPageRoute(
                     builder: (context) => ProductDetails(
                       productModel: snap.data()!,
                       notFromHome: false,
@@ -92,7 +92,7 @@ class _HomePageState extends State<HomePage> {
               if (snap.exists && snap.data() != null) {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
+                  CupertinoPageRoute(
                     builder: (context) => SearchPage(
                       category: data[1],
                       isCategry: true,
@@ -418,7 +418,7 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
+                        CupertinoPageRoute(
                           builder: (context) =>
                               ProductDetails(productModel: data),
                         ),

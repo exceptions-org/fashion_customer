@@ -156,7 +156,7 @@ class _ViewOrdersState extends State<ViewOrders>
                               order: element,
                               viewDetails: (order) {
                                 Navigator.of(context).push(
-                                  MaterialPageRoute(
+                                  CupertinoPageRoute(
                                     builder: (context) =>
                                         OrderDetails(order: order),
                                   ),
@@ -177,7 +177,7 @@ class _ViewOrdersState extends State<ViewOrders>
                               order: element,
                               viewDetails: (order) {
                                 Navigator.of(context).push(
-                                  MaterialPageRoute(
+                                  CupertinoPageRoute(
                                     builder: (context) =>
                                         OrderDetails(order: order),
                                   ),

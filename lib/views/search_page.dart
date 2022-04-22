@@ -297,7 +297,7 @@ class _SearchPageState extends State<SearchPage> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
+                      CupertinoPageRoute(
                         builder: (context) =>
                             ProductDetails(productModel: data),
                       ),

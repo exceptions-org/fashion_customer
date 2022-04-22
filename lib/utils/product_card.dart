@@ -1,5 +1,6 @@
 import 'package:fashion_customer/model/product_model.dart';
 import 'package:fashion_customer/views/product_details.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'constants.dart';
@@ -20,7 +21,7 @@ class ProductCard extends StatelessWidget {
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(
+            CupertinoPageRoute(
               builder: (context) => ProductDetails(
                 productModel: data,
                 notFromHome: notFromHome,
