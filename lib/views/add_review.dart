@@ -6,6 +6,7 @@ import 'package:fashion_customer/model/order_model.dart';
 import 'package:fashion_customer/model/review_model.dart';
 import 'package:fashion_customer/utils/constants.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -49,11 +50,37 @@ class _AddReviewState extends State<AddReview> {
       margin: EdgeInsets.all(8),
       child: Column(
         children: [
-          Image.file(
-            File(image),
-            height: 100,
-            width: 100,
-            fit: BoxFit.cover,
+          InkWell(
+            onTap: () {
+              String e;
+              Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                      builder: (context) => Scaffold(
+                            body: Center(
+                              child: Hero(
+                                  tag: image,
+                                  child: InteractiveViewer(
+                                    child: Image.file(
+                                      File(image),
+                                      // height:
+                                      //     MediaQuery.of(context).size.height,
+                                      // width: MediaQuery.of(context).size.width,
+                                      // fit: BoxFit.cover,
+                                    ),
+                                  )),
+                            ),
+                          )));
+            },
+            child: Hero(
+              tag: image,
+              child: Image.file(
+                File(image),
+                height: 100,
+                width: 100,
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
           InkWell(
             onTap: () {
