@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ReviewModel {
-  List<String> images;
+  final List<String> images;
   final Timestamp createdAt;
   final List<String> productId;
   final double rating;

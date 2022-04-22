@@ -516,6 +516,43 @@ class _ProductDetailsState extends State<ProductDetails> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    SizedBox(
+                      height: 20,
+                    ),
+                    StreamBuilder<QuerySnapshot<ReviewModel>>(
+                      stream: FirebaseFirestore.instance
+                          .collection("reviews")
+                          .where("productId", arrayContains: productModel.id)
+                          .withConverter<ReviewModel>(
+                              fromFirestore: (snapshot, options) =>
+                                  ReviewModel.fromMap(snapshot.data()!),
+                              toFirestore: (reviews, options) =>
+                                  reviews.toMap())
+                          //.limit(4)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return Column(
+                              // shrinkWrap: true,
+                              children: snapshot.data!.docs
+                                  .map((e) => Container(
+                                        child: Column(
+                                          children: [
+                                            Text(e.data().userName),
+                                            Image.network(
+                                                e.data().images.first),
+                                            Text(e.data().review),
+                                          ],
+                                        ),
+                                      ))
+                                  .toList());
+                        } else {
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                      },
+                    ),
                     Text(
                       'Related Products',
                       style: TextStyle(
@@ -525,7 +562,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                           letterSpacing: 1),
                     ),
                     SizedBox(
-                      height: 20,
+                      height: 04,
                     ),
                     StreamBuilder<QuerySnapshot<ProductModel>>(
                         stream: FirebaseFirestore.instance
@@ -543,7 +580,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                           if (snapshot.hasData) {
                             return AnimationLimiter(
                               child: GridView.count(
-                                childAspectRatio: 1 / 1.1,
+                                childAspectRatio: 1 / 1.3,
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),
                                 crossAxisCount: 2,
@@ -569,37 +606,10 @@ class _ProductDetailsState extends State<ProductDetails> {
                               child: CircularProgressIndicator(),
                             );
                           }
-                        })
+                        }),
                   ],
                 ),
               ),
-              StreamBuilder<QuerySnapshot<ReviewModel>>(
-                stream: FirebaseFirestore.instance
-                    .collection("reviews")
-                    .where("productId", arrayContains: productModel.id)
-                    .withConverter<ReviewModel>(
-                        fromFirestore: (snapshot, options) =>
-                            ReviewModel.fromMap(snapshot.data()!),
-                        toFirestore: (review, options) => review.toMap())
-                    .limit(4)
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return ListView(
-                      shrinkWrap: true,
-                        children: snapshot.data!.docs
-                            .map((e) => e.data())
-                            .map((e) => Container(
-                              child: Text(e.userName),
-                            ))
-                            .toList());
-                  } else {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                },
-              )
             ]),
           )),
     );

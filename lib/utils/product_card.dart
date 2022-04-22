@@ -40,7 +40,7 @@ class ProductCard extends StatelessWidget {
           ),
           margin: const EdgeInsets.all(10),
           // padding: const EdgeInsets.all(8),
-          height: height * 0.25,
+          height: height * 0.100,
 
           width: width * 0.4,
           child: Column(
