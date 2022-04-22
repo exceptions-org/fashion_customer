@@ -44,8 +44,8 @@ class _AddReviewState extends State<AddReview> {
 
   Widget imageContainer(String image, int i) {
     return Container(
-      height: 200,
-      width: 100,
+      height: MediaQuery.of(context).size.height * 0.15,
+      width: MediaQuery.of(context).size.width * 0.3,
       margin: EdgeInsets.all(8),
       child: Column(
         children: [
@@ -108,6 +108,9 @@ class _AddReviewState extends State<AddReview> {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+    var height = size.height;
+    var width = size.width;
     return Scaffold(
       bottomNavigationBar: Container(
         height: kBottomNavigationBarHeight * 1.5,
@@ -173,75 +176,157 @@ class _AddReviewState extends State<AddReview> {
             color: KConstants.kPrimary100,
           ),
         ),
-      ),
-      body: Column(
-        children: [
-          defContainer(
-            children: [
-              Text(
-                'Rating',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xff130B43),
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              SmoothStarRating(
-                rating: rating,
-                size: 40,
-                borderColor: KConstants.kPrimary100,
-                color: KConstants.kPrimary100,
-                onRatingChanged: (e) {
-                  setState(() {
-                    rating = e;
-                  });
-                },
-              ),
-            ],
+        leading: IconButton(
+          icon: Image.asset(
+            "Icons/Arrow.png",
+            color: KConstants.kPrimary100,
           ),
-          defContainer(
-            children: [
-              Text(
-                'Review',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xff130B43),
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              TextField(
-                maxLines: 5,
-                controller: reviewController,
-                decoration: InputDecoration(
-                  hintText: 'Tell us how you feel about our product',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ),
+      body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            ListView.builder(
+              itemCount: order.products.length,
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemBuilder: (BuildContext context, int index) {
+                return Column(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(16.0),
+                      height: 150,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(
+                          color: Color(0xffC8D5EF),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            height: 120,
+                            width: 140,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Color(0xffC8D5EF),
+                              ),
+                            ),
+                            child: Image.network(
+                              order.products[index].image.first,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 8.0,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                order.products[index].name,
+                                style: TextStyle(fontSize: 18),
+                              ),
+                              SizedBox(
+                                height: 4.0,
+                              ),
+                              Text(
+                                "Price: ${order.products[index].price}",
+                                style: TextStyle(
+                                    color: Color(0xff604FCC),
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              if (order.products[index].selectedSize != '') ...[
+                                SizedBox(
+                                  height: 4.0,
+                                ),
+                                Text(
+                                  "Delivered Size: ${order.products[index].selectedSize}",
+                                  style: TextStyle(
+                                      color: Color(0xff604FCC),
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ]
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 4,
+                    ),
+                  ],
+                );
+              },
+            ),
+            defContainer(
+              children: [
+                Text(
+                  'Rate the Product',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xff130B43),
                   ),
                 ),
-              ),
-            ],
-          ),
-          defContainer(
-            children: [
-              Text('Upload Images'),
-              SizedBox(
-                height: 10,
-              ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    ...images
-                        .mapIndexed((i, e) => imageContainer(e, i))
-                        .toList(),
-                    IconButton(
-                        onPressed: () {
+                SizedBox(
+                  height: 10,
+                ),
+                SmoothStarRating(
+                  rating: rating,
+                  size: 40,
+                  borderColor: KConstants.kPrimary100,
+                  color: KConstants.kPrimary100,
+                  onRatingChanged: (e) {
+                    setState(() {
+                      rating = e;
+                    });
+                  },
+                ),
+              ],
+            ),
+            defContainer(
+              children: [
+                Text(
+                  'Share your review',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xff130B43),
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                TextField(
+                  maxLines: 6,
+                  controller: reviewController,
+                  decoration: InputDecoration(
+                    hintText: 'Tell us how you feel about our product',
+                    // border: OutlineInputBorder(
+                    //   borderRadius: BorderRadius.circular(10),
+                    // ),
+                  ),
+                ),
+              ],
+            ),
+            defContainer(
+              children: [
+                Text('Add Images'),
+                SizedBox(
+                  height: 10,
+                ),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      InkWell(
+                        onTap: () {
                           picker.pickMultiImage().then((value) {
                             if (value != null) {
                               setState(() {
@@ -251,13 +336,28 @@ class _AddReviewState extends State<AddReview> {
                             }
                           });
                         },
-                        icon: Icon(Icons.add_a_photo)),
-                  ],
-                ),
-              )
-            ],
-          ),
-        ],
+                        child: Container(
+                            margin: EdgeInsets.only(right: 18),
+                            decoration: BoxDecoration(
+                                color: KConstants.kBorderColor,
+                                borderRadius: BorderRadius.circular(5)),
+                            height: height * 0.15,
+                            width: width * 0.3,
+                            child: Icon(
+                              Icons.add,
+                              size: height * 0.05,
+                            )),
+                      ),
+                      ...images
+                          .mapIndexed((i, e) => imageContainer(e, i))
+                          .toList(),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
