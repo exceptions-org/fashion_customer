@@ -33,8 +33,10 @@ class ReviewModel {
 
   factory ReviewModel.fromMap(Map<String, dynamic> map) {
     return ReviewModel(
-      images: map['images'],
-      productId: map['productId'],
+      images: map['images'] != null && map['images']?.length != 0
+          ? List.from(map['images'])
+          : [],
+      productId: List.from(map['productId']),
       userName: map['userName'],
       userPhone: map['userPhone'],
       createdAt: map['createdAt'],

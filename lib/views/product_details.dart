@@ -517,7 +517,18 @@ class _ProductDetailsState extends State<ProductDetails> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
-                      height: 20,
+                      height: 10,
+                    ),
+                    Text(
+                      'Review',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: height * 0.02,
+                          color: KConstants.txtColor100,
+                          letterSpacing: 1),
+                    ),
+                    SizedBox(
+                      height: 04,
                     ),
                     StreamBuilder<QuerySnapshot<ReviewModel>>(
                       stream: FirebaseFirestore.instance
@@ -532,6 +543,10 @@ class _ProductDetailsState extends State<ProductDetails> {
                           .snapshots(),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
+                          if (snapshot.data!.docs.isEmpty) {
+                            return Text('No Reviews Yet');
+                          }
+
                           return Column(
                               // shrinkWrap: true,
                               children: snapshot.data!.docs
@@ -539,8 +554,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                                         child: Column(
                                           children: [
                                             Text(e.data().userName),
-                                            Image.network(
-                                                e.data().images.first),
+                                            if (e.data().images.isNotEmpty)
+                                              Container(
+                                                height: 100,
+                                                width: 100,
+                                                child: Image.network(
+                                                    e.data().images.first),
+                                              ),
                                             Text(e.data().review),
                                           ],
                                         ),
@@ -552,6 +572,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                           );
                         }
                       },
+                    ),
+                    SizedBox(
+                      height: 15,
                     ),
                     Text(
                       'Related Products',
