@@ -36,18 +36,16 @@ class _MyAppState extends State<MyApp> {
         textTheme: GoogleFonts.montserratTextTheme(Theme.of(context).textTheme),
         appBarTheme: AppBarTheme(
             backgroundColor: Colors.white,
-            toolbarTextStyle: GoogleFonts.montserratAlternates(
-              color: KConstants.kPrimary100,
-            ),
+            toolbarTextStyle:
+                GoogleFonts.montserratAlternates(color: KConstants.kPrimary100),
             elevation: 1,
             centerTitle: true),
         scaffoldBackgroundColor: KConstants.kBgColor,
         inputDecorationTheme: InputDecorationTheme(
             focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: KConstants.kPrimary100))),
-        colorScheme: ColorScheme.fromSwatch().copyWith(
-          secondary: KConstants.kPrimary100,
-        ),
+        colorScheme: ColorScheme.fromSwatch()
+            .copyWith(secondary: KConstants.kPrimary100),
       ),
       debugShowCheckedModeBanner: false,
       home: SplashScreen(),

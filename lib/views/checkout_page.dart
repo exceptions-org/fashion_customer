@@ -4,6 +4,7 @@ import 'package:fashion_customer/bottom_navigation.dart';
 import 'package:fashion_customer/controller/cart_controller.dart';
 import 'package:fashion_customer/controller/controller.dart';
 import 'package:fashion_customer/main.dart';
+import 'package:fashion_customer/model/offer_model.dart';
 import 'package:fashion_customer/model/order_model.dart';
 import 'package:fashion_customer/utils/constants.dart';
 import 'package:fashion_customer/utils/product_card.dart';
@@ -49,6 +50,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
       createdAt: Timestamp.now(),
       cancellationReason: '',
       cancelledByUser: false);
+
+  CouponModel? couponModel;
+  double couponDiscount = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -454,6 +458,84 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   height: 4.0,
                 ),
                 Container(
+                  decoration: KConstants.defContainerDec,
+                  width: double.infinity,
+                  padding: EdgeInsets.all(16.0),
+                  child: Row(
+                    children: [
+                      if (couponModel == null)
+                        Text('Select Coupon')
+                      else
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Coupon Applied',
+                                style:
+                                    TextStyle(color: KConstants.kPrimary100)),
+                            Text(couponModel!.couponCode,
+                                style:
+                                    TextStyle(color: KConstants.kPrimary100)),
+                          ],
+                        ),
+                      Spacer(),
+                      if (couponModel == null)
+                        TextButton(
+                          onPressed: () async {
+                            await showModalBottomSheet(
+                                context: context,
+                                builder: (c) {
+                                  return SelectCouponBottomSheet(
+                                    user: controller.userModel.number,
+                                    onSelected: (p0) {
+                                      setState(() {
+                                        if (widget.totalAmount > p0.minPrice) {
+                                          couponModel = p0;
+                                          if (p0.isByPercent) {
+                                            couponDiscount =
+                                                widget.totalAmount *
+                                                    p0.couponDiscount /
+                                                    100;
+                                          } else {
+                                            couponDiscount = p0.couponDiscount;
+                                          }
+                                        }
+                                      });
+                                    },
+                                  );
+                                });
+                            setState(() {});
+                          },
+                          child: Text(
+                            'Select',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: KConstants.kPrimary100,
+                            ),
+                          ),
+                        )
+                      else
+                        InkWell(
+                          onTap: () async {
+                            setState(() {
+                              couponModel = null;
+                              couponDiscount = 0;
+                            });
+                          },
+                          child: Image.asset(
+                            'Icons/remove.png',
+                            height: 24,
+                            width: 24,
+                            color: Colors.red,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 4.0,
+                ),
+                Container(
                   width: double.infinity,
                   padding: EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
@@ -521,6 +603,30 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       SizedBox(
                         height: 4.0,
                       ),
+                      if (couponModel != null) ...[
+                        Row(
+                          children: [
+                            Text(
+                              'Discount',
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                color: Color(0xff130B43),
+                              ),
+                            ),
+                            Spacer(),
+                            Text(
+                              (couponDiscount).toString(),
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                color: Color(0xff130B43),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 4.0,
+                        ),
+                      ],
                       Row(
                         children: [
                           Text(
@@ -533,7 +639,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           ),
                           Spacer(),
                           Text(
-                            widget.totalAmount.toString(),
+                            (widget.totalAmount - couponDiscount).toString(),
                             style: TextStyle(
                               fontSize: 16.0,
                               color: Color(0xff130B43),
@@ -606,6 +712,81 @@ class _CheckoutPageState extends State<CheckoutPage> {
               ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class SelectCouponBottomSheet extends StatelessWidget {
+  final Function(CouponModel) onSelected;
+  final String user;
+  static const String routeName = "SelectCouponBottomSheet";
+  SelectCouponBottomSheet(
+      {Key? key, required this.onSelected, required this.user})
+      : super(key: key);
+
+  final CollectionReference<CouponModel> _couponCollection =
+      FirebaseFirestore.instance.collection('coupons').withConverter(
+          fromFirestore: (snapshot, options) =>
+              CouponModel.fromMap(snapshot.data()!),
+          toFirestore: (document, options) => document.toMap());
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: StreamBuilder<QuerySnapshot<CouponModel>>(
+        stream: _couponCollection.snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data!.docs.isEmpty) {
+              return Center(
+                child: Text('No Coupons Available'),
+              );
+            }
+
+            return ListView(
+              children: snapshot.data!.docs
+                  .where((element) =>
+                      element.data().isActive &&
+                      (element.data().isSingleUse
+                          ? !element.data().usedBy.contains(user)
+                          : true) &&
+                      (element.data().forUsers.isEmpty
+                          ? true
+                          : element.data().forUsers.contains(user)))
+                  .map((el) {
+                CouponModel e = el.data();
+                return ExpansionTile(
+                  title: Text(e.couponCode),
+                  subtitle: Text(e.couponDescription),
+                  children: [
+                    ListTile(
+                      title: Text('Discount'),
+                      subtitle: Text(e.isByPercent
+                          ? '${e.couponDiscount}%'
+                          : '${e.couponDiscount}'),
+                    ),
+                    ListTile(
+                      title: Text('Min Price'),
+                      subtitle: Text(e.minPrice.toString()),
+                    ),
+                    ListTile(
+                      title: Text('Select Coupon'),
+                      onTap: () {
+                        Navigator.pop(context);
+                        onSelected(e);
+                      },
+                    )
+                  ],
+                );
+              }).toList(),
+            );
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
       ),
     );
   }
