@@ -303,7 +303,7 @@ class _HomePageState extends State<HomePage> {
                         height: 200,
                         width: double.infinity,
                         child: snapshot.hasData && snapshot.data != null
-                            ? Column(
+                            ? snapshot.data!.docs.isEmpty?Container(): Column(
                                 children: [
                                   SizedBox(
                                       height: 160,
