@@ -1,5 +1,4 @@
 import 'package:fashion_customer/services/auth_service.dart';
-import 'package:fashion_customer/views/contact_details.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/constants.dart';
@@ -82,6 +81,7 @@ class _PhoneVerificationState extends State<PhoneVerification> {
                 height: 40,
                 width: 240,
                 child: TextField(
+                  keyboardType: TextInputType.number,
                   maxLength: 6,
                   textAlign: TextAlign.center,
                   controller: smsController,
@@ -118,9 +118,8 @@ class _PhoneVerificationState extends State<PhoneVerification> {
               Center(
                 child: GestureDetector(
                   onTap: () async {
-                  await widget.authService.verifySmsCode(
+                    await widget.authService.verifySmsCode(
                         widget.number, smsController.text, context);
-                 
                   },
                   child: Container(
                     height: 60.0,
