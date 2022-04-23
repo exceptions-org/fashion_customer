@@ -52,7 +52,6 @@ class _AddReviewState extends State<AddReview> {
         children: [
           InkWell(
             onTap: () {
-              String e;
               Navigator.push(
                   context,
                   CupertinoPageRoute(

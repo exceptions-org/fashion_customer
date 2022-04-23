@@ -8,6 +8,7 @@ import 'package:fashion_customer/model/review_model.dart';
 import 'package:fashion_customer/utils/constants.dart';
 import 'package:fashion_customer/utils/review_card.dart';
 import 'package:fashion_customer/utils/spHelper.dart';
+import 'package:fashion_customer/views/cart_page.dart';
 import 'package:fashion_customer/views/reviews.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,11 @@ class ProductDetails extends StatefulWidget {
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
+  void onPageChange(index) {
+    pageIndex = index;
+    setState(() {});
+  }
+
   late List<String> listOfImage = productModel.images.first.images;
 
   CartController cartController = getIt<CartController>();
@@ -80,8 +86,8 @@ class _ProductDetailsState extends State<ProductDetails> {
         return false;
       },
       child: Scaffold(
-          floatingActionButton: SizedBox(
-            height: 60,
+          bottomNavigationBar: SizedBox(
+            height: kBottomNavigationBarHeight,
             child: FittedBox(
               child: AnimatedSwitcher(
                 duration: Duration(milliseconds: 200),
@@ -293,6 +299,17 @@ class _ProductDetailsState extends State<ProductDetails> {
               style: TextStyle(color: KConstants.kPrimary100),
             ),
             centerTitle: true,
+            actions: [
+              InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                            builder: (context) =>
+                                Cartpage(onChange: onPageChange)));
+                  },
+                  child: Image.asset("Icons/Bag.png")),
+            ],
           ),
           body: SingleChildScrollView(
             child:
@@ -575,7 +592,10 @@ class _ProductDetailsState extends State<ProductDetails> {
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         if (snapshot.data!.docs.isEmpty) {
-                          return Text('No Reviews Yet');
+                          return Padding(
+                            padding: const EdgeInsets.only(left: 16.0),
+                            child: Text('No Reviews Yet'),
+                          );
                         }
 
                         return Column(
@@ -593,13 +613,16 @@ class _ProductDetailsState extends State<ProductDetails> {
                   SizedBox(
                     height: 15,
                   ),
-                  Text(
-                    'Related Products',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: height * 0.02,
-                        color: KConstants.txtColor100,
-                        letterSpacing: 1),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16.0),
+                    child: Text(
+                      'Related Products',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: height * 0.02,
+                          color: KConstants.txtColor100,
+                          letterSpacing: 1),
+                    ),
                   ),
                   SizedBox(
                     height: 04,

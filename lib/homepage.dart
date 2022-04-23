@@ -300,47 +300,51 @@ class _HomePageState extends State<HomePage> {
                         .get(),
                     builder: (context, snapshot) {
                       return SizedBox(
-                        height: 200,
                         width: double.infinity,
                         child: snapshot.hasData && snapshot.data != null
-                            ? snapshot.data!.docs.isEmpty?Container(): Column(
-                                children: [
-                                  SizedBox(
-                                      height: 160,
-                                      child: PageView(
-                                        onPageChanged: onPageChange,
-                                        controller: pageController,
-                                        scrollDirection: Axis.horizontal,
-                                        children: snapshot.data!.docs
-                                            .map((e) =>
-                                                carouselContainer(e.data()))
-                                            .toList(),
-                                      )),
-                                  const SizedBox(height: 5),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: List.generate(
-                                      snapshot.data!.docs.length,
-                                      (index) => Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: AnimatedContainer(
-                                          duration:
-                                              const Duration(milliseconds: 300),
-                                          height: 10,
-                                          width: pageIndex == index ? 15 : 10,
-                                          decoration: BoxDecoration(
-                                              color: pageIndex == index
-                                                  ? KConstants.kPrimary100
-                                                  : KConstants.kPrimary100
-                                                      .withOpacity(.2),
-                                              borderRadius:
-                                                  BorderRadius.circular(20)),
+                            ? snapshot.data!.docs.isEmpty
+                                ? Container()
+                                : Column(
+                                    children: [
+                                      SizedBox(
+                                          height: 160,
+                                          child: PageView(
+                                            onPageChanged: onPageChange,
+                                            controller: pageController,
+                                            scrollDirection: Axis.horizontal,
+                                            children: snapshot.data!.docs
+                                                .map((e) =>
+                                                    carouselContainer(e.data()))
+                                                .toList(),
+                                          )),
+                                      const SizedBox(height: 5),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: List.generate(
+                                          snapshot.data!.docs.length,
+                                          (index) => Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: AnimatedContainer(
+                                              duration: const Duration(
+                                                  milliseconds: 300),
+                                              height: 10,
+                                              width:
+                                                  pageIndex == index ? 15 : 10,
+                                              decoration: BoxDecoration(
+                                                  color: pageIndex == index
+                                                      ? KConstants.kPrimary100
+                                                      : KConstants.kPrimary100
+                                                          .withOpacity(.2),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          20)),
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                ],
-                              )
+                                    ],
+                                  )
                             : Center(
                                 child: CircularProgressIndicator(
                                   color: KConstants.kPrimary100,
