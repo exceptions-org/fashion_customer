@@ -13,12 +13,9 @@ GetIt getIt = GetIt.instance;
 void main() async {
   getIt.registerLazySingleton(() => UserController());
   getIt.registerLazySingleton(() => CartController());
-
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(
-    const MyApp(),
-  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {

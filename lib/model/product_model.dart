@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 import 'category_model.dart';
@@ -25,6 +26,8 @@ class ProductModel {
   final double quantity;
   final double discountPrice;
   final String selectedSize;
+  final double averageRating;
+  final Timestamp createdAt;
   ProductModel({
     required this.name,
     required this.id,
@@ -44,6 +47,8 @@ class ProductModel {
     required this.quantity,
     required this.discountPrice,
     required this.selectedSize,
+    required this.averageRating,
+    required this.createdAt,
   });
 
   ProductModel copyWith({
@@ -62,6 +67,10 @@ class ProductModel {
     String? sizeUnit,
     String? unit,
     double? quantity,
+    double? discountPrice,
+    String? selectedSize,
+    double? averageRating,
+    Timestamp? createdAt,
   }) {
     return ProductModel(
       name: name ?? this.name,
@@ -80,8 +89,10 @@ class ProductModel {
       sizeUnit: sizeUnit ?? this.sizeUnit,
       unit: unit ?? this.unit,
       quantity: quantity ?? this.quantity,
-      discountPrice: discountPrice,
-      selectedSize: selectedSize,
+      discountPrice: discountPrice ?? this.discountPrice,
+      selectedSize: selectedSize ?? this.selectedSize,
+      averageRating: averageRating ?? this.averageRating,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 
@@ -94,6 +105,7 @@ class ProductModel {
       'subCategory': subCategory.toMap(),
       'images': images.map((x) => x.toMap()).toList(),
       'prices': prices.map((x) => x.toMap()).toList(),
+      'highPrice': highPrice,
       'quality': quality,
       'brand': brand,
       'rating': rating,
@@ -103,6 +115,8 @@ class ProductModel {
       'unit': unit,
       'quantity': quantity,
       'selectedSize': selectedSize,
+      'averageRating': averageRating,
+      'createdAt': createdAt,
     };
   }
 
@@ -118,7 +132,7 @@ class ProductModel {
           map['images']?.map((x) => ImageColorModel.fromMap(x))),
       prices: List<SizePriceModel>.from(
           map['prices']?.map((x) => SizePriceModel.fromMap(x))),
-      highPrice: map['highPrice'],
+      highPrice: map['highPrice'] ?? map['prices'][0]['colorPrice'][0]['price'],
       quality: map['quality'] ?? '',
       brand: map['brand'] ?? '',
       rating: map['rating']?.toDouble() ?? 0.0,
@@ -128,6 +142,8 @@ class ProductModel {
       unit: map['unit'] ?? '',
       quantity: map['quantity']?.toDouble() ?? 0.0,
       selectedSize: map['selectedSize'] ?? '',
+      averageRating: map['averageRating']?.toDouble() ?? 0.0,
+      createdAt: map['createdAt'] ?? Timestamp.now(),
     );
   }
 

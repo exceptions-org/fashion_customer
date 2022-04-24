@@ -177,6 +177,29 @@ class _AddReviewState extends State<AddReview> {
                 await FirebaseFirestore.instance
                     .collection('reviews')
                     .add(reviewModel.toMap());
+
+                for (var e in order.products) {
+                  QuerySnapshot<ReviewModel> reviews = await FirebaseFirestore
+                      .instance
+                      .collection('reviews')
+                      .where('productId', arrayContains: e.productId)
+                      .withConverter(
+                          fromFirestore: (snapshot, options) =>
+                              ReviewModel.fromMap(snapshot.data()!),
+                          toFirestore: (ReviewModel obj, options) =>
+                              obj.toMap())
+                      .get();
+                  List<double> allRatings =
+                      reviews.docs.map((e) => e.data().rating).toList();
+                  double avgRating = allRatings.isEmpty
+                      ? 0
+                      : allRatings.reduce((a, b) => a + b) / allRatings.length;
+                  await FirebaseFirestore.instance
+                      .collection('products')
+                      .doc(e.productId)
+                      .update({'averageRating': avgRating});
+                }
+
                 Navigator.pop(context);
               },
               child: Container(

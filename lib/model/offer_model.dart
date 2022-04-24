@@ -18,6 +18,7 @@ class CouponModel {
   final int usedCount;
   final List<String> forUsers;
   final List<String> usedBy;
+  final String couponId;
   CouponModel({
     required this.couponCode,
     required this.couponName,
@@ -33,6 +34,7 @@ class CouponModel {
     required this.usedCount,
     required this.forUsers,
     required this.usedBy,
+    required this.couponId,
   });
 
   CouponModel copyWith({
@@ -50,6 +52,7 @@ class CouponModel {
     int? usedCount,
     List<String>? forUsers,
     List<String>? usedBy,
+    String? couponId,
   }) {
     return CouponModel(
       couponCode: couponCode ?? this.couponCode,
@@ -66,6 +69,7 @@ class CouponModel {
       usedCount: usedCount ?? this.usedCount,
       forUsers: forUsers ?? this.forUsers,
       usedBy: usedBy ?? this.usedBy,
+      couponId: couponId ?? this.couponId,
     );
   }
 
@@ -85,6 +89,7 @@ class CouponModel {
       'usedCount': usedCount,
       'forUsers': forUsers,
       'usedBy': usedBy,
+      'couponId': couponId,
     };
   }
 
@@ -104,6 +109,7 @@ class CouponModel {
       usedCount: map['usedCount']?.toInt() ?? 0,
       forUsers: List<String>.from(map['forUsers']),
       usedBy: List<String>.from(map['usedBy']),
+      couponId: map['couponId'] ?? '',
     );
   }
 

@@ -208,6 +208,16 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         }
                       }
 
+                      if (couponModel != null) {
+                        await FirebaseFirestore.instance
+                            .collection('coupons')
+                            .doc(couponModel!.couponId)
+                            .update({
+                          'usedBy': FieldValue.arrayUnion(
+                              [controller.userModel.number])
+                        });
+                      }
+
                       await FirebaseFirestore.instance
                           .runTransaction((transaction) async {
                         for (var item in cartController.cartItems) {

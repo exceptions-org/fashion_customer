@@ -87,95 +87,121 @@ class _ProductDetailsState extends State<ProductDetails> {
       },
       child: Scaffold(
           bottomNavigationBar: SizedBox(
-            height: kBottomNavigationBarHeight,
-            child: FittedBox(
-              child: AnimatedSwitcher(
-                duration: Duration(milliseconds: 200),
-                child: cartController.cartItems.any((element) =>
-                        element.productId == productModel.id &&
-                        element.color == selectedColor.value &&
-                        size == element.selectedSize)
-                    ? FloatingActionButton.extended(
-                        key: ValueKey(cartController.cartItems.any((element) =>
-                            element.productId == productModel.id &&
-                            element.color == selectedColor.value &&
-                            size == element.selectedSize)),
-                        onPressed: () {},
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        label: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            IconButton(
+            height: kBottomNavigationBarHeight * 1.5,
+            child: SizedBox(
+              width: width,
+              height: kBottomNavigationBarHeight * 1.5,
+              child: Row(
+                children: [
+                  Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 18.0),
+                    child: FittedBox(
+                      child: AnimatedSwitcher(
+                        duration: Duration(milliseconds: 200),
+                        child: cartController.cartItems.any((element) =>
+                                element.productId == productModel.id &&
+                                element.color == selectedColor.value &&
+                                size == element.selectedSize)
+                            ? FloatingActionButton.extended(
+                                key: ValueKey(cartController.cartItems.any(
+                                    (element) =>
+                                        element.productId == productModel.id &&
+                                        element.color == selectedColor.value &&
+                                        size == element.selectedSize)),
+                                onPressed: () {},
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                                label: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    IconButton(
+                                        onPressed: () {
+                                          cartController.decrement(
+                                              productModel.id,
+                                              size,
+                                              selectedColor.value);
+                                          setState(() {});
+                                        },
+                                        icon: Icon(Icons.remove,
+                                            color: Colors.white)),
+                                    Text(
+                                      cartController
+                                          .getCart(productModel.id, size,
+                                              selectedColor.value)
+                                          .quantity
+                                          .toString(),
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: height * 0.025,
+                                          letterSpacing: 1),
+                                    ),
+                                    IconButton(
+                                        onPressed: () {
+                                          cartController.increment(
+                                              productModel.id,
+                                              size,
+                                              selectedColor.value);
+                                          setState(() {});
+                                        },
+                                        icon: Icon(Icons.add,
+                                            color: Colors.white)),
+                                  ],
+                                ),
+                              )
+                            : FloatingActionButton.extended(
+                                key: ValueKey(cartController.cartItems.any(
+                                    (element) =>
+                                        element.productId == productModel.id &&
+                                        element.color == selectedColor.value &&
+                                        size == element.selectedSize)),
                                 onPressed: () {
-                                  cartController.decrement(productModel.id,
-                                      size, selectedColor.value);
-                                  setState(() {});
-                                },
-                                icon: Icon(Icons.remove, color: Colors.white)),
-                            Text(
-                              cartController
-                                  .getCart(productModel.id, size,
-                                      selectedColor.value)
-                                  .quantity
-                                  .toString(),
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: height * 0.025,
-                                  letterSpacing: 1),
-                            ),
-                            IconButton(
-                                onPressed: () {
-                                  cartController.increment(productModel.id,
-                                      size, selectedColor.value);
-                                  setState(() {});
-                                },
-                                icon: Icon(Icons.add, color: Colors.white)),
-                          ],
-                        ),
-                      )
-                    : FloatingActionButton.extended(
-                        key: ValueKey(cartController.cartItems.any((element) =>
-                            element.productId == productModel.id &&
-                            element.color == selectedColor.value &&
-                            size == element.selectedSize)),
-                        onPressed: () {
-                          if (sizes.isNotEmpty && size == '') {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text('Please select a size')));
-                            return;
-                          }
-                          cartController.addToCart(
-                              productModel.id,
-                              size,
-                              selectedColor.value,
-                              listOfImage,
-                              productModel.name,
-                              price,
-                              widget.productModel.images
-                                  .firstWhere((element) =>
-                                      element.colorCode == selectedColor.value)
-                                  .colorName);
-                          SPHelper().setCart(cartController.cartItems);
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              duration: Duration(seconds: 1),
-                              content: Text("Product added to the cart")));
+                                  if (sizes.isNotEmpty && size == '') {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            content:
+                                                Text('Please select a size')));
+                                    return;
+                                  }
+                                  cartController.addToCart(
+                                      productModel.id,
+                                      size,
+                                      selectedColor.value,
+                                      listOfImage,
+                                      productModel.name,
+                                      price,
+                                      widget.productModel.images
+                                          .firstWhere((element) =>
+                                              element.colorCode ==
+                                              selectedColor.value)
+                                          .colorName);
+                                  SPHelper().setCart(cartController.cartItems);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          duration: Duration(seconds: 1),
+                                          content: Text(
+                                              "Product added to the cart")));
 
-                          setState(() {});
-                          // Navigator.pop(context);
-                        },
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        icon: Image.asset('Icons/Bag.png', color: Colors.white),
-                        label: Text(
-                          "Add to Cart",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: height * 0.025,
-                              letterSpacing: 1),
-                        ),
+                                  setState(() {});
+                                  // Navigator.pop(context);
+                                },
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                                icon: Image.asset('Icons/Bag.png',
+                                    color: Colors.white),
+                                label: Text(
+                                  "Add to Cart",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: height * 0.025,
+                                      letterSpacing: 1),
+                                ),
+                              ),
                       ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
