@@ -36,6 +36,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
   late OrderModel orderModel = OrderModel(
       deliveredDate: Timestamp.now(),
+      couponModel: couponModel,
       products: cartController.cartItems,
       pushToken: controller.userModel.pushToken,
       orderDocId: '',
@@ -44,7 +45,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       userPhone: controller.userModel.number,
       totalPrice: widget.totalAmount,
       deliveryDate: Timestamp.now(),
-      totalDiscountPrice: 0,
+      totalDiscountPrice: couponDiscount,
       orderId: '',
       orderState: OrderState.placed,
       createdAt: Timestamp.now(),
@@ -193,7 +194,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             userPhone: controller.userModel.number,
                             totalPrice: widget.totalAmount,
                             deliveryDate: Timestamp.now(),
-                            totalDiscountPrice: 0,
+                            couponModel: couponModel,
+                            totalDiscountPrice: couponDiscount,
                             orderId: 'FASHIO${orders.docs.length + 1}',
                             orderState: OrderState.placed,
                             createdAt: Timestamp.now(),
@@ -211,7 +213,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       if (couponModel != null) {
                         await FirebaseFirestore.instance
                             .collection('coupons')
-                            .doc(couponModel!.couponId)
+                            .doc(couponModel!.couponCode)
                             .update({
                           'usedBy': FieldValue.arrayUnion(
                               [controller.userModel.number])
@@ -508,6 +510,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                           } else {
                                             couponDiscount = p0.couponDiscount;
                                           }
+                                        } else {
+                                          //Navigator.pop(context);
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                                  content: Text(
+                                                      'Coupon not applicable')));
                                         }
                                       });
                                     },
@@ -524,7 +532,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             ),
                           ),
                         )
-                      else
+                      else if(!orderPlaced)
                         InkWell(
                           onTap: () async {
                             setState(() {

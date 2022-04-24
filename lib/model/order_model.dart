@@ -2,16 +2,17 @@ import 'dart:convert';
 import 'dart:core';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
-
 import 'package:fashion_customer/model/cart_model.dart';
+import 'package:fashion_customer/model/offer_model.dart';
 import 'package:fashion_customer/model/user_model.dart';
+import 'package:flutter/foundation.dart';
 
 enum OrderState { placed, confirmed, outForDelivery, delivered, cancel }
 
 class OrderModel {
   final String orderDocId;
   final List<CartModel> products;
+
   final double totalPrice;
   final Timestamp deliveryDate;
   final double totalDiscountPrice;
@@ -25,6 +26,8 @@ class OrderModel {
   final Timestamp deliveredDate;
   final bool cancelledByUser;
   final String cancellationReason;
+  final CouponModel? couponModel;
+
   OrderModel({
     required this.orderDocId,
     required this.products,
@@ -41,6 +44,7 @@ class OrderModel {
     required this.deliveredDate,
     required this.cancelledByUser,
     required this.cancellationReason,
+    required this.couponModel,
   });
 
   OrderModel copyWith({
@@ -59,6 +63,7 @@ class OrderModel {
     Timestamp? deliveredDate,
     bool? cancelledByUser,
     String? cancellationReason,
+    CouponModel? couponModel,
   }) {
     return OrderModel(
       orderDocId: orderDocId ?? this.orderDocId,
@@ -76,6 +81,7 @@ class OrderModel {
       deliveredDate: deliveredDate ?? this.deliveredDate,
       cancelledByUser: cancelledByUser ?? this.cancelledByUser,
       cancellationReason: cancellationReason ?? this.cancellationReason,
+      couponModel: couponModel ?? this.couponModel,
     );
   }
 
@@ -96,6 +102,7 @@ class OrderModel {
       'deliveredDate': deliveredDate,
       'cancelledByUser': cancelledByUser,
       'cancellationReason': cancellationReason,
+      'couponModel': couponModel?.toMap(),
     };
   }
 
@@ -117,6 +124,9 @@ class OrderModel {
       deliveredDate: map['deliveredDate'],
       cancelledByUser: map['cancelledByUser'] ?? false,
       cancellationReason: map['cancellationReason'] ?? '',
+      couponModel: map['couponModel'] == null
+          ? null
+          : CouponModel.fromMap(map['couponModel']),
     );
   }
 
