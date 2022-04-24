@@ -1,5 +1,7 @@
 import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
+
 import 'category_model.dart';
 import 'image_color_model.dart';
 import 'size_price_model.dart';
@@ -12,6 +14,7 @@ class ProductModel {
   final CategoryModel subCategory;
   final List<ImageColorModel> images;
   final List<SizePriceModel> prices;
+  final String highPrice;
   final String quality;
   final String brand;
   final double rating;
@@ -30,6 +33,7 @@ class ProductModel {
     required this.subCategory,
     required this.images,
     required this.prices,
+    required this.highPrice,
     required this.quality,
     required this.brand,
     required this.rating,
@@ -67,6 +71,7 @@ class ProductModel {
       subCategory: subCategory ?? this.subCategory,
       images: images ?? this.images,
       prices: prices ?? this.prices,
+      highPrice: highPrice,
       quality: quality ?? this.quality,
       brand: brand ?? this.brand,
       rating: rating ?? this.rating,
@@ -97,13 +102,13 @@ class ProductModel {
       'sizeUnit': sizeUnit,
       'unit': unit,
       'quantity': quantity,
-      'selectedSize' : selectedSize,
+      'selectedSize': selectedSize,
     };
   }
 
   factory ProductModel.fromMap(Map<String, dynamic> map) {
     return ProductModel(
-      discountPrice: map['discountPrice']??0,
+      discountPrice: map['discountPrice'] ?? 0,
       name: map['name'] ?? '',
       id: map['id'] ?? '',
       description: map['description'] ?? '',
@@ -113,6 +118,7 @@ class ProductModel {
           map['images']?.map((x) => ImageColorModel.fromMap(x))),
       prices: List<SizePriceModel>.from(
           map['prices']?.map((x) => SizePriceModel.fromMap(x))),
+      highPrice: map['highPrice'],
       quality: map['quality'] ?? '',
       brand: map['brand'] ?? '',
       rating: map['rating']?.toDouble() ?? 0.0,
@@ -121,7 +127,7 @@ class ProductModel {
       sizeUnit: map['sizeUnit'] ?? '',
       unit: map['unit'] ?? '',
       quantity: map['quantity']?.toDouble() ?? 0.0,
-      selectedSize: map['selectedSize']?? '',
+      selectedSize: map['selectedSize'] ?? '',
     );
   }
 
