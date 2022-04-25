@@ -10,6 +10,8 @@ import 'package:fashion_customer/views/view_order.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'utils/constants.dart';
 
@@ -225,14 +227,21 @@ class _ProfilePageState extends State<ProfilePage> {
                                 width: 20,
                               ),
                               IconButton(
-                                onPressed: () {
-                                  showModalBottomSheet(
+                                onPressed: () async {
+                                  await Geolocator.requestPermission();
+                                  Position position =
+                                      await Geolocator.getCurrentPosition(
+                                          desiredAccuracy:
+                                              LocationAccuracy.high);
+                                  await showModalBottomSheet(
                                       isScrollControlled: true,
                                       isDismissible: false,
                                       context: context,
                                       builder: (c) {
                                         return AddAdress(
                                           addressModel: e,
+                                          latLng: LatLng(position.latitude,
+                                              position.longitude),
                                           editIndex: i,
                                           isEdit: true,
                                           onTap: () {
@@ -280,7 +289,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     Center(
                       child: TextButton.icon(
-                        onPressed: () {
+                        onPressed: () async {
+                          await Geolocator.requestPermission();
+                          Position position =
+                              await Geolocator.getCurrentPosition(
+                                  desiredAccuracy: LocationAccuracy.high);
                           showModalBottomSheet(
                               isScrollControlled: true,
                               isDismissible: false,
@@ -288,6 +301,8 @@ class _ProfilePageState extends State<ProfilePage> {
                               builder: (c) {
                                 return AddAdress(
                                   isEdit: false,
+                                  latLng: LatLng(
+                                      position.latitude, position.longitude),
                                   onTap: () {
                                     setState(() {});
                                   },

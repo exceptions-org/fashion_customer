@@ -15,13 +15,15 @@ class AddAdress extends StatefulWidget {
   final Function() onTap;
   final bool isEdit;
   final int? editIndex;
+  final LatLng? latLng;
   final AddressModel? addressModel;
   AddAdress(
       {Key? key,
       required this.onTap,
       required this.isEdit,
       this.addressModel,
-      this.editIndex})
+      this.editIndex,
+      this.latLng})
       : super(key: key);
 
   @override
@@ -56,7 +58,10 @@ class _AddAdressState extends State<AddAdress> {
   late TextEditingController landmark = TextEditingController(
       text: widget.isEdit ? widget.addressModel!.landMark : "");
 
-  LatLng? selectedLatLng;
+  late LatLng? selectedLatLng = (widget.isEdit
+      ? LatLng(widget.addressModel!.latlng.latitude,
+          widget.addressModel!.latlng.longitude)
+      : widget.latLng);
   GoogleMapController? controller;
   Completer<GoogleMapController> completer = Completer<GoogleMapController>();
 
@@ -358,7 +363,7 @@ class _AddAdressState extends State<AddAdress> {
                                       Marker(
                                           markerId: MarkerId('0'),
                                           position: selectedLatLng!)
-                                    else
+                                    else if (widget.isEdit)
                                       Marker(
                                           markerId: MarkerId('0'),
                                           position: LatLng(
