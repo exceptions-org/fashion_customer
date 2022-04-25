@@ -107,7 +107,8 @@ class _HomePageState extends State<HomePage> {
         },
         child: Container(
           decoration: BoxDecoration(
-            image: DecorationImage(image: NetworkImage(carouselModel.imageUrl)),
+            image: DecorationImage(
+                image: NetworkImage(carouselModel.imageUrl), fit: BoxFit.cover),
             borderRadius: BorderRadius.circular(10),
           ),
         ),
@@ -155,17 +156,17 @@ class _HomePageState extends State<HomePage> {
                 child: Image.asset("Icons/User.png")),
           ],
         ),
-        body: Padding(
-          padding: const EdgeInsets.only(left: 10, right: 10),
-          child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 12,
-                ),
-                InkWell(
+        body: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 12,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: InkWell(
                   onTap: () async {
                     await showModalBottomSheet(
                         context: context, builder: (c) => SelectAddressSheet());
@@ -203,94 +204,189 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
-                const Padding(
-                  padding: EdgeInsets.only(left: 10),
-                  child: Text(
-                    "Categories",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Color(
-                        0xff130B43,
+              ),
+              const SizedBox(height: 20),
+              Container(
+                decoration: KConstants.defContainerDec,
+                padding: EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Categories",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color(
+                          0xff130B43,
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                SizedBox(
-                  height: 12,
-                ),
-                FutureBuilder<QuerySnapshot<FetchCategoryModel>>(
-                    future: FirebaseFirestore.instance
-                        .collection('admin')
-                        .doc('categories')
-                        .collection('categories')
-                        .withConverter(
-                            fromFirestore: (snapshot, options) =>
-                                FetchCategoryModel.fromMap(snapshot.data()!),
-                            toFirestore: (FetchCategoryModel v, s) => v.toMap())
-                        .get(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData && snapshot.data != null) {
-                        return Container(
-                          width: size.width,
-                          child: Wrap(
-                            crossAxisAlignment: WrapCrossAlignment.center,
-                            alignment: WrapAlignment.spaceBetween,
-                            children: snapshot.data!.docs
-                                .map((e) => Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: InkWell(
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              CupertinoPageRoute(
-                                                  builder: (context) =>
-                                                      SearchPage(
-                                                        onChange:
-                                                            widget.onChange,
-                                                        category: e
-                                                            .data()
-                                                            .category
-                                                            .name,
-                                                        isCategry: true,
-                                                        subcategories: e
-                                                            .data()
-                                                            .subcategory,
-                                                      )));
-                                        },
-                                        child: Column(
-                                          children: [
-                                            Container(
-                                              padding: EdgeInsets.all(10),
-                                              height: size.height * 0.065,
-                                              width: size.height * 0.065,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(4),
-                                                color: Colors.white,
-                                                border: Border.all(
-                                                  color: KConstants.kPrimary100,
-                                                ),
+                    SizedBox(
+                      height: 12,
+                    ),
+                    StreamBuilder<QuerySnapshot<FetchCategoryModel>>(
+                        stream: FirebaseFirestore.instance
+                            .collection('admin')
+                            .doc('categories')
+                            .collection('categories')
+                            .withConverter(
+                                fromFirestore: (snapshot, options) =>
+                                    FetchCategoryModel.fromMap(
+                                        snapshot.data()!),
+                                toFirestore: (FetchCategoryModel v, s) =>
+                                    v.toMap())
+                            .orderBy('p')
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData && snapshot.data != null) {
+                            return Container(
+                              width: size.width,
+                              child: GridView.count(
+                                  shrinkWrap: true,
+                                  crossAxisCount: 4,
+                                  crossAxisSpacing: 12,
+                                  mainAxisSpacing: 7,
+                                  childAspectRatio: 1 / 0.9,
+                                  children: [
+                                    ...(snapshot.data!.docs.length > 7
+                                            ? snapshot.data!.docs.sublist(0, 7)
+                                            : snapshot.data!.docs)
+                                        .map((e) => InkWell(
+                                              onTap: () {
+                                                Navigator.push(
+                                                    context,
+                                                    CupertinoPageRoute(
+                                                        builder: (context) =>
+                                                            SearchPage(
+                                                              onChange: widget
+                                                                  .onChange,
+                                                              category: e
+                                                                  .data()
+                                                                  .category
+                                                                  .name,
+                                                              isCategry: true,
+                                                              subcategories: e
+                                                                  .data()
+                                                                  .subcategory,
+                                                            )));
+                                              },
+                                              child: Column(
+                                                children: [
+                                                  Image.network(
+                                                    e.data().category.imageUrl,
+                                                    height: width * 0.12,
+                                                    width: width * 0.12,
+                                                    color:
+                                                        KConstants.kPrimary100,
+                                                  ),
+                                                  SizedBox(
+                                                    height: 12,
+                                                  ),
+                                                  Text(e.data().category.name),
+                                                ],
                                               ),
-                                              child: Image.network(
-                                                  e.data().category.imageUrl),
-                                            ),
-                                            SizedBox(
-                                              height: 12,
-                                            ),
-                                            Text(e.data().category.name),
-                                          ],
-                                        ),
+                                            ))
+                                        .toList(),
+                                    InkWell(
+                                      onTap: () {
+                                        showModalBottomSheet(
+                                          isScrollControlled: true,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.vertical(
+                                                      top:
+                                                          Radius.circular(15))),
+                                          context: context,
+                                          builder: (c) => Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 20,
+                                                    top: 20,
+                                                    bottom: 10),
+                                                child: Text('Select Category'),
+                                              ),
+                                              Divider(),
+                                              ListView(
+                                                shrinkWrap: true,
+                                                children: snapshot.data!.docs
+                                                    .map(
+                                                      (e) => ListTile(
+                                                        /*      leading: Image.network(
+                                                          e
+                                                              .data()
+                                                              .category
+                                                              .imageUrl,
+                                                          height: 30,
+                                                          width: 30,
+                                                        ), */
+                                                        title: Text(
+                                                          e
+                                                              .data()
+                                                              .category
+                                                              .name,
+                                                          style: TextStyle(
+                                                              fontSize: 12),
+                                                        ),
+                                                        onTap: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                          Navigator.push(
+                                                              context,
+                                                              CupertinoPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          SearchPage(
+                                                                            onChange:
+                                                                                widget.onChange,
+                                                                            category:
+                                                                                e.data().category.name,
+                                                                            isCategry:
+                                                                                true,
+                                                                            subcategories:
+                                                                                e.data().subcategory,
+                                                                          )));
+                                                        },
+                                                      ),
+                                                    )
+                                                    .toList(),
+                                              ),
+                                              SizedBox(
+                                                height: 20,
+                                              )
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                      child: Column(
+                                        children: [
+                                          Image.asset(
+                                            'Icons/view_all.png',
+                                            height: width * 0.12,
+                                            width: width * 0.12,
+                                          ),
+                                          SizedBox(
+                                            height: 12,
+                                          ),
+                                          Text('View All'),
+                                        ],
                                       ),
-                                    ))
-                                .toList(),
-                          ),
-                        );
-                      }
-                      return Container();
-                    }),
-                FutureBuilder<QuerySnapshot<CarouselModel>>(
+                                    ),
+                                  ]),
+                            );
+                          }
+                          return Container();
+                        }),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: FutureBuilder<QuerySnapshot<CarouselModel>>(
                     future: FirebaseFirestore.instance
                         .collection('carousel')
                         .withConverter(
@@ -352,36 +448,39 @@ class _HomePageState extends State<HomePage> {
                               ),
                       );
                     }),
-                const SizedBox(height: 5),
-                Padding(
-                  padding: EdgeInsets.only(left: 10, right: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Popular Products",
-                        style: TextStyle(fontSize: 18),
+              ),
+              const SizedBox(height: 5),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Popular Products",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        widget.onChange(1);
+                        // Navigator.push(
+                        //     context,
+                        //     CupertinoPageRoute(
+                        //         builder: (context) => SearchPage()));
+                      },
+                      child: Text(
+                        "View More",
+                        style: TextStyle(fontSize: 18, color: Colors.purple),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          widget.onChange(1);
-                          // Navigator.push(
-                          //     context,
-                          //     CupertinoPageRoute(
-                          //         builder: (context) => SearchPage()));
-                        },
-                        child: Text(
-                          "View More",
-                          style: TextStyle(fontSize: 18, color: Colors.purple),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 5),
-                StreamBuilder<QuerySnapshot<ProductModel>>(
+              ),
+              const SizedBox(height: 5),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: StreamBuilder<QuerySnapshot<ProductModel>>(
                   stream: productRefs
-                      .orderBy("orderCount")
+                      .orderBy("orderCount", descending: true)
                       .withConverter<ProductModel>(
                           fromFirestore: (snapshot, options) =>
                               ProductModel.fromMap(snapshot.data()!),
@@ -412,6 +511,8 @@ class _HomePageState extends State<HomePage> {
                           physics: BouncingScrollPhysics(),
                           childAspectRatio: 1 / 1.2,
                           shrinkWrap: true,
+                          mainAxisSpacing: 8,
+                          crossAxisSpacing: 8,
                           crossAxisCount: 2,
                           children: snapshot.data!.docs
                               .map((e) => e.data())
@@ -520,8 +621,8 @@ class _HomePageState extends State<HomePage> {
                     return const Center(child: Text('Loading...'));
                   },
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

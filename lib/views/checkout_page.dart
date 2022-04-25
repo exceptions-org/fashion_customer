@@ -532,7 +532,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             ),
                           ),
                         )
-                      else if(!orderPlaced)
+                      else if (!orderPlaced)
                         InkWell(
                           onTap: () async {
                             setState(() {
@@ -698,9 +698,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
                               if (snapshot.hasData) {
                                 return AnimationLimiter(
                                   child: GridView.count(
-                                    shrinkWrap: true,
-                                    childAspectRatio: 1 / 1.3,
                                     physics: BouncingScrollPhysics(),
+                                    childAspectRatio: 1 / 1.2,
+                                    shrinkWrap: true,
+                                    mainAxisSpacing: 8,
+                                    crossAxisSpacing: 8,
                                     crossAxisCount: 2,
                                     children: snapshot.data!.docs
                                         .mapIndexed((i, element) =>
