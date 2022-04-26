@@ -25,7 +25,6 @@ class ProductModel {
   final String unit;
   final double quantity;
   final double discountPrice;
-  final String selectedSize;
   final double averageRating;
   final Timestamp createdAt;
   ProductModel({
@@ -46,7 +45,6 @@ class ProductModel {
     required this.unit,
     required this.quantity,
     required this.discountPrice,
-    required this.selectedSize,
     required this.averageRating,
     required this.createdAt,
   });
@@ -68,7 +66,6 @@ class ProductModel {
     String? unit,
     double? quantity,
     double? discountPrice,
-    String? selectedSize,
     double? averageRating,
     Timestamp? createdAt,
   }) {
@@ -90,7 +87,6 @@ class ProductModel {
       unit: unit ?? this.unit,
       quantity: quantity ?? this.quantity,
       discountPrice: discountPrice ?? this.discountPrice,
-      selectedSize: selectedSize ?? this.selectedSize,
       averageRating: averageRating ?? this.averageRating,
       createdAt: createdAt ?? this.createdAt,
     );
@@ -114,7 +110,6 @@ class ProductModel {
       'sizeUnit': sizeUnit,
       'unit': unit,
       'quantity': quantity,
-      'selectedSize': selectedSize,
       'averageRating': averageRating,
       'createdAt': createdAt,
     };
@@ -141,7 +136,6 @@ class ProductModel {
       sizeUnit: map['sizeUnit'] ?? '',
       unit: map['unit'] ?? '',
       quantity: map['quantity']?.toDouble() ?? 0.0,
-      selectedSize: map['selectedSize'] ?? '',
       averageRating: map['averageRating']?.toDouble() ?? 0.0,
       createdAt: map['createdAt'] ?? Timestamp.now(),
     );

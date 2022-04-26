@@ -1,4 +1,4 @@
-package com.example.fashion_customer
+package com.exceptions.fashio
 
 import io.flutter.embedding.android.FlutterActivity
 

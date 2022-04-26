@@ -229,221 +229,226 @@ class _SearchPageState extends State<SearchPage> {
             ),
           ),
           Expanded(
-            child: StreamBuilder<QuerySnapshot<ProductModel>>(
-              stream: productRefs
-                  .withConverter<ProductModel>(
-                      fromFirestore: (snapshot, options) =>
-                          ProductModel.fromMap(snapshot.data()!),
-                      toFirestore: (product, options) => product.toMap())
-                  .snapshots(),
-              builder: (BuildContext context, snapshot) {
-                if (snapshot.hasError) {
-                  return const Center(
-                    child: Text("something went wrong"),
-                  );
-                }
-                // if (snapshot.data!.docs.isEmpty) {
-                //   return Center(child: Text("No such Product Found"));
-                // }
-                if (snapshot.hasData && snapshot.data != null) {
-                  // var productLength = snapshot.data!.docs.length;
-                  if (snapshot.data!.docs.isEmpty) {
-                    return Text(
-                      "No such Product Found",
-                      style: TextStyle(fontSize: 50),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: StreamBuilder<QuerySnapshot<ProductModel>>(
+                stream: productRefs
+                    .withConverter<ProductModel>(
+                        fromFirestore: (snapshot, options) =>
+                            ProductModel.fromMap(snapshot.data()!),
+                        toFirestore: (product, options) => product.toMap())
+                    .snapshots(),
+                builder: (BuildContext context, snapshot) {
+                  if (snapshot.hasError) {
+                    return const Center(
+                      child: Text("something went wrong"),
                     );
                   }
-                  if (snapshot.data!.docs
-                      .where((element) => element
-                          .data()
-                          .name
-                          .toLowerCase()
-                          .contains(search.text.toLowerCase()))
-                      .isEmpty) {
-                    return Center(
-                      child: Text(
-                        "${search.text} not found",
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    );
-                  }
-
-                  List<ProductModel> products = [];
-
-                  if (widget.isCategry) {
-                    products = snapshot.data!.docs
-                        .where((element) => element
-                            .data()
-                            .name
-                            .toLowerCase()
-                            .contains(search.text.toLowerCase()))
-                        .where((element) =>
-                            element.data().category == widget.category)
-                        .map((e) => e.data())
-                        .toList();
-                  } else {
-                    products = snapshot.data!.docs
-                        .where((element) => element
-                            .data()
-                            .name
-                            .toLowerCase()
-                            .contains(search.text.toLowerCase()))
-                        .map((e) => e.data())
-                        .toList();
-                  }
-
-                  if (subcategory != null) {
-                    products = products
-                        .where((element) =>
-                            element.subCategory.name == subcategory!.name)
-                        .toList();
-                  }
-                  if (sortBy != null) {
-                    switch (sortBy) {
-                      case SortBy.aToZ:
-                        products.sort((a, b) => a.name.compareTo(b.name));
-                        break;
-                      case SortBy.priceHighToLow:
-                        products.sort((a, b) =>
-                            double.parse(b.prices.first.colorPrice.first.price)
-                                .compareTo(double.parse(
-                                    a.prices.first.colorPrice.first.price)));
-                        break;
-                      case SortBy.priceLowToHigh:
-                        products.sort((a, b) =>
-                            double.parse(a.prices.first.colorPrice.first.price)
-                                .compareTo(double.parse(
-                                    b.prices.first.colorPrice.first.price)));
-                        break;
-                      case SortBy.popularity:
-                        products.sort(
-                            (a, b) => b.orderCount.compareTo(a.orderCount));
-                        break;
-                      case SortBy.newest:
-                        products
-                            .sort((a, b) => b.createdAt.compareTo(a.createdAt));
-                        break;
-                      case SortBy.oldest:
-                        products
-                            .sort((a, b) => a.createdAt.compareTo(b.createdAt));
-                        break;
-                      case SortBy.rating:
-                        products.sort((a, b) =>
-                            b.averageRating.compareTo(a.averageRating));
-                        break;
-                      default:
+                  // if (snapshot.data!.docs.isEmpty) {
+                  //   return Center(child: Text("No such Product Found"));
+                  // }
+                  if (snapshot.hasData && snapshot.data != null) {
+                    // var productLength = snapshot.data!.docs.length;
+                    if (snapshot.data!.docs.isEmpty) {
+                      return Text(
+                        "No such Product Found",
+                        style: TextStyle(fontSize: 50),
+                      );
                     }
-                  }
+                    if (snapshot.data!.docs
+                        .where((element) => element
+                            .data()
+                            .name
+                            .toLowerCase()
+                            .contains(search.text.toLowerCase()))
+                        .isEmpty) {
+                      return Center(
+                        child: Text(
+                          "${search.text} not found",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      );
+                    }
 
-                  return GridView.count(
-                    physics: BouncingScrollPhysics(),
-                    childAspectRatio: 1 / 1.1,
-                    shrinkWrap: true,
-                    crossAxisCount: 2,
-                    children: products
-                        .map((data) => ProductCard(data: data))
-                        .toList(), /* (context, index) {
-                      ProductModel data = snapshot.data.docs[index].data();
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                              builder: (context) =>
-                                  ProductDetails(productModel: data),
+                    List<ProductModel> products = [];
+
+                    if (widget.isCategry) {
+                      products = snapshot.data!.docs
+                          .where((element) => element
+                              .data()
+                              .name
+                              .toLowerCase()
+                              .contains(search.text.toLowerCase()))
+                          .where((element) =>
+                              element.data().category == widget.category)
+                          .map((e) => e.data())
+                          .toList();
+                    } else {
+                      products = snapshot.data!.docs
+                          .where((element) => element
+                              .data()
+                              .name
+                              .toLowerCase()
+                              .contains(search.text.toLowerCase()))
+                          .map((e) => e.data())
+                          .toList();
+                    }
+
+                    if (subcategory != null) {
+                      products = products
+                          .where((element) =>
+                              element.subCategory.name == subcategory!.name)
+                          .toList();
+                    }
+                    if (sortBy != null) {
+                      switch (sortBy) {
+                        case SortBy.aToZ:
+                          products.sort((a, b) => a.name.compareTo(b.name));
+                          break;
+                        case SortBy.priceHighToLow:
+                          products.sort((a, b) => double.parse(
+                                  b.prices.first.colorPrice.first.price)
+                              .compareTo(double.parse(
+                                  a.prices.first.colorPrice.first.price)));
+                          break;
+                        case SortBy.priceLowToHigh:
+                          products.sort((a, b) => double.parse(
+                                  a.prices.first.colorPrice.first.price)
+                              .compareTo(double.parse(
+                                  b.prices.first.colorPrice.first.price)));
+                          break;
+                        case SortBy.popularity:
+                          products.sort(
+                              (a, b) => b.orderCount.compareTo(a.orderCount));
+                          break;
+                        case SortBy.newest:
+                          products.sort(
+                              (a, b) => b.createdAt.compareTo(a.createdAt));
+                          break;
+                        case SortBy.oldest:
+                          products.sort(
+                              (a, b) => a.createdAt.compareTo(b.createdAt));
+                          break;
+                        case SortBy.rating:
+                          products.sort((a, b) =>
+                              b.averageRating.compareTo(a.averageRating));
+                          break;
+                        default:
+                      }
+                    }
+
+                    return GridView.count(
+                      physics: BouncingScrollPhysics(),
+                      childAspectRatio: 1 / 1.2,
+                      shrinkWrap: true,
+                      mainAxisSpacing: 8,
+                      crossAxisSpacing: 8,
+                      crossAxisCount: 2,
+                      children: products
+                          .map((data) => ProductCard(data: data))
+                          .toList(), /* (context, index) {
+                        ProductModel data = snapshot.data.docs[index].data();
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) =>
+                                    ProductDetails(productModel: data),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                color: Colors.blueGrey.shade100,
+                                // width: 1,
+                              ),
+                              // color: Colors.white,
+                              borderRadius: BorderRadius.circular(4),
                             ),
-                          );
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                              color: Colors.blueGrey.shade100,
-                              // width: 1,
-                            ),
-                            // color: Colors.white,
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          margin: const EdgeInsets.all(10),
-                          // padding: const EdgeInsets.all(8),
-                          height: 200,
-                          width: 162,
-                          child: Column(
-                            // mainAxisSize: MainAxisSize.max,
-                            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                height: 120,
-                                width: 142,
-                                // padding: const EdgeInsets.only(left: 10),
-                                margin: const EdgeInsets.only(top: 10, left: 15),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(4),
-                                  image: DecorationImage(
-                                    image: NetworkImage(
-                                        data.images.first.images.first),
-                                    fit: BoxFit.cover,
+                            margin: const EdgeInsets.all(10),
+                            // padding: const EdgeInsets.all(8),
+                            height: 200,
+                            width: 162,
+                            child: Column(
+                              // mainAxisSize: MainAxisSize.max,
+                              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  height: 120,
+                                  width: 142,
+                                  // padding: const EdgeInsets.only(left: 10),
+                                  margin: const EdgeInsets.only(top: 10, left: 15),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(4),
+                                    image: DecorationImage(
+                                      image: NetworkImage(
+                                          data.images.first.images.first),
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 15),
+                                  child: Text(
+                                    data.name,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 15),
+                                  child: Text(
+                                    "Rs. ${data.prices.first.colorPrice.first.price}",
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: KConstants.kPrimary100,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                /* Container(
+                              height: 50,
+                              width: 162,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                color: Colors.white,
                               ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 15),
+                              child: const Center(
                                 child: Text(
-                                  data.name,
-                                  style: const TextStyle(
+                                  "NameOfProduct",
+                                  style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 15),
-                                child: Text(
-                                  "Rs. ${data.prices.first.colorPrice.first.price}",
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    color: KConstants.kPrimary100,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              /* Container(
-                            height: 50,
-                            width: 162,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
-                              color: Colors.white,
+                            ), */
+                              ],
                             ),
-                            child: const Center(
-                              child: Text(
-                                "NameOfProduct",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ), */
-                            ],
                           ),
-                        ),
-                      );
-                    } */
-                    // itemCount: productLength,
-                  );
-                }
-                return const Center(child: Text('Loading...'));
-              },
+                        );
+                      } */
+                      // itemCount: productLength,
+                    );
+                  }
+                  return const Center(child: Text('Loading...'));
+                },
+              ),
             ),
           ),
         ],

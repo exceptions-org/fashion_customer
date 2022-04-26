@@ -4,12 +4,17 @@ import 'package:collection/collection.dart';
 import 'package:fashion_customer/controller/controller.dart';
 import 'package:fashion_customer/main.dart';
 import 'package:fashion_customer/model/user_model.dart';
+import 'package:fashion_customer/views/about_us.dart';
 import 'package:fashion_customer/views/add_address.dart';
 import 'package:fashion_customer/views/login_page.dart';
 import 'package:fashion_customer/views/view_order.dart';
+import 'package:fashion_customer/views/wishlist.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'utils/constants.dart';
 
@@ -47,14 +52,25 @@ class _ProfilePageState extends State<ProfilePage> {
           child: Column(
             children: [
               CircleAvatar(
-                radius: 80,
-                //backgroundColor: KConstants.kPrimary100,
-                foregroundImage: AssetImage("Icons/account.png"),
+                radius: 70,
+                backgroundColor: KConstants.kPrimary100,
+                child: Text(
+                  (controller.userModel.name.split(' ').length > 1
+                          ? controller.userModel.name.split(' ')[0][0] +
+                              controller.userModel.name.split(' ')[1][0]
+                          : controller.userModel.name[0])
+                      .toUpperCase(),
+                  style: GoogleFonts.montserratAlternates(
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
               ),
               SizedBox(height: 20),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                //mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Spacer(),
                   Text(
                     controller.userModel.name,
                     style: TextStyle(
@@ -62,103 +78,112 @@ class _ProfilePageState extends State<ProfilePage> {
                         color: Colors.black,
                         fontWeight: FontWeight.bold),
                   ),
-                  IconButton(
-                      onPressed: () {
-                        showModalBottomSheet(
-                            isScrollControlled: true,
-                            context: context,
-                            builder: (c) {
-                              return StatefulBuilder(builder: (context, s) {
-                                var newMedia = MediaQuery.of(context);
-                                return Container(
-                                  padding: EdgeInsets.only(
-                                      bottom: newMedia.viewInsets.bottom),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 30.0, horizontal: 10),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            InkWell(
-                                              onTap: () {
-                                                Navigator.pop(context);
-                                              },
-                                              child: Image.asset(
-                                                'Icons/Arrow.png',
-                                                color: KConstants.kPrimary100,
-                                              ),
-                                            ),
-                                            Text(
-                                              'Update Name',
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                color: KConstants.kPrimary100,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            Image.asset(
-                                              'Icons/Arrow.png',
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 30.0, horizontal: 10),
-                                        child: TextField(
-                                          autofocus: true,
-                                          controller: name,
-                                          decoration: InputDecoration(
-                                            labelText: "Name",
-                                            labelStyle: TextStyle(
-                                              color: Color(0xff4E4872),
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: IconButton(
+                          onPressed: () {
+                            showModalBottomSheet(
+                                isScrollControlled: true,
+                                context: context,
+                                builder: (c) {
+                                  return StatefulBuilder(builder: (context, s) {
+                                    var newMedia = MediaQuery.of(context);
+                                    return Container(
+                                      padding: EdgeInsets.only(
+                                          bottom: newMedia.viewInsets.bottom),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 30.0, horizontal: 10),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                InkWell(
+                                                  onTap: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Image.asset(
+                                                    'Icons/Arrow.png',
+                                                    color:
+                                                        KConstants.kPrimary100,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  'Update Name',
+                                                  style: TextStyle(
+                                                    fontSize: 18,
+                                                    color:
+                                                        KConstants.kPrimary100,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                Image.asset(
+                                                  'Icons/Arrow.png',
+                                                ),
+                                              ],
                                             ),
                                           ),
-                                        ),
-                                      ),
-                                      InkWell(
-                                        onTap: () async {
-                                          await FirebaseFirestore.instance
-                                              .collection('users')
-                                              .doc(controller.userModel.number)
-                                              .update({'name': name.text});
-                                          await controller.getUser();
-                                          Navigator.pop(context);
-                                        },
-                                        child: Container(
-                                            margin: EdgeInsets.all(20),
-                                            height: 60,
-                                            decoration: BoxDecoration(
-                                              color: KConstants.kPrimary100,
-                                              borderRadius:
-                                                  BorderRadius.circular(6),
-                                            ),
-                                            child: Center(
-                                              child: Text(
-                                                "Save",
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 14),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 30.0, horizontal: 10),
+                                            child: TextField(
+                                              autofocus: true,
+                                              controller: name,
+                                              decoration: InputDecoration(
+                                                labelText: "Name",
+                                                labelStyle: TextStyle(
+                                                  color: Color(0xff4E4872),
+                                                ),
                                               ),
-                                            )),
+                                            ),
+                                          ),
+                                          InkWell(
+                                            onTap: () async {
+                                              await FirebaseFirestore.instance
+                                                  .collection('users')
+                                                  .doc(controller
+                                                      .userModel.number)
+                                                  .update({'name': name.text});
+                                              await controller.getUser();
+                                              Navigator.pop(context);
+                                            },
+                                            child: Container(
+                                                margin: EdgeInsets.all(20),
+                                                height: 60,
+                                                decoration: BoxDecoration(
+                                                  color: KConstants.kPrimary100,
+                                                  borderRadius:
+                                                      BorderRadius.circular(6),
+                                                ),
+                                                child: Center(
+                                                  child: Text(
+                                                    "Save",
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 14),
+                                                  ),
+                                                )),
+                                          ),
+                                          SizedBox(
+                                            height: media.viewPadding.bottom,
+                                          )
+                                        ],
                                       ),
-                                      SizedBox(
-                                        height: media.viewPadding.bottom,
-                                      )
-                                    ],
-                                  ),
-                                );
-                              });
-                            });
-                      },
-                      icon: Icon(
-                        Icons.edit,
-                        size: 18,
-                      ))
+                                    );
+                                  });
+                                });
+                          },
+                          icon: Icon(
+                            Icons.edit,
+                            size: 18,
+                          )),
+                    ),
+                  )
                 ],
               ),
               SizedBox(height: 20),
@@ -225,14 +250,21 @@ class _ProfilePageState extends State<ProfilePage> {
                                 width: 20,
                               ),
                               IconButton(
-                                onPressed: () {
-                                  showModalBottomSheet(
+                                onPressed: () async {
+                                  await Geolocator.requestPermission();
+                                  Position position =
+                                      await Geolocator.getCurrentPosition(
+                                          desiredAccuracy:
+                                              LocationAccuracy.high);
+                                  await showModalBottomSheet(
                                       isScrollControlled: true,
                                       isDismissible: false,
                                       context: context,
                                       builder: (c) {
                                         return AddAdress(
                                           addressModel: e,
+                                          latLng: LatLng(position.latitude,
+                                              position.longitude),
                                           editIndex: i,
                                           isEdit: true,
                                           onTap: () {
@@ -280,7 +312,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     Center(
                       child: TextButton.icon(
-                        onPressed: () {
+                        onPressed: () async {
+                          await Geolocator.requestPermission();
+                          Position position =
+                              await Geolocator.getCurrentPosition(
+                                  desiredAccuracy: LocationAccuracy.high);
                           showModalBottomSheet(
                               isScrollControlled: true,
                               isDismissible: false,
@@ -288,6 +324,8 @@ class _ProfilePageState extends State<ProfilePage> {
                               builder: (c) {
                                 return AddAdress(
                                   isEdit: false,
+                                  latLng: LatLng(
+                                      position.latitude, position.longitude),
                                   onTap: () {
                                     setState(() {});
                                   },
@@ -374,6 +412,68 @@ class _ProfilePageState extends State<ProfilePage> {
                     color: KConstants.kPrimary100,
                   ),
                   title: Text("Your Orders"),
+                  trailing: RotatedBox(
+                    quarterTurns: 2,
+                    child: Image.asset(
+                      "Icons/Arrow.png",
+                      height: 25,
+                      color: KConstants.kPrimary100,
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 2),
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                width: double.maxFinite,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(
+                      //width: 1,
+                      color: Color(0XFFC8DFEF),
+                    )),
+                child: ListTile(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                            builder: (context) => WishlistWidget()));
+                  },
+                  leading: Icon(
+                    Icons.bookmark_border,
+                    color: Colors.blueGrey,
+                  ),
+                  title: Text("Wishlist"),
+                  trailing: RotatedBox(
+                    quarterTurns: 2,
+                    child: Image.asset(
+                      "Icons/Arrow.png",
+                      height: 25,
+                      color: KConstants.kPrimary100,
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 2),
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                width: double.maxFinite,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(
+                      //width: 1,
+                      color: Color(0XFFC8DFEF),
+                    )),
+                child: ListTile(
+                  onTap: () {
+                    Navigator.push(context,
+                        CupertinoPageRoute(builder: (context) => AboutUs()));
+                  },
+                  leading: Icon(
+                    CupertinoIcons.at,
+                    color: Colors.teal,
+                  ),
+                  title: Text("About US"),
                   trailing: RotatedBox(
                     quarterTurns: 2,
                     child: Image.asset(

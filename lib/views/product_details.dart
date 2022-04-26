@@ -3,8 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:fashion_customer/bottom_navigation.dart';
 import 'package:fashion_customer/controller/cart_controller.dart';
+import 'package:fashion_customer/controller/controller.dart';
 import 'package:fashion_customer/main.dart';
 import 'package:fashion_customer/model/review_model.dart';
+import 'package:fashion_customer/model/user_model.dart';
 import 'package:fashion_customer/utils/constants.dart';
 import 'package:fashion_customer/utils/review_card.dart';
 import 'package:fashion_customer/utils/spHelper.dart';
@@ -69,6 +71,8 @@ class _ProductDetailsState extends State<ProductDetails> {
     border: Border.all(color: KConstants.kBorderColor),
   );
 
+  final UserController userController = getIt.get<UserController>();
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -94,6 +98,46 @@ class _ProductDetailsState extends State<ProductDetails> {
               height: kBottomNavigationBarHeight * 1.5,
               child: Row(
                 children: [
+                  Padding(
+                      padding: EdgeInsets.only(left: 20),
+                      child: StreamBuilder<DocumentSnapshot<UserModel>>(
+                          stream: FirebaseFirestore.instance
+                              .collection('users')
+                              .doc(userController.userModel.number)
+                              .withConverter(
+                                  fromFirestore: (snapshot, options) =>
+                                      UserModel.fromMap(snapshot.data()!),
+                                  toFirestore: (UserModel userModel, o) =>
+                                      userModel.toMap())
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            return AnimatedContainer(
+                              decoration: ShapeDecoration(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                color: KConstants.kPrimary100,
+                              ),
+                              duration: Duration(milliseconds: 300),
+                              padding: EdgeInsets.all(10),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.bookmark_add_outlined,
+                                      size: 20, color: Colors.white),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    'Add To Wishlist',
+                                    style: TextStyle(
+                                        fontSize: height * 0.015,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                            );
+                          })),
                   Spacer(),
                   Padding(
                     padding: const EdgeInsets.only(right: 18.0),
@@ -195,7 +239,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                   "Add to Cart",
                                   style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: height * 0.025,
+                                      fontSize: height * 0.02,
                                       letterSpacing: 1),
                                 ),
                               ),
@@ -711,10 +755,12 @@ class _ProductDetailsState extends State<ProductDetails> {
                         if (snapshot.hasData) {
                           return AnimationLimiter(
                             child: GridView.count(
-                              childAspectRatio: 1 / 1.3,
+                              childAspectRatio: 1 / 1.2,
                               shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
+                              mainAxisSpacing: 8,
+                              crossAxisSpacing: 8,
                               crossAxisCount: 2,
+                              physics: NeverScrollableScrollPhysics(),
                               children: snapshot.data!.docs
                                   .where((element) =>
                                       element.data().id !=

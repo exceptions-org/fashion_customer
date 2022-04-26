@@ -8,6 +8,8 @@ import 'package:fashion_customer/views/contact_details.dart';
 import 'package:fashion_customer/views/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../views/phone_verification.dart';
@@ -15,8 +17,10 @@ import '../views/phone_verification.dart';
 class AuthService {
   String verificationId = "";
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-  Future<void> signinWithPhone(String phoneNumber, BuildContext w) async {
-    Navigator.push(w, CupertinoPageRoute(builder: (w) => Loading()));
+  Future<void> signinWithPhone(
+      String phoneNumber, BuildContext w, bool isOtpPage) async {
+    if (!isOtpPage)
+      Navigator.push(w, CupertinoPageRoute(builder: (w) => Loading()));
     await firebaseAuth.verifyPhoneNumber(
         phoneNumber: "+91" + phoneNumber,
         verificationCompleted: verificationCompleted,
@@ -25,6 +29,7 @@ class AuthService {
               phoneNumber,
               c,
               w,
+              isOtpPage,
               r,
             ),
         codeAutoRetrievalTimeout: codeRetrievalTimeout);
@@ -44,17 +49,20 @@ class AuthService {
     } catch (e) {}
   }
 
-  void codeSent(String number, String string, BuildContext context,
+  void codeSent(
+      String number, String string, BuildContext context, bool isOtpPage,
       [int? code]) async {
     try {
       verificationId = string;
-      Navigator.pushReplacement(
-        context,
-        CupertinoPageRoute(
-          builder: (context) =>
-              PhoneVerification(authService: this, number: number),
-        ),
-      );
+      if (!isOtpPage) {
+        Navigator.pushReplacement(
+          context,
+          CupertinoPageRoute(
+            builder: (context) =>
+                PhoneVerification(authService: this, number: number),
+          ),
+        );
+      }
     } catch (e) {}
   }
 
@@ -86,11 +94,14 @@ class AuthService {
             CupertinoPageRoute(builder: (context) => BottomNavigation()),
             (e) => false);
       } else {
+        await Geolocator.requestPermission();
+        Position position = await Geolocator.getCurrentPosition();
         Navigator.pushReplacement(
             context,
             CupertinoPageRoute(
                 builder: (context) => SignupPage2(
                       number: phone,
+                      latLng: LatLng(position.latitude, position.longitude),
                     )));
       } /* 
           (await SharedPreferences.getInstance()).setString('user', UserModel(name: "name", number: "number", adress: []).toJson());

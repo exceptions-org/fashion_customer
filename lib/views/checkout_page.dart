@@ -37,6 +37,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
   late OrderModel orderModel = OrderModel(
       deliveredDate: Timestamp.now(),
+      couponModel: couponModel,
       products: cartController.cartItems,
       pushToken: controller.userModel.pushToken,
       orderDocId: '',
@@ -45,7 +46,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       userPhone: controller.userModel.number,
       totalPrice: widget.totalAmount,
       deliveryDate: Timestamp.now(),
-      totalDiscountPrice: 0,
+      totalDiscountPrice: couponDiscount,
       orderId: '',
       orderState: OrderState.placed,
       createdAt: Timestamp.now(),
@@ -194,7 +195,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             userPhone: controller.userModel.number,
                             totalPrice: widget.totalAmount,
                             deliveryDate: Timestamp.now(),
-                            totalDiscountPrice: 0,
+                            couponModel: couponModel,
+                            totalDiscountPrice: couponDiscount,
                             orderId: 'FASHIO${orders.docs.length + 1}',
                             orderState: OrderState.placed,
                             createdAt: Timestamp.now(),
@@ -212,7 +214,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       if (couponModel != null) {
                         await FirebaseFirestore.instance
                             .collection('coupons')
-                            .doc(couponModel!.couponId)
+                            .doc(couponModel!.couponCode)
                             .update({
                           'usedBy': FieldValue.arrayUnion(
                               [controller.userModel.number])
@@ -710,65 +712,65 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       ],
                     ),
                   ),
-                ],
-              ),
-              if (orderPlaced)
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Continue Shopping'),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Expanded(
-                          child: StreamBuilder<QuerySnapshot<ProductModel>>(
-                              stream: FirebaseFirestore.instance
-                                  .collection('products')
-                                  .orderBy("orderCount")
-                                  .withConverter<ProductModel>(
-                                      fromFirestore: (snapshot, options) =>
-                                          ProductModel.fromMap(
-                                              snapshot.data()!),
-                                      toFirestore: (product, options) =>
-                                          product.toMap())
-                                  .limit(10)
-                                  .snapshots(),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData) {
-                                  return AnimationLimiter(
-                                    child: GridView.count(
-                                      shrinkWrap: true,
-                                      childAspectRatio: 1 / 1.3,
-                                      physics: BouncingScrollPhysics(),
-                                      crossAxisCount: 2,
-                                      children: snapshot.data!.docs
-                                          .mapIndexed((i, element) =>
-                                              AnimationConfiguration
-                                                  .staggeredGrid(
-                                                      duration: Duration(
-                                                          milliseconds: 300),
-                                                      columnCount: 2,
-                                                      position: i,
-                                                      child: ScaleAnimation(
-                                                        child: ProductCard(
-                                                            data:
-                                                                element.data()),
-                                                      )))
-                                          .toList(),
-                                    ),
-                                  );
-                                } else {
-                                  return Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                }
-                              }),
-                        )
-                      ],
-                    ),
+                ),
+              ],
+            ),
+            if (orderPlaced)
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Continue Shopping'),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Expanded(
+                        child: StreamBuilder<QuerySnapshot<ProductModel>>(
+                            stream: FirebaseFirestore.instance
+                                .collection('products')
+                                .orderBy("orderCount")
+                                .withConverter<ProductModel>(
+                                    fromFirestore: (snapshot, options) =>
+                                        ProductModel.fromMap(snapshot.data()!),
+                                    toFirestore: (product, options) =>
+                                        product.toMap())
+                                .limit(10)
+                                .snapshots(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return AnimationLimiter(
+                                  child: GridView.count(
+                                    physics: BouncingScrollPhysics(),
+                                    childAspectRatio: 1 / 1.2,
+                                    shrinkWrap: true,
+                                    mainAxisSpacing: 8,
+                                    crossAxisSpacing: 8,
+                                    crossAxisCount: 2,
+                                    children: snapshot.data!.docs
+                                        .mapIndexed((i, element) =>
+                                            AnimationConfiguration
+                                                .staggeredGrid(
+                                                    duration: Duration(
+                                                        milliseconds: 300),
+                                                    columnCount: 2,
+                                                    position: i,
+                                                    child: ScaleAnimation(
+                                                      child: ProductCard(
+                                                          data: element.data()),
+                                                    )))
+                                        .toList(),
+                                  ),
+                                );
+                              } else {
+                                return Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                            }),
+                      )
+                    ],
                   ),
                 ),
             ],

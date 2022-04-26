@@ -1,10 +1,13 @@
+import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fashion_customer/model/order_model.dart';
 import 'package:fashion_customer/utils/constants.dart';
+import 'package:fashion_customer/utils/generate_pdf.dart';
 import 'package:fashion_customer/utils/spHelper.dart';
 import 'package:fashion_customer/views/add_review.dart';
+import 'package:file_saver/file_saver.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -395,6 +398,40 @@ class _OrderDetailsState extends State<OrderDetails> {
               ]),
               child: Row(
                 children: [
+                  InkWell(
+                    onTap: () async {
+                      Uint8List list = await generatePdf(widget.order);
+                      await FileSaver.instance.saveAs(
+                          widget.order.orderId, list, 'pdf', MimeType.PDF);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(20),
+                      margin: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: KConstants.kPrimary100),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Download Invoice',
+                            style: TextStyle(
+                                color: KConstants.kPrimary100, fontSize: 20),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Icon(
+                            Icons.download,
+                            color: KConstants.kPrimary100,
+                            size: 20,
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
                   Spacer(),
                   if (![OrderState.cancel, OrderState.delivered]
                       .contains(widget.order.orderState))
@@ -603,7 +640,29 @@ class _OrderDetailsState extends State<OrderDetails> {
                                             color: Color(0xff604FCC),
                                             fontWeight: FontWeight.bold),
                                       ),
-                                    ]
+                                    ],
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Selected Colour:",
+                                          style: TextStyle(
+                                              color: Color(0xff604FCC),
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              color: Color(widget
+                                                  .order.products[index].color),
+                                              borderRadius:
+                                                  BorderRadius.circular(15)),
+                                          height: 20,
+                                          width: 30,
+                                        )
+                                      ],
+                                    ),
                                   ],
                                 )
                               ],
@@ -726,6 +785,30 @@ class _OrderDetailsState extends State<OrderDetails> {
                           SizedBox(
                             height: 4.0,
                           ),
+                          if (widget.order.couponModel != null) ...[
+                            Row(
+                              children: [
+                                Text(
+                                  'Discount',
+                                  style: TextStyle(
+                                    fontSize: 14.0,
+                                    color: Color(0xff130B43),
+                                  ),
+                                ),
+                                Spacer(),
+                                Text(
+                                  (widget.order.totalDiscountPrice).toString(),
+                                  style: TextStyle(
+                                    fontSize: 14.0,
+                                    color: Color(0xff130B43),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 4.0,
+                            ),
+                          ],
                           Row(
                             children: [
                               Text(
@@ -738,7 +821,9 @@ class _OrderDetailsState extends State<OrderDetails> {
                               ),
                               Spacer(),
                               Text(
-                                widget.order.totalPrice.toString(),
+                                (widget.order.totalPrice -
+                                        widget.order.totalDiscountPrice)
+                                    .toString(),
                                 style: TextStyle(
                                   fontSize: 16.0,
                                   color: Color(0xff130B43),
@@ -750,6 +835,36 @@ class _OrderDetailsState extends State<OrderDetails> {
                         ],
                       ),
                     ),
+                    if (widget.order.couponModel != null) ...[
+                      SizedBox(
+                        height: 4,
+                      ),
+                      Container(
+                        decoration: KConstants.defContainerDec,
+                        width: double.infinity,
+                        padding: EdgeInsets.all(16.0),
+                        child: Row(
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Coupon Applied',
+                                    style: TextStyle(
+                                        color: KConstants.kPrimary100)),
+                                Text(widget.order.couponModel!.couponCode,
+                                    style: TextStyle(
+                                        color: KConstants.kPrimary100)),
+                              ],
+                            ),
+                            Spacer(),
+                            Icon(
+                              Icons.check,
+                              color: KConstants.kPrimary100,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                     SizedBox(
                       height: 4,
                     ),

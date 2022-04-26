@@ -88,7 +88,8 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    authService.signinWithPhone(phoneController.text, context);
+                    authService.signinWithPhone(
+                        phoneController.text, context, false);
                   },
                   child: Center(
                     child: Padding(
