@@ -360,7 +360,7 @@ class _SignupPage2State extends State<SignupPage2> {
                       selectedLatLng!.latitude, selectedLatLng!.longitude)
                   : GeoPoint(0, 0),
               pinCode: pincode.text),
-        ], whistList: []);
+        ]);
     await FirebaseFirestore.instance
         .collection("users")
         .doc(widget.number)
