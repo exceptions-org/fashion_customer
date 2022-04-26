@@ -13,6 +13,7 @@ import 'package:fashion_customer/utils/spHelper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../model/product_model.dart';
 
@@ -284,340 +285,343 @@ class _CheckoutPageState extends State<CheckoutPage> {
             ),
           ),
         ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (!orderPlaced)
-              ConstrainedBox(
-                constraints: BoxConstraints(
-                    minHeight: height * 0.1, maxHeight: height * 0.5),
-                child: ListView.builder(
-                  itemCount: cartController.cartItems.length,
-                  shrinkWrap: true,
-                  physics: BouncingScrollPhysics(),
-                  itemBuilder: (BuildContext context, int index) {
-                    return Column(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(16.0),
-                          height: 150,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                              color: Color(0xffC8D5EF),
+        body: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (!orderPlaced)
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                      minHeight: height * 0.1, maxHeight: height * 0.5),
+                  child: ListView.builder(
+                    itemCount: cartController.cartItems.length,
+                    shrinkWrap: true,
+                    physics: BouncingScrollPhysics(),
+                    itemBuilder: (BuildContext context, int index) {
+                      return Column(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(16.0),
+                            height: 150,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                color: Color(0xffC8D5EF),
+                              ),
                             ),
-                          ),
-                          child: Row(
-                            children: [
-                              Container(
-                                height: 120,
-                                width: 140,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Color(0xffC8D5EF),
+                            child: Row(
+                              children: [
+                                Container(
+                                  height: 120,
+                                  width: 140,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Color(0xffC8D5EF),
+                                    ),
+                                  ),
+                                  child: Image.network(
+                                    cartController.cartItems[index].image.first,
+                                    fit: BoxFit.contain,
                                   ),
                                 ),
-                                child: Image.network(
-                                  cartController.cartItems[index].image.first,
-                                  fit: BoxFit.contain,
+                                SizedBox(
+                                  width: 8.0,
                                 ),
-                              ),
-                              SizedBox(
-                                width: 8.0,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    cartController.cartItems[index].name,
-                                    style: TextStyle(fontSize: 18),
-                                  ),
-                                  SizedBox(
-                                    height: 4.0,
-                                  ),
-                                  Text(
-                                    "Price: ${cartController.cartItems[index].price}",
-                                    style: TextStyle(
-                                        color: Color(0xff604FCC),
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  if (cartController
-                                          .cartItems[index].selectedSize !=
-                                      '') ...[
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      cartController.cartItems[index].name,
+                                      style: TextStyle(fontSize: 18),
+                                    ),
                                     SizedBox(
                                       height: 4.0,
                                     ),
                                     Text(
-                                      "Selected Size: ${cartController.cartItems[index].selectedSize}",
+                                      "Price: ${cartController.cartItems[index].price}",
                                       style: TextStyle(
                                           color: Color(0xff604FCC),
                                           fontWeight: FontWeight.bold),
                                     ),
-                                    Text(
-                                      "Quantity: ${cartController.cartItems[index].quantity}",
-                                      style: TextStyle(
-                                          color: Color(0xff604FCC),
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      "Selected Colour: ${cartController.cartItems[index].colorName}",
-                                      style: TextStyle(
-                                          color: Color(0xff604FCC),
-                                          fontWeight: FontWeight.bold),
-                                    )
-                                  ]
-                                ],
-                              )
-                            ],
+                                    if (cartController
+                                            .cartItems[index].selectedSize !=
+                                        '') ...[
+                                      SizedBox(
+                                        height: 4.0,
+                                      ),
+                                      Text(
+                                        "Selected Size: ${cartController.cartItems[index].selectedSize}",
+                                        style: TextStyle(
+                                            color: Color(0xff604FCC),
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        "Quantity: ${cartController.cartItems[index].quantity}",
+                                        style: TextStyle(
+                                            color: Color(0xff604FCC),
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        "Selected Colour: ${cartController.cartItems[index].colorName}",
+                                        style: TextStyle(
+                                            color: Color(0xff604FCC),
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    ]
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 4,
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              )
-            else
-              Container(
-                padding: EdgeInsets.all(16.0),
-                child: Row(
-                  children: [
-                    Image.asset(
-                      'Icons/check_1.png',
-                      height: 24,
-                      width: 24,
-                    ),
-                    SizedBox(
-                      width: 8.0,
-                    ),
-                    Text(
-                      'Your Order has been placed successfully',
-                      style: TextStyle(
-                          color: Color(0xff058F13),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16.0),
-                    )
-                  ],
-                ),
-              ),
-            Column(
-              children: [
+                          SizedBox(
+                            height: 4,
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                )
+              else
                 Container(
                   padding: EdgeInsets.all(16.0),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Color(0xffC7D4EE),
-                    ),
-                    color: Colors.white,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Row(
                     children: [
-                      Row(
-                        children: [
-                          Text(
-                            'Deliver to',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Spacer(),
-                          if (!orderPlaced)
-                            TextButton(
-                              onPressed: () async {
-                                await showModalBottomSheet(
-                                    context: context,
-                                    builder: (c) {
-                                      return SelectAddressSheet();
-                                    });
-                                setState(() {});
-                              },
-                              child: Text(
-                                'Edit',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: KConstants.kPrimary100,
-                                ),
-                              ),
-                            ),
-                        ],
+                      Image.asset(
+                        'Icons/check_1.png',
+                        height: 24,
+                        width: 24,
                       ),
                       SizedBox(
-                        height: 8.0,
+                        width: 8.0,
                       ),
                       Text(
-                        controller.seletedAddress == null
-                            ? controller.userModel.address.first.actualAddress
-                            : controller.seletedAddress!.actualAddress,
-                        textAlign: TextAlign.start,
+                        'Your Order has been placed successfully',
                         style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.black,
-                        ),
+                            color: Color(0xff058F13),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16.0),
                       )
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 4.0,
-                ),
-                Container(
-                  decoration: KConstants.defContainerDec,
-                  width: double.infinity,
-                  padding: EdgeInsets.all(16.0),
-                  child: Row(
-                    children: [
-                      if (couponModel == null)
-                        Text('Select Coupon')
-                      else
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Coupon Applied',
-                                style:
-                                    TextStyle(color: KConstants.kPrimary100)),
-                            Text(couponModel!.couponCode,
-                                style:
-                                    TextStyle(color: KConstants.kPrimary100)),
-                          ],
-                        ),
-                      Spacer(),
-                      if (couponModel == null)
-                        TextButton(
-                          onPressed: () async {
-                            await showModalBottomSheet(
-                                context: context,
-                                builder: (c) {
-                                  return SelectCouponBottomSheet(
-                                    user: controller.userModel.number,
-                                    onSelected: (p0) {
-                                      setState(() {
-                                        if (widget.totalAmount > p0.minPrice) {
-                                          couponModel = p0;
-                                          if (p0.isByPercent) {
-                                            couponDiscount =
-                                                widget.totalAmount *
-                                                    p0.couponDiscount /
-                                                    100;
-                                          } else {
-                                            couponDiscount = p0.couponDiscount;
-                                          }
-                                        }
-                                      });
-                                    },
-                                  );
-                                });
-                            setState(() {});
-                          },
-                          child: Text(
-                            'Select',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: KConstants.kPrimary100,
-                            ),
-                          ),
-                        )
-                      else
-                        InkWell(
-                          onTap: () async {
-                            setState(() {
-                              couponModel = null;
-                              couponDiscount = 0;
-                            });
-                          },
-                          child: Image.asset(
-                            'Icons/remove.png',
-                            height: 24,
-                            width: 24,
-                            color: Colors.red,
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 4.0,
-                ),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(16.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(
-                      color: Color(0xffC7D4EE),
+              Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(16.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Color(0xffC7D4EE),
+                      ),
+                      color: Colors.white,
                     ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Order Summary',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xff130B43),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 8.0,
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            'Subtotal',
-                            style: TextStyle(
-                              fontSize: 14.0,
-                              color: Color(0xff130B43),
-                            ),
-                          ),
-                          Spacer(),
-                          Text(
-                            widget.totalAmount.toString(),
-                            style: TextStyle(
-                              fontSize: 14.0,
-                              color: Color(0xff130B43),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 4.0,
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            'Delivery Charges',
-                            style: TextStyle(
-                              fontSize: 14.0,
-                              color: Color(0xff130B43),
-                            ),
-                          ),
-                          Spacer(),
-                          Text(
-                            'Free',
-                            style: TextStyle(
-                              fontSize: 14.0,
-                              color: Color(0xff130B43),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 4.0,
-                      ),
-                      if (couponModel != null) ...[
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         Row(
                           children: [
                             Text(
-                              'Discount',
+                              'Deliver to',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Spacer(),
+                            if (!orderPlaced)
+                              TextButton(
+                                onPressed: () async {
+                                  await showModalBottomSheet(
+                                      context: context,
+                                      builder: (c) {
+                                        return SelectAddressSheet();
+                                      });
+                                  setState(() {});
+                                },
+                                child: Text(
+                                  'Edit',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: KConstants.kPrimary100,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 8.0,
+                        ),
+                        Text(
+                          controller.seletedAddress == null
+                              ? controller.userModel.address.first.actualAddress
+                              : controller.seletedAddress!.actualAddress,
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.black,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 4.0,
+                  ),
+                  Container(
+                    width: width,
+                    decoration: defContainerDec,
+                    padding: EdgeInsets.symmetric(vertical: 25, horizontal: 15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          "You can directly buy it from the store",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: height * 0.02,
+                              color: KConstants.txtColor100,
+                              letterSpacing: 1),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "Gala no 04, New Apartment, Dargah Road, Bhiwandi 421-305",
+                          style: TextStyle(
+                              fontSize: height * 0.015,
+                              color: Colors.grey,
+                              letterSpacing: 1),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            launch("tel:${8845433463}");
+                          },
+                          child: Text(
+                            "Contact No: 8849392489",
+                            style: TextStyle(
+                                fontSize: height * 0.015,
+                                color: Colors.grey,
+                                letterSpacing: 1),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 4,
+                  ),
+                  Container(
+                    decoration: KConstants.defContainerDec,
+                    width: double.infinity,
+                    padding: EdgeInsets.all(16.0),
+                    child: Row(
+                      children: [
+                        if (couponModel == null)
+                          Text('Select Coupon')
+                        else
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Coupon Applied',
+                                  style:
+                                      TextStyle(color: KConstants.kPrimary100)),
+                              Text(couponModel!.couponCode,
+                                  style:
+                                      TextStyle(color: KConstants.kPrimary100)),
+                            ],
+                          ),
+                        Spacer(),
+                        if (couponModel == null)
+                          TextButton(
+                            onPressed: () async {
+                              await showModalBottomSheet(
+                                  context: context,
+                                  builder: (c) {
+                                    return SelectCouponBottomSheet(
+                                      user: controller.userModel.number,
+                                      onSelected: (p0) {
+                                        setState(() {
+                                          if (widget.totalAmount >
+                                              p0.minPrice) {
+                                            couponModel = p0;
+                                            if (p0.isByPercent) {
+                                              couponDiscount =
+                                                  widget.totalAmount *
+                                                      p0.couponDiscount /
+                                                      100;
+                                            } else {
+                                              couponDiscount =
+                                                  p0.couponDiscount;
+                                            }
+                                          }
+                                        });
+                                      },
+                                    );
+                                  });
+                              setState(() {});
+                            },
+                            child: Text(
+                              'Select',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: KConstants.kPrimary100,
+                              ),
+                            ),
+                          )
+                        else
+                          InkWell(
+                            onTap: () async {
+                              setState(() {
+                                couponModel = null;
+                                couponDiscount = 0;
+                              });
+                            },
+                            child: Image.asset(
+                              'Icons/remove.png',
+                              height: 24,
+                              width: 24,
+                              color: Colors.red,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 4.0,
+                  ),
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(16.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(
+                        color: Color(0xffC7D4EE),
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Order Summary',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xff130B43),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 8.0,
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              'Subtotal',
                               style: TextStyle(
                                 fontSize: 14.0,
                                 color: Color(0xff130B43),
@@ -625,7 +629,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             ),
                             Spacer(),
                             Text(
-                              (couponDiscount).toString(),
+                              widget.totalAmount.toString(),
                               style: TextStyle(
                                 fontSize: 14.0,
                                 color: Color(0xff130B43),
@@ -636,91 +640,139 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         SizedBox(
                           height: 4.0,
                         ),
-                      ],
-                      Row(
-                        children: [
-                          Text(
-                            'Total',
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              color: Color(0xff130B43),
-                              fontWeight: FontWeight.bold,
+                        Row(
+                          children: [
+                            Text(
+                              'Delivery Charges',
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                color: Color(0xff130B43),
+                              ),
                             ),
+                            Spacer(),
+                            Text(
+                              'Free',
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                color: Color(0xff130B43),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 4.0,
+                        ),
+                        if (couponModel != null) ...[
+                          Row(
+                            children: [
+                              Text(
+                                'Discount',
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                  color: Color(0xff130B43),
+                                ),
+                              ),
+                              Spacer(),
+                              Text(
+                                (couponDiscount).toString(),
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                  color: Color(0xff130B43),
+                                ),
+                              ),
+                            ],
                           ),
-                          Spacer(),
-                          Text(
-                            (widget.totalAmount - couponDiscount).toString(),
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              color: Color(0xff130B43),
-                              fontWeight: FontWeight.bold,
-                            ),
+                          SizedBox(
+                            height: 4.0,
                           ),
                         ],
-                      ),
-                    ],
+                        Row(
+                          children: [
+                            Text(
+                              'Total',
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                color: Color(0xff130B43),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Spacer(),
+                            Text(
+                              (widget.totalAmount - couponDiscount).toString(),
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                color: Color(0xff130B43),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-            if (orderPlaced)
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Continue Shopping'),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Expanded(
-                        child: StreamBuilder<QuerySnapshot<ProductModel>>(
-                            stream: FirebaseFirestore.instance
-                                .collection('products')
-                                .orderBy("orderCount")
-                                .withConverter<ProductModel>(
-                                    fromFirestore: (snapshot, options) =>
-                                        ProductModel.fromMap(snapshot.data()!),
-                                    toFirestore: (product, options) =>
-                                        product.toMap())
-                                .limit(10)
-                                .snapshots(),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                return AnimationLimiter(
-                                  child: GridView.count(
-                                    shrinkWrap: true,
-                                    childAspectRatio: 1 / 1.3,
-                                    physics: BouncingScrollPhysics(),
-                                    crossAxisCount: 2,
-                                    children: snapshot.data!.docs
-                                        .mapIndexed((i, element) =>
-                                            AnimationConfiguration
-                                                .staggeredGrid(
-                                                    duration: Duration(
-                                                        milliseconds: 300),
-                                                    columnCount: 2,
-                                                    position: i,
-                                                    child: ScaleAnimation(
-                                                      child: ProductCard(
-                                                          data: element.data()),
-                                                    )))
-                                        .toList(),
-                                  ),
-                                );
-                              } else {
-                                return Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              }
-                            }),
-                      )
-                    ],
-                  ),
-                ),
+                ],
               ),
-          ],
+              if (orderPlaced)
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Continue Shopping'),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Expanded(
+                          child: StreamBuilder<QuerySnapshot<ProductModel>>(
+                              stream: FirebaseFirestore.instance
+                                  .collection('products')
+                                  .orderBy("orderCount")
+                                  .withConverter<ProductModel>(
+                                      fromFirestore: (snapshot, options) =>
+                                          ProductModel.fromMap(
+                                              snapshot.data()!),
+                                      toFirestore: (product, options) =>
+                                          product.toMap())
+                                  .limit(10)
+                                  .snapshots(),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  return AnimationLimiter(
+                                    child: GridView.count(
+                                      shrinkWrap: true,
+                                      childAspectRatio: 1 / 1.3,
+                                      physics: BouncingScrollPhysics(),
+                                      crossAxisCount: 2,
+                                      children: snapshot.data!.docs
+                                          .mapIndexed((i, element) =>
+                                              AnimationConfiguration
+                                                  .staggeredGrid(
+                                                      duration: Duration(
+                                                          milliseconds: 300),
+                                                      columnCount: 2,
+                                                      position: i,
+                                                      child: ScaleAnimation(
+                                                        child: ProductCard(
+                                                            data:
+                                                                element.data()),
+                                                      )))
+                                          .toList(),
+                                    ),
+                                  );
+                                } else {
+                                  return Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                }
+                              }),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );
@@ -755,6 +807,7 @@ class SelectCouponBottomSheet extends StatelessWidget {
             }
 
             return ListView(
+              shrinkWrap: true,
               children: snapshot.data!.docs
                   .where((element) =>
                       element.data().isActive &&
@@ -766,28 +819,32 @@ class SelectCouponBottomSheet extends StatelessWidget {
                           : element.data().forUsers.contains(user)))
                   .map((el) {
                 CouponModel e = el.data();
-                return ExpansionTile(
-                  title: Text(e.couponCode),
-                  subtitle: Text(e.couponDescription),
-                  children: [
-                    ListTile(
-                      title: Text('Discount'),
-                      subtitle: Text(e.isByPercent
-                          ? '${e.couponDiscount}%'
-                          : '${e.couponDiscount}'),
-                    ),
-                    ListTile(
-                      title: Text('Min Price'),
-                      subtitle: Text(e.minPrice.toString()),
-                    ),
-                    ListTile(
-                      title: Text('Select Coupon'),
-                      onTap: () {
-                        Navigator.pop(context);
-                        onSelected(e);
-                      },
-                    )
-                  ],
+                return Container(
+                  margin: EdgeInsets.all(10),
+                  decoration: KConstants.defContainerDec,
+                  child: ExpansionTile(
+                    title: Text(e.couponCode),
+                    subtitle: Text(e.couponDescription),
+                    children: [
+                      ListTile(
+                        title: Text('Discount'),
+                        subtitle: Text(e.isByPercent
+                            ? '${e.couponDiscount}%'
+                            : '${e.couponDiscount}'),
+                      ),
+                      ListTile(
+                        title: Text('Min Price'),
+                        subtitle: Text(e.minPrice.toString()),
+                      ),
+                      ListTile(
+                        title: Text('Select Coupon'),
+                        onTap: () {
+                          Navigator.pop(context);
+                          onSelected(e);
+                        },
+                      )
+                    ],
+                  ),
                 );
               }).toList(),
             );

@@ -13,6 +13,7 @@ import 'package:fashion_customer/views/reviews.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../model/image_color_model.dart';
 import '../model/product_model.dart';
@@ -459,6 +460,47 @@ class _ProductDetailsState extends State<ProductDetails> {
                           fontSize: height * 0.03,
                           color: KConstants.txtColor75,
                           letterSpacing: 1),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                width: width,
+                decoration: defContainerDec,
+                padding: EdgeInsets.symmetric(vertical: 25, horizontal: 15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      "You can directly buy it from the store",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: height * 0.02,
+                          color: KConstants.txtColor100,
+                          letterSpacing: 1),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "Gala no 04, New Apartment, Dargah Road, Bhiwandi 421-305",
+                      style: TextStyle(
+                          fontSize: height * 0.015,
+                          color: Colors.grey,
+                          letterSpacing: 1),
+                    ),
+                    InkWell(
+                      onTap: (){
+                        launch("tel:${8845433463}");
+                      },
+                      child: Text(
+                        "Contact No: 8849392489",
+                        style: TextStyle(
+                            fontSize: height * 0.015,
+                            color: Colors.grey,
+                            letterSpacing: 1),
+                      ),
                     ),
                   ],
                 ),
