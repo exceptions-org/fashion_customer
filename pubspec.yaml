@@ -54,6 +54,7 @@ dependencies:
   pdf: ^3.7.4
   shared_preferences: ^2.0.13
   smooth_star_rating_null_safety: ^1.0.4+2
+  url_launcher: ^6.0.20
 
 dev_dependencies:
   flutter_lints: ^1.0.0
