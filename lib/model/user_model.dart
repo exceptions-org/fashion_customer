@@ -9,26 +9,31 @@ class UserModel {
   List<AddressModel> address;
   int orderCount;
   String pushToken;
-  UserModel({
-    required this.name,
-    required this.number,
-    required this.address,
-    required this.orderCount,
-    required this.pushToken
-  });
+  List<String> wishList;
+  UserModel(
+      {required this.name,
+      required this.number,
+      required this.address,
+      required this.orderCount,
+      required this.pushToken,
+      required this.wishList});
 
   UserModel copyWith({
     String? name,
     String? number,
     List<AddressModel>? address,
     int? orderCount,
+    String? pushToken,
+    List<String>? wishList,
   }) {
     return UserModel(
-      pushToken: pushToken,
+      
       orderCount: orderCount ?? this.orderCount,
       name: name ?? this.name,
       number: number ?? this.number,
       address: address ?? this.address,
+      pushToken: pushToken ?? this.pushToken,
+      wishList: wishList ?? this.wishList,
     );
   }
 
@@ -36,10 +41,11 @@ class UserModel {
     return {
       'name': name,
       'number': number,
-
       'orderCount': orderCount,
       'address': address.map((x) => x.toMap()).toList(),
       'pushToken': pushToken,
+      'wishList': wishList,
+      
     };
   }
 
@@ -51,6 +57,7 @@ class UserModel {
           map['address']?.map((x) => AddressModel.fromMap(x))),
       orderCount: map['orderCount'] ?? 0,
       pushToken: map['pushToken'] ?? '',
+      wishList: List<String>.from(map['wishList'] ?? []),
     );
   }
 
@@ -61,6 +68,7 @@ class UserModel {
       'address': address.map((x) => x.toSf()).toList(),
       'orderCount': orderCount,
       'pushToken': pushToken,
+      'wishList': wishList,
     };
   }
 
@@ -72,6 +80,7 @@ class UserModel {
           map['address']?.map((x) => AddressModel.fromSf(x))),
       orderCount: map['orderCount'] ?? 0,
       pushToken: map['pushToken'] ?? '',
+      wishList: List<String>.from(map['wishList'] ?? []),
     );
   }
 

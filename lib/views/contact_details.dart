@@ -345,6 +345,7 @@ class _SignupPage2State extends State<SignupPage2> {
   void addaddress() async {
     UserModel userModel = UserModel(
         orderCount: 0,
+        wishList: [],
         name: name.text,
         number: widget.number,
         pushToken: '',

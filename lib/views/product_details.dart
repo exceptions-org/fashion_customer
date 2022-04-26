@@ -110,30 +110,66 @@ class _ProductDetailsState extends State<ProductDetails> {
                                       userModel.toMap())
                               .snapshots(),
                           builder: (context, snapshot) {
-                            return AnimatedContainer(
-                              decoration: ShapeDecoration(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                            bool hasAdded = snapshot.data
+                                    ?.data()
+                                    ?.wishList
+                                    .contains(productModel.id) ??
+                                false;
+                            return InkWell(
+                              onTap: () async {
+                                if (hasAdded) {
+                                  snapshot.data?.reference.update({
+                                    'wishList': FieldValue.arrayRemove(
+                                        [productModel.id])
+                                  });
+                                } else {
+                                  snapshot.data?.reference.update({
+                                    'wishList':
+                                        FieldValue.arrayUnion([productModel.id])
+                                  });
+                                }
+                                getIt<UserController>().getUser();
+                              },
+                              child: AnimatedContainer(
+                                decoration: ShapeDecoration(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      side: BorderSide(
+                                          color: hasAdded
+                                              ? KConstants.kPrimary100
+                                              : Colors.transparent)),
+                                  color: hasAdded
+                                      ? Colors.white
+                                      : KConstants.kPrimary100,
                                 ),
-                                color: KConstants.kPrimary100,
-                              ),
-                              duration: Duration(milliseconds: 300),
-                              padding: EdgeInsets.all(10),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.bookmark_add_outlined,
-                                      size: 20, color: Colors.white),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    'Add To Wishlist',
-                                    style: TextStyle(
-                                        fontSize: height * 0.015,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white),
-                                  ),
-                                ],
+                                duration: Duration(milliseconds: 300),
+                                padding: EdgeInsets.all(10),
+                                child: Row(
+                                  children: [
+                                    if (hasAdded)
+                                      Icon(
+                                        Icons.bookmark,
+                                        color: KConstants.kPrimary100,
+                                      )
+                                    else
+                                      Icon(Icons.bookmark_add_outlined,
+                                          size: 20, color: Colors.white),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      hasAdded
+                                          ? 'Remove from Wishlist'
+                                          : 'Add To Wishlist',
+                                      style: TextStyle(
+                                          fontSize: height * 0.015,
+                                          fontWeight: FontWeight.w600,
+                                          color: hasAdded
+                                              ? KConstants.kPrimary100
+                                              : Colors.white),
+                                    ),
+                                  ],
+                                ),
                               ),
                             );
                           })),

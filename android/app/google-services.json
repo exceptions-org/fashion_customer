@@ -7,18 +7,18 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:531866719037:android:7fd7e1188faa2cc13c2b54",
+        "mobilesdk_app_id": "1:531866719037:android:b1c75bcedd38c8593c2b54",
         "android_client_info": {
-          "package_name": "com.example.fashion_customer"
+          "package_name": "com.exceptions.fashio"
         }
       },
       "oauth_client": [
         {
-          "client_id": "531866719037-nb98vmqtulvjn2f4t77l12eilggvu8gv.apps.googleusercontent.com",
+          "client_id": "531866719037-53mfv1sv5ke0ut8buovg2fngvrm8l665.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.fashion_customer",
-            "certificate_hash": "54cf09fba4a314820a88d14e255929aa5f889a96"
+            "package_name": "com.exceptions.fashio",
+            "certificate_hash": "b0666fa3af9768419a9e674bf7db921847d1dc8f"
           }
         },
         {
@@ -51,11 +51,19 @@
       },
       "oauth_client": [
         {
-          "client_id": "531866719037-9stuogrod2e11iqmv978108g9s7inhs7.apps.googleusercontent.com",
+          "client_id": "531866719037-ckp38s9iq91gietmtg2s72hhl7qmskoj.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.exceptions.fashion_admin",
-            "certificate_hash": "b0666fa3af9768419a9e674bf7db921847d1dc8f"
+            "certificate_hash": "de07537208a66241d162b93b8e8ceca78df14e6b"
+          }
+        },
+        {
+          "client_id": "531866719037-oavai8s1vhvs73r4j7nfaq145qmn6upi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.exceptions.fashion_admin",
+            "certificate_hash": "423b8a2aa12eaa17a77f014385e3ace07f1e2863"
           }
         },
         {

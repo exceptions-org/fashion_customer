@@ -12,6 +12,7 @@ class UserController {
 
   void setEmptyUser() {
     userModel = UserModel(
+      wishList: [],
         name: "", number: "", address: [], orderCount: 0, pushToken: '');
   }
 

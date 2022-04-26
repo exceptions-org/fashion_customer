@@ -52,10 +52,16 @@ class WishlistWidget extends StatelessWidget {
                   child: Text("something went wrong"),
                 );
               }
+
               // if (snapshot.data!.docs.isEmpty) {
               //   return Center(child: Text("No such Product Found"));
               // }
               if (snapshot.hasData && snapshot.data != null) {
+                List<ProductModel> products = snapshot.data!.docs
+                    .map((e) => e.data())
+                    .where((element) =>
+                        userController.userModel.wishList.contains(element.id))
+                    .toList();
                 // var productLength = snapshot.data!.docs.length;
                 if (snapshot.data!.docs.isEmpty) {
                   return Center(
@@ -71,9 +77,7 @@ class WishlistWidget extends StatelessWidget {
                   mainAxisSpacing: 8,
                   crossAxisSpacing: 8,
                   crossAxisCount: 2,
-                  children: snapshot.data!.docs
-                      .map((e) => ProductCard(data: e.data()))
-                      .toList(),
+                  children: products.map((e) => ProductCard(data: e)).toList(),
                 );
               }
               return const Center(child: Text('Loading...'));

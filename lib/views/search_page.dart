@@ -280,11 +280,12 @@ class _SearchPageState extends State<SearchPage> {
                               .toLowerCase()
                               .contains(search.text.toLowerCase()))
                           .where((element) =>
-                              element.data().category == widget.category)
+                              element.data().category.name.toLowerCase() ==
+                              widget.category.toLowerCase())
                           .map((e) => e.data())
                           .toList();
                     } else {
-                      products = snapshot.data!.docs
+                      List<ProductModel> searches = snapshot.data!.docs
                           .where((element) => element
                               .data()
                               .name
@@ -292,6 +293,7 @@ class _SearchPageState extends State<SearchPage> {
                               .contains(search.text.toLowerCase()))
                           .map((e) => e.data())
                           .toList();
+                      products = searches;
                     }
 
                     if (subcategory != null) {
