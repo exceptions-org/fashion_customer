@@ -12,7 +12,7 @@ class UserController {
 
   void setEmptyUser() {
     userModel = UserModel(
-        name: "", number: "", address: [], orderCount: 0, pushToken: '');
+        name: "", number: "", address: [], orderCount: 0, pushToken: '', whistList: []);
   }
 
   Future<void> addAddress(AddressModel address) async {

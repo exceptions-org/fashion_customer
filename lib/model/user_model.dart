@@ -7,12 +7,14 @@ class UserModel {
   String name;
   String number;
   List<AddressModel> address;
+  List<String> whistList;
   int orderCount;
   String pushToken;
   UserModel({
     required this.name,
     required this.number,
     required this.address,
+    required this.whistList,
     required this.orderCount,
     required this.pushToken
   });
@@ -29,6 +31,7 @@ class UserModel {
       name: name ?? this.name,
       number: number ?? this.number,
       address: address ?? this.address,
+      whistList: whistList,
     );
   }
 
@@ -47,6 +50,7 @@ class UserModel {
     return UserModel(
       name: map['name'] ?? '',
       number: map['number'] ?? '',
+      whistList: map['whistList'],
       address: List<AddressModel>.from(
           map['address']?.map((x) => AddressModel.fromMap(x))),
       orderCount: map['orderCount'] ?? 0,
@@ -68,6 +72,7 @@ class UserModel {
     return UserModel(
       name: map['name'] ?? '',
       number: map['number'] ?? '',
+      whistList: map['whistList'],
       address: List<AddressModel>.from(
           map['address']?.map((x) => AddressModel.fromSf(x))),
       orderCount: map['orderCount'] ?? 0,

@@ -712,7 +712,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       ],
                     ),
                   ),
-                ),
               ],
             ),
             if (orderPlaced)
@@ -772,7 +771,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       )
                     ],
                   ),
-                ),
+                ),)
             ],
           ),
         ),
