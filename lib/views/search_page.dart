@@ -60,9 +60,13 @@ class _SearchPageState extends State<SearchPage> {
   CollectionReference productRefs =
       FirebaseFirestore.instance.collection('products');
 
-  CategoryModel? subcategory;
+  List<String> subcategories = [];
   SortBy? sortBy;
 
+  List<String> categories = [];
+
+  double minPrice = 100;
+  double maxPrice = 10000;
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
@@ -157,60 +161,240 @@ class _SearchPageState extends State<SearchPage> {
                 Spacer(),
                 TextButton.icon(
                     onPressed: () {
+                      SortBy? sortBy = this.sortBy;
+                      List<String> filterCategories = this.categories;
+                      double minPrice = this.minPrice;
+                      double maxPrice = this.maxPrice;
                       showModalBottomSheet(
                           context: context,
+                          isScrollControlled: true,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.vertical(
                               top: Radius.circular(20),
                             ),
                           ),
                           builder: (context) {
-                            return Container(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                            return StatefulBuilder(builder: (context, s) {
+                              return Stack(
                                 children: [
-                                  SizedBox(
-                                    height: 10,
+                                  Container(
+                                    child: SingleChildScrollView(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(18.0),
+                                            child: Text(
+                                              'Sort By',
+                                              style: TextStyle(
+                                                color: KConstants.txtColor100,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Divider(
+                                            color: Color(0xffC7D4EE),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          ...SortBy.values.map(
+                                            (e) => RadioListTile<SortBy>(
+                                              groupValue: sortBy,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  sortBy = value;
+                                                });
+                                                s(() {});
+                                              },
+                                              value: e,
+                                              title: Text(
+                                                getSorting(e),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 30,
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(18.0),
+                                            child: Text(
+                                              'Filter By',
+                                              style: TextStyle(
+                                                color: KConstants.txtColor100,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Divider(
+                                            color: Color(0xffC7D4EE),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          if (!widget.isCategry)
+                                            StreamBuilder<
+                                                    QuerySnapshot<
+                                                        FetchCategoryModel>>(
+                                                stream: FirebaseFirestore
+                                                    .instance
+                                                    .collection('admin')
+                                                    .doc('categories')
+                                                    .collection('categories')
+                                                    .withConverter(
+                                                        fromFirestore: (snapshot,
+                                                                options) =>
+                                                            FetchCategoryModel
+                                                                .fromMap(snapshot
+                                                                    .data()!),
+                                                        toFirestore:
+                                                            (FetchCategoryModel
+                                                                        v,
+                                                                    s) =>
+                                                                v.toMap())
+                                                    .snapshots(),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot.hasData &&
+                                                      snapshot.data != null) {
+                                                    return Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: snapshot
+                                                          .data!.docs
+                                                          .map((e) =>
+                                                              CheckboxListTile(
+                                                                  value: filterCategories
+                                                                      .contains(e
+                                                                          .data()
+                                                                          .category
+                                                                          .name),
+                                                                  title: Text(
+                                                                    e
+                                                                        .data()
+                                                                        .category
+                                                                        .name,
+                                                                  ),
+                                                                  onChanged:
+                                                                      (v) {
+                                                                    if (v ??
+                                                                        false) {
+                                                                      filterCategories.add(e
+                                                                          .data()
+                                                                          .category
+                                                                          .name);
+                                                                    } else {
+                                                                      filterCategories.remove(e
+                                                                          .data()
+                                                                          .category
+                                                                          .name);
+                                                                    }
+                                                                    s(() {});
+                                                                  }))
+                                                          .toList(),
+                                                    );
+                                                  }
+                                                  return Container();
+                                                })
+                                          else
+                                            ...widget.subcategories
+                                                .map((e) => CheckboxListTile(
+                                                      value: filterCategories
+                                                          .contains(e.name),
+                                                      title: Text(e.name),
+                                                      onChanged: (v) {
+                                                        if (v ?? false) {
+                                                          filterCategories
+                                                              .add(e.name);
+                                                        } else {
+                                                          filterCategories
+                                                              .remove(e.name);
+                                                        }
+                                                        s(() {});
+                                                      },
+                                                    )),
+                                          SizedBox(
+                                            height: 20,
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(18.0),
+                                            child: Text(
+                                              'Price Range',
+                                              style: TextStyle(
+                                                color: KConstants.txtColor100,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Divider(
+                                            color: Color(0xffC7D4EE),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          RangeSlider(
+                                              activeColor:
+                                                  KConstants.kPrimary100,
+                                              values: RangeValues(
+                                                  minPrice, maxPrice),
+                                              onChanged: (v) {
+                                                setState(() {
+                                                  minPrice = v.start;
+                                                  maxPrice = v.end;
+                                                });
+                                                s(() {});
+                                              },
+                                              min: 100,
+                                              max: 10000,
+                                              divisions: 100000 ~/ 100,
+                                              labels: RangeLabels(
+                                                  '${minPrice.toInt()}',
+                                                  '${maxPrice.toInt()}')),
+                                          SizedBox(
+                                            height: kBottomNavigationBarHeight,
+                                          )
+                                        ],
+                                      ),
+                                    ),
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.all(18.0),
-                                    child: Text(
-                                      'Sort By',
-                                      style: TextStyle(
-                                        color: KConstants.txtColor100,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                    padding: const EdgeInsets.only(right: 8.0),
+                                    child: Align(
+                                      alignment: Alignment.bottomRight,
+                                      child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              primary: KConstants.kPrimary100),
+                                          onPressed: () {
+                                            setState(() {
+                                              this.sortBy = sortBy;
+                                              this.categories =
+                                                  filterCategories;
+                                              this.minPrice = minPrice;
+                                              this.maxPrice = maxPrice;
+                                            });
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text('Apply')),
                                     ),
                                   ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Divider(
-                                    color: Color(0xffC7D4EE),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  ...SortBy.values.map(
-                                    (e) => ListTile(
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                        setState(() {
-                                          sortBy = e;
-                                        });
-                                      },
-                                      title: Text(
-                                        getSorting(e),
-                                      ),
-                                      trailing: sortBy == e
-                                          ? Icon(Icons.check)
-                                          : null,
-                                    ),
-                                  )
                                 ],
-                              ),
-                            );
+                              );
+                            });
                           });
                     },
                     icon: Image.asset(
@@ -249,12 +433,7 @@ class _SearchPageState extends State<SearchPage> {
                   // }
                   if (snapshot.hasData && snapshot.data != null) {
                     // var productLength = snapshot.data!.docs.length;
-                    if (snapshot.data!.docs.isEmpty) {
-                      return Text(
-                        "No such Product Found",
-                        style: TextStyle(fontSize: 50),
-                      );
-                    }
+
                     if (snapshot.data!.docs
                         .where((element) => element
                             .data()
@@ -296,12 +475,27 @@ class _SearchPageState extends State<SearchPage> {
                       products = searches;
                     }
 
-                    if (subcategory != null) {
-                      products = products
-                          .where((element) =>
-                              element.subCategory.name == subcategory!.name)
-                          .toList();
+                    if (categories.isNotEmpty) {
+                      if (widget.isCategry)
+                        products = products
+                            .where((element) =>
+                                categories.contains(element.subCategory.name))
+                            .toList();
+                      else
+                        products = products
+                            .where((element) =>
+                                categories.contains(element.category.name))
+                            .toList();
                     }
+                    products = products
+                        .where((element) =>
+                            double.parse(element
+                                    .prices.first.colorPrice.first.price) >=
+                                minPrice &&
+                            double.parse(element
+                                    .prices.first.colorPrice.first.price) <=
+                                maxPrice)
+                        .toList();
                     if (sortBy != null) {
                       switch (sortBy) {
                         case SortBy.aToZ:
@@ -338,7 +532,12 @@ class _SearchPageState extends State<SearchPage> {
                         default:
                       }
                     }
-
+                    if (products.isEmpty) {
+                      return Text(
+                        "No such Product Found",
+                        style: TextStyle(fontSize: 50),
+                      );
+                    }
                     return GridView.count(
                       physics: BouncingScrollPhysics(),
                       childAspectRatio: 1 / 1.2,

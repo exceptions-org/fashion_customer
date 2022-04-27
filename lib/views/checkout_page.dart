@@ -492,18 +492,21 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           height: 10,
                         ),
                         Text(
-                          "Gala no 04, New Apartment, Dargah Road, Bhiwandi 421-305",
+                          "Rabia Masjid, Mangal Bazaar Slap, Bhiwandi",
                           style: TextStyle(
                               fontSize: height * 0.015,
                               color: Colors.grey,
                               letterSpacing: 1),
                         ),
+                        SizedBox(
+                          height: 10,
+                        ),
                         InkWell(
                           onTap: () {
-                            launch("tel:${8845433463}");
+                            launch("tel:${8286349316}");
                           },
                           child: Text(
-                            "Contact No: 8849392489",
+                            "Contact No: 8286349316",
                             style: TextStyle(
                                 fontSize: height * 0.015,
                                 color: Colors.grey,
@@ -547,7 +550,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                       user: controller.userModel.number,
                                       onSelected: (p0) {
                                         setState(() {
-                                          if (widget.totalAmount >
+                                          if (widget.totalAmount >=
                                               p0.minPrice) {
                                             couponModel = p0;
                                             if (p0.isByPercent) {
@@ -559,6 +562,16 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                               couponDiscount =
                                                   p0.couponDiscount;
                                             }
+                                          } else {
+                                            couponModel = null;
+                                            couponDiscount = 0;
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                    'Coupon cannot be applied'),
+                                              ),
+                                            );
                                           }
                                         });
                                       },
@@ -712,66 +725,69 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       ],
                     ),
                   ),
-              ],
-            ),
-            if (orderPlaced)
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Continue Shopping'),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Expanded(
-                        child: StreamBuilder<QuerySnapshot<ProductModel>>(
-                            stream: FirebaseFirestore.instance
-                                .collection('products')
-                                .orderBy("orderCount")
-                                .withConverter<ProductModel>(
-                                    fromFirestore: (snapshot, options) =>
-                                        ProductModel.fromMap(snapshot.data()!),
-                                    toFirestore: (product, options) =>
-                                        product.toMap())
-                                .limit(10)
-                                .snapshots(),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                return AnimationLimiter(
-                                  child: GridView.count(
-                                    physics: BouncingScrollPhysics(),
-                                    childAspectRatio: 1 / 1.2,
-                                    shrinkWrap: true,
-                                    mainAxisSpacing: 8,
-                                    crossAxisSpacing: 8,
-                                    crossAxisCount: 2,
-                                    children: snapshot.data!.docs
-                                        .mapIndexed((i, element) =>
-                                            AnimationConfiguration
-                                                .staggeredGrid(
-                                                    duration: Duration(
-                                                        milliseconds: 300),
-                                                    columnCount: 2,
-                                                    position: i,
-                                                    child: ScaleAnimation(
-                                                      child: ProductCard(
-                                                          data: element.data()),
-                                                    )))
-                                        .toList(),
-                                  ),
-                                );
-                              } else {
-                                return Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              }
-                            }),
-                      )
-                    ],
+                ],
+              ),
+              if (orderPlaced)
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Continue Shopping'),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Expanded(
+                          child: StreamBuilder<QuerySnapshot<ProductModel>>(
+                              stream: FirebaseFirestore.instance
+                                  .collection('products')
+                                  .orderBy("orderCount")
+                                  .withConverter<ProductModel>(
+                                      fromFirestore: (snapshot, options) =>
+                                          ProductModel.fromMap(
+                                              snapshot.data()!),
+                                      toFirestore: (product, options) =>
+                                          product.toMap())
+                                  .limit(10)
+                                  .snapshots(),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  return AnimationLimiter(
+                                    child: GridView.count(
+                                      physics: BouncingScrollPhysics(),
+                                      childAspectRatio: 1 / 1.2,
+                                      shrinkWrap: true,
+                                      mainAxisSpacing: 8,
+                                      crossAxisSpacing: 8,
+                                      crossAxisCount: 2,
+                                      children: snapshot.data!.docs
+                                          .mapIndexed((i, element) =>
+                                              AnimationConfiguration
+                                                  .staggeredGrid(
+                                                      duration: Duration(
+                                                          milliseconds: 300),
+                                                      columnCount: 2,
+                                                      position: i,
+                                                      child: ScaleAnimation(
+                                                        child: ProductCard(
+                                                            data:
+                                                                element.data()),
+                                                      )))
+                                          .toList(),
+                                    ),
+                                  );
+                                } else {
+                                  return Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                }
+                              }),
+                        )
+                      ],
+                    ),
                   ),
-                ),)
+                )
             ],
           ),
         ),
