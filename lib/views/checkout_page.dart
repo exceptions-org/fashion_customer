@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:collection/collection.dart';
 import 'package:fashion_customer/bottom_navigation.dart';
 import 'package:fashion_customer/controller/cart_controller.dart';
 import 'package:fashion_customer/controller/controller.dart';
@@ -7,9 +6,9 @@ import 'package:fashion_customer/main.dart';
 import 'package:fashion_customer/model/offer_model.dart';
 import 'package:fashion_customer/model/order_model.dart';
 import 'package:fashion_customer/utils/constants.dart';
-import 'package:fashion_customer/utils/product_card.dart';
 import 'package:fashion_customer/utils/select_address_sheet.dart';
 import 'package:fashion_customer/utils/spHelper.dart';
+import 'package:fashion_customer/views/custom_grid_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -519,93 +518,94 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   SizedBox(
                     height: 4,
                   ),
-                  Container(
-                    decoration: KConstants.defContainerDec,
-                    width: double.infinity,
-                    padding: EdgeInsets.all(16.0),
-                    child: Row(
-                      children: [
-                        if (couponModel == null)
-                          Text('Select Coupon')
-                        else
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Coupon Applied',
-                                  style:
-                                      TextStyle(color: KConstants.kPrimary100)),
-                              Text(couponModel!.couponCode,
-                                  style:
-                                      TextStyle(color: KConstants.kPrimary100)),
-                            ],
-                          ),
-                        Spacer(),
-                        if (couponModel == null)
-                          TextButton(
-                            onPressed: () async {
-                              await showModalBottomSheet(
-                                  context: context,
-                                  builder: (c) {
-                                    return SelectCouponBottomSheet(
-                                      user: controller.userModel.number,
-                                      onSelected: (p0) {
-                                        setState(() {
-                                          if (widget.totalAmount >=
-                                              p0.minPrice) {
-                                            couponModel = p0;
-                                            if (p0.isByPercent) {
-                                              couponDiscount =
-                                                  widget.totalAmount *
-                                                      p0.couponDiscount /
-                                                      100;
+                  if (!orderPlaced)
+                    Container(
+                      decoration: KConstants.defContainerDec,
+                      width: double.infinity,
+                      padding: EdgeInsets.all(16.0),
+                      child: Row(
+                        children: [
+                          if (couponModel == null)
+                            Text('Select Coupon')
+                          else
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Coupon Applied',
+                                    style: TextStyle(
+                                        color: KConstants.kPrimary100)),
+                                Text(couponModel!.couponCode,
+                                    style: TextStyle(
+                                        color: KConstants.kPrimary100)),
+                              ],
+                            ),
+                          Spacer(),
+                          if (couponModel == null)
+                            TextButton(
+                              onPressed: () async {
+                                await showModalBottomSheet(
+                                    context: context,
+                                    builder: (c) {
+                                      return SelectCouponBottomSheet(
+                                        user: controller.userModel.number,
+                                        onSelected: (p0) {
+                                          setState(() {
+                                            if (widget.totalAmount >=
+                                                p0.minPrice) {
+                                              couponModel = p0;
+                                              if (p0.isByPercent) {
+                                                couponDiscount =
+                                                    widget.totalAmount *
+                                                        p0.couponDiscount /
+                                                        100;
+                                              } else {
+                                                couponDiscount =
+                                                    p0.couponDiscount;
+                                              }
                                             } else {
-                                              couponDiscount =
-                                                  p0.couponDiscount;
+                                              couponModel = null;
+                                              couponDiscount = 0;
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                      'Coupon cannot be applied'),
+                                                ),
+                                              );
                                             }
-                                          } else {
-                                            couponModel = null;
-                                            couponDiscount = 0;
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              SnackBar(
-                                                content: Text(
-                                                    'Coupon cannot be applied'),
-                                              ),
-                                            );
-                                          }
-                                        });
-                                      },
-                                    );
-                                  });
-                              setState(() {});
-                            },
-                            child: Text(
-                              'Select',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                color: KConstants.kPrimary100,
+                                          });
+                                        },
+                                      );
+                                    });
+                                setState(() {});
+                              },
+                              child: Text(
+                                'Select',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: KConstants.kPrimary100,
+                                ),
+                              ),
+                            )
+                          else
+                            InkWell(
+                              onTap: () async {
+                                setState(() {
+                                  couponModel = null;
+                                  couponDiscount = 0;
+                                });
+                              },
+                              child: Image.asset(
+                                'Icons/remove.png',
+                                height: 24,
+                                width: 24,
+                                color: Colors.red,
                               ),
                             ),
-                          )
-                        else
-                          InkWell(
-                            onTap: () async {
-                              setState(() {
-                                couponModel = null;
-                                couponDiscount = 0;
-                              });
-                            },
-                            child: Image.asset(
-                              'Icons/remove.png',
-                              height: 24,
-                              width: 24,
-                              color: Colors.red,
-                            ),
-                          ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
                   SizedBox(
                     height: 4.0,
                   ),
@@ -728,64 +728,41 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 ],
               ),
               if (orderPlaced)
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Continue Shopping'),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Expanded(
-                          child: StreamBuilder<QuerySnapshot<ProductModel>>(
-                              stream: FirebaseFirestore.instance
-                                  .collection('products')
-                                  .orderBy("orderCount")
-                                  .withConverter<ProductModel>(
-                                      fromFirestore: (snapshot, options) =>
-                                          ProductModel.fromMap(
-                                              snapshot.data()!),
-                                      toFirestore: (product, options) =>
-                                          product.toMap())
-                                  .limit(10)
-                                  .snapshots(),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData) {
-                                  return AnimationLimiter(
-                                    child: GridView.count(
-                                      physics: BouncingScrollPhysics(),
-                                      childAspectRatio: 1 / 1.2,
-                                      shrinkWrap: true,
-                                      mainAxisSpacing: 8,
-                                      crossAxisSpacing: 8,
-                                      crossAxisCount: 2,
-                                      children: snapshot.data!.docs
-                                          .mapIndexed((i, element) =>
-                                              AnimationConfiguration
-                                                  .staggeredGrid(
-                                                      duration: Duration(
-                                                          milliseconds: 300),
-                                                      columnCount: 2,
-                                                      position: i,
-                                                      child: ScaleAnimation(
-                                                        child: ProductCard(
-                                                            data:
-                                                                element.data()),
-                                                      )))
-                                          .toList(),
-                                    ),
-                                  );
-                                } else {
-                                  return Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                }
-                              }),
-                        )
-                      ],
-                    ),
+                Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Continue Shopping'),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      StreamBuilder<QuerySnapshot<ProductModel>>(
+                          stream: FirebaseFirestore.instance
+                              .collection('products')
+                              .orderBy("orderCount")
+                              .withConverter<ProductModel>(
+                                  fromFirestore: (snapshot, options) =>
+                                      ProductModel.fromMap(snapshot.data()!),
+                                  toFirestore: (product, options) =>
+                                      product.toMap())
+                              .limit(6)
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return AnimationLimiter(
+                                child: CustomGridView(
+                                    products: snapshot.data!.docs
+                                        .map((e) => e.data())
+                                        .toList()),
+                              );
+                            } else {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                          })
+                    ],
                   ),
                 )
             ],
@@ -839,9 +816,11 @@ class SelectCouponBottomSheet extends StatelessWidget {
                 return Container(
                   margin: EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: KConstants.kBorderColor),
-                      borderRadius: BorderRadius.circular(10)),
+                    //color: Colors.white,
+                    border: Border(
+                        bottom: BorderSide(color: KConstants.kBorderColor)),
+                    //borderRadius: BorderRadius.circular(10)
+                  ),
                   child: ExpansionTile(
                     title: Text(e.couponCode),
                     subtitle: Text(e.couponDescription),

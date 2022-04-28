@@ -4,8 +4,8 @@ import 'package:fashion_customer/controller/controller.dart';
 import 'package:fashion_customer/main.dart';
 import 'package:fashion_customer/model/carousel_model.dart';
 import 'package:fashion_customer/model/category_model.dart';
-import 'package:fashion_customer/utils/product_card.dart';
 import 'package:fashion_customer/utils/select_address_sheet.dart';
+import 'package:fashion_customer/views/custom_grid_view.dart';
 import 'package:fashion_customer/views/product_details.dart';
 import 'package:fashion_customer/views/search_page.dart';
 import 'package:flutter/cupertino.dart';
@@ -247,7 +247,7 @@ class _HomePageState extends State<HomePage> {
                                   crossAxisCount: 4,
                                   crossAxisSpacing: 12,
                                   mainAxisSpacing: 7,
-                                  childAspectRatio: 1 / 0.9,
+                                  childAspectRatio: 1 / 1.2,
                                   children: [
                                     ...(snapshot.data!.docs.length > 7
                                             ? snapshot.data!.docs.sublist(0, 7)
@@ -507,16 +507,9 @@ class _HomePageState extends State<HomePage> {
 
                       return SingleChildScrollView(
                         physics: const BouncingScrollPhysics(),
-                        child: GridView.count(
-                          physics: BouncingScrollPhysics(),
-                          childAspectRatio: 1 / 1.2,
-                          shrinkWrap: true,
-                          mainAxisSpacing: 8,
-                          crossAxisSpacing: 8,
-                          crossAxisCount: 2,
-                          children: snapshot.data!.docs
+                        child: CustomGridView(
+                          products: snapshot.data!.docs
                               .map((e) => e.data())
-                              .map((data) => ProductCard(data: data))
                               .toList(), /* (context, index) {
                   ProductModel data = snapshot.data.docs[index].data();
                   return GestureDetector(

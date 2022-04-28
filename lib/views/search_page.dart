@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fashion_customer/model/category_model.dart';
 import 'package:fashion_customer/utils/constants.dart';
-import 'package:fashion_customer/utils/product_card.dart';
+import 'package:fashion_customer/views/custom_grid_view.dart';
 import 'package:flutter/material.dart';
 
 import '../model/product_model.dart';
@@ -533,21 +533,15 @@ class _SearchPageState extends State<SearchPage> {
                       }
                     }
                     if (products.isEmpty) {
-                      return Text(
-                        "No such Product Found",
-                        style: TextStyle(fontSize: 50),
+                      return Center(
+                        child: Text(
+                          "No such Product Found",
+                        ),
                       );
                     }
-                    return GridView.count(
-                      physics: BouncingScrollPhysics(),
-                      childAspectRatio: 1 / 1.2,
-                      shrinkWrap: true,
-                      mainAxisSpacing: 8,
-                      crossAxisSpacing: 8,
-                      crossAxisCount: 2,
-                      children: products
-                          .map((data) => ProductCard(data: data))
-                          .toList(), /* (context, index) {
+                    return CustomGridView(
+                      products: products,
+                      /* (context, index) {
                         ProductModel data = snapshot.data.docs[index].data();
                         return GestureDetector(
                           onTap: () {

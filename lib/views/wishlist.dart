@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fashion_customer/controller/controller.dart';
 import 'package:fashion_customer/model/product_model.dart';
 import 'package:fashion_customer/utils/constants.dart';
-import 'package:fashion_customer/utils/product_card.dart';
+import 'package:fashion_customer/views/custom_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -37,7 +37,7 @@ class WishlistWidget extends StatelessWidget {
         centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: StreamBuilder<QuerySnapshot<ProductModel>>(
             stream: FirebaseFirestore.instance
                 .collection('products')
@@ -67,18 +67,11 @@ class WishlistWidget extends StatelessWidget {
                   return Center(
                     child: Text(
                       "No Product Found",
-                      style: TextStyle(fontSize: 20),
+                      //  style: TextStyle(fontSize: 20),
                     ),
                   );
                 }
-                return GridView.count(
-                  childAspectRatio: 1 / 1.2,
-                  shrinkWrap: true,
-                  mainAxisSpacing: 8,
-                  crossAxisSpacing: 8,
-                  crossAxisCount: 2,
-                  children: products.map((e) => ProductCard(data: e)).toList(),
-                );
+                return CustomGridView(products: products);
               }
               return const Center(child: Text('Loading...'));
             }),
