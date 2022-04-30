@@ -46,7 +46,6 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   CartController cartController = getIt<CartController>();
 
-  String size = '';
   ProductModel get productModel => widget.productModel;
   late Color selectedColor = Color(productModel.images.first.colorCode);
   late List<String> sizes = productModel.sizeUnit.contains(',,')
@@ -59,6 +58,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                   .toString())
       : [];
   // DocumentReference get documentReference => widget.documentReference;
+  String size = '';
   late String price = productModel.prices.first.colorPrice
       .firstWhere(
           (element) => element.colorName == productModel.images.first.colorName)
@@ -71,13 +71,17 @@ class _ProductDetailsState extends State<ProductDetails> {
     border: Border.all(color: KConstants.kBorderColor),
   );
 
+
+
   final UserController userController = getIt.get<UserController>();
 
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
-
+    if (sizes.isEmpty) {
+      size = productModel.sizeUnit;
+    }
     return WillPopScope(
       onWillPop: () async {
         if (widget.notFromHome) {
@@ -180,16 +184,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                     child: FittedBox(
                       child: AnimatedSwitcher(
                         duration: Duration(milliseconds: 200),
-                        child: cartController.cartItems.any((element) =>
-                                element.productId == productModel.id &&
-                                element.color == selectedColor.value &&
-                                size == element.selectedSize)
+                        child: cartController.isExist(
+                                productModel.id, selectedColor.value, size)
                             ? FloatingActionButton.extended(
-                                key: ValueKey(cartController.cartItems.any(
-                                    (element) =>
-                                        element.productId == productModel.id &&
-                                        element.color == selectedColor.value &&
-                                        size == element.selectedSize)),
+                                key: ValueKey(cartController.isExist(
+                                    productModel.id,
+                                    selectedColor.value,
+                                    size)),
                                 onPressed: () {},
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10)),
@@ -232,11 +233,10 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 ),
                               )
                             : FloatingActionButton.extended(
-                                key: ValueKey(cartController.cartItems.any(
-                                    (element) =>
-                                        element.productId == productModel.id &&
-                                        element.color == selectedColor.value &&
-                                        size == element.selectedSize)),
+                                key: ValueKey(cartController.isExist(
+                                    productModel.id,
+                                    selectedColor.value,
+                                    size)),
                                 onPressed: () {
                                   if (sizes.isNotEmpty && size == '') {
                                     ScaffoldMessenger.of(context).showSnackBar(
@@ -523,7 +523,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                       height: 10,
                     ),
                     Text(
-                      productModel.name,
+                      productModel.name.toTitleCase(),
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: height * 0.02,
@@ -544,6 +544,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                   ],
                 ),
               ),
+              SizedBox(
+                height: 4,
+              ),
               Container(
                 width: width,
                 decoration: defContainerDec,
@@ -563,19 +566,36 @@ class _ProductDetailsState extends State<ProductDetails> {
                     SizedBox(
                       height: 10,
                     ),
-                    Text(
-                      "Gala no 04, New Apartment, Dargah Road, Bhiwandi 421-305",
-                      style: TextStyle(
-                          fontSize: height * 0.015,
-                          color: Colors.grey,
-                          letterSpacing: 1),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: width * 0.7,
+                          child: Text(
+                            "Rabia Masjid, Mangal Bazaar Slap, Bhiwandi",
+                            style: TextStyle(
+                                fontSize: height * 0.015,
+                                color: Colors.grey,
+                                letterSpacing: 1),
+                          ),
+                        ),
+                        TextButton(
+                            onPressed: () {
+                              launchMap(
+                                  'Rabia Masjid, Mangal Bazaar Slap, Bhiwandi');
+                            },
+                            child: Text('View On Map')),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
                     ),
                     InkWell(
-                      onTap: (){
-                        launch("tel:${8845433463}");
+                      onTap: () {
+                        launch("tel:${8286349316}");
                       },
                       child: Text(
-                        "Contact No: 8849392489",
+                        "Contact No: 8286349316",
                         style: TextStyle(
                             fontSize: height * 0.015,
                             color: Colors.grey,
