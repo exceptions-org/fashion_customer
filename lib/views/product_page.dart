@@ -1,4 +1,4 @@
-import 'package:fashion_customer/utils/constants.dart';
+/* import 'package:fashion_customer/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 class ProductPage extends StatefulWidget {
@@ -136,3 +136,4 @@ class _ProductPageState extends State<ProductPage> {
     );
   }
 }
+ */

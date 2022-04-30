@@ -74,7 +74,7 @@ class _CartpageState extends State<Cartpage> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          e.name,
+                                          e.name.toTitleCase(),
                                           style: TextStyle(fontSize: 18),
                                         ),
                                         SizedBox(height: 8),

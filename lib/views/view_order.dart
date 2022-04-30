@@ -12,6 +12,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ViewOrders extends StatefulWidget {
   final String userPhone;
@@ -374,6 +375,10 @@ class _OrderDetailsState extends State<OrderDetails> {
 
   @override
   Widget build(BuildContext context) {
+    var media = MediaQuery.of(context);
+    Size size = media.size;
+    var height = size.height;
+    var width = size.width;
     return Stack(
       children: [
         WillPopScope(
@@ -716,6 +721,68 @@ class _OrderDetailsState extends State<OrderDetails> {
                     ),
                     SizedBox(
                       height: 4.0,
+                    ),
+                    Container(
+                      width: width,
+                      decoration: KConstants.defContainerDec,
+                      padding:
+                          EdgeInsets.symmetric(vertical: 25, horizontal: 15),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            "You can directly buy it from the store",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: height * 0.02,
+                                color: KConstants.txtColor100,
+                                letterSpacing: 1),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: width * 0.7,
+                                child: Text(
+                                  "Rabia Masjid, Mangal Bazaar Slap, Bhiwandi",
+                                  style: TextStyle(
+                                      fontSize: height * 0.015,
+                                      color: Colors.grey,
+                                      letterSpacing: 1),
+                                ),
+                              ),
+                              TextButton(
+                                  onPressed: () {
+                                    launchMap(
+                                        'Rabia Masjid, Mangal Bazaar Slap, Bhiwandi');
+                                  },
+                                  child: Text('View On Map')),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          InkWell(
+                            onTap: () {
+                              launch("tel:${8286349316}");
+                            },
+                            child: Text(
+                              "Contact No: 8286349316",
+                              style: TextStyle(
+                                  fontSize: height * 0.015,
+                                  color: Colors.grey,
+                                  letterSpacing: 1),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 4,
                     ),
                     Container(
                       width: double.infinity,

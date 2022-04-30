@@ -65,6 +65,33 @@ class _SearchPageState extends State<SearchPage> {
 
   List<String> categories = [];
 
+  int get filterCount {
+    if (categories.isNotEmpty &&
+        (minPrice > 100 || maxPrice < 10000) &&
+        sortBy != null) {
+      return 3;
+    }
+    if (sortBy != null && categories.isNotEmpty) {
+      return 2;
+    }
+    if (sortBy != null && (maxPrice < 10000 || minPrice > 100)) {
+      return 2;
+    }
+    if ((maxPrice < 10000 || minPrice > 100) && categories.isNotEmpty) {
+      return 2;
+    }
+    if (categories.isNotEmpty) {
+      return 1;
+    }
+    if (maxPrice < 10000 || minPrice > 100) {
+      return 1;
+    }
+    if (sortBy != null) {
+      return 1;
+    }
+    return 0;
+  }
+
   double minPrice = 100;
   double maxPrice = 10000;
   @override
@@ -155,10 +182,13 @@ class _SearchPageState extends State<SearchPage> {
       body: Column(
         children: [
           Container(
+            color: KConstants.kPrimary25,
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               children: [
-                Spacer(),
+                Expanded(
+                    child: Text(
+                        '${filterCount != 0 ? filterCount.toString() + ' Filters Applied' : ''} ')),
                 TextButton.icon(
                     onPressed: () {
                       SortBy? sortBy = this.sortBy;
@@ -168,6 +198,7 @@ class _SearchPageState extends State<SearchPage> {
                       showModalBottomSheet(
                           context: context,
                           isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.vertical(
                               top: Radius.circular(20),
@@ -178,14 +209,23 @@ class _SearchPageState extends State<SearchPage> {
                               return Stack(
                                 children: [
                                   Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(20),
+                                      ),
+                                    ),
+                                    margin: EdgeInsets.only(
+                                      top: MediaQuery.of(this.context)
+                                          .viewPadding
+                                          .top,
+                                    ),
                                     child: SingleChildScrollView(
+                                      physics: BouncingScrollPhysics(),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          SizedBox(
-                                            height: 10,
-                                          ),
                                           Padding(
                                             padding: const EdgeInsets.all(18.0),
                                             child: Text(
@@ -209,6 +249,8 @@ class _SearchPageState extends State<SearchPage> {
                                           ...SortBy.values.map(
                                             (e) => RadioListTile<SortBy>(
                                               groupValue: sortBy,
+                                              activeColor:
+                                                  KConstants.kPrimary100,
                                               onChanged: (value) {
                                                 setState(() {
                                                   sortBy = value;
@@ -275,6 +317,9 @@ class _SearchPageState extends State<SearchPage> {
                                                           .data!.docs
                                                           .map((e) =>
                                                               CheckboxListTile(
+                                                                  activeColor:
+                                                                      KConstants
+                                                                          .kPrimary100,
                                                                   value: filterCategories
                                                                       .contains(e
                                                                           .data()
@@ -347,24 +392,42 @@ class _SearchPageState extends State<SearchPage> {
                                           SizedBox(
                                             height: 10,
                                           ),
-                                          RangeSlider(
-                                              activeColor:
-                                                  KConstants.kPrimary100,
-                                              values: RangeValues(
-                                                  minPrice, maxPrice),
-                                              onChanged: (v) {
-                                                setState(() {
-                                                  minPrice = v.start;
-                                                  maxPrice = v.end;
-                                                });
-                                                s(() {});
-                                              },
-                                              min: 100,
-                                              max: 10000,
-                                              divisions: 100000 ~/ 100,
-                                              labels: RangeLabels(
-                                                  '${minPrice.toInt()}',
-                                                  '${maxPrice.toInt()}')),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 15.0),
+                                            child: Row(
+                                              children: [
+                                                Text('100'),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Expanded(
+                                                  child: RangeSlider(
+                                                      activeColor: KConstants
+                                                          .kPrimary100,
+                                                      values: RangeValues(
+                                                          minPrice, maxPrice),
+                                                      onChanged: (v) {
+                                                        setState(() {
+                                                          minPrice = v.start;
+                                                          maxPrice = v.end;
+                                                        });
+                                                        s(() {});
+                                                      },
+                                                      min: 100,
+                                                      max: 10000,
+                                                      divisions: 100000 ~/ 100,
+                                                      labels: RangeLabels(
+                                                          '${minPrice.toInt()}',
+                                                          '${maxPrice.toInt()}')),
+                                                ),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text('10,000'),
+                                              ],
+                                            ),
+                                          ),
                                           SizedBox(
                                             height: kBottomNavigationBarHeight,
                                           )
@@ -373,23 +436,49 @@ class _SearchPageState extends State<SearchPage> {
                                     ),
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(right: 8.0),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
                                     child: Align(
-                                      alignment: Alignment.bottomRight,
-                                      child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                              primary: KConstants.kPrimary100),
-                                          onPressed: () {
-                                            setState(() {
-                                              this.sortBy = sortBy;
-                                              this.categories =
-                                                  filterCategories;
-                                              this.minPrice = minPrice;
-                                              this.maxPrice = maxPrice;
-                                            });
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text('Apply')),
+                                      alignment: Alignment.bottomCenter,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          TextButton(
+                                              style: ElevatedButton.styleFrom(
+                                                  shape: RoundedRectangleBorder(
+                                                      side: BorderSide(
+                                                          color: KConstants
+                                                              .kPrimary100)),
+                                                  onPrimary:
+                                                      KConstants.kPrimary100),
+                                              onPressed: () {
+                                                setState(() {
+                                                  this.sortBy = null;
+                                                  this.categories = [];
+                                                  this.minPrice = 100;
+                                                  this.maxPrice = 10000;
+                                                });
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text('Clear Filters')),
+                                          ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                  primary:
+                                                      KConstants.kPrimary100),
+                                              onPressed: () {
+                                                setState(() {
+                                                  this.sortBy = sortBy;
+                                                  this.categories =
+                                                      filterCategories;
+                                                  this.minPrice = minPrice;
+                                                  this.maxPrice = maxPrice;
+                                                });
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text('Apply')),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],

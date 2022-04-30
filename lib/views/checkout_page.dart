@@ -334,7 +334,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      cartController.cartItems[index].name,
+                                      cartController.cartItems[index].name
+                                          .toTitleCase(),
                                       style: TextStyle(fontSize: 18),
                                     ),
                                     SizedBox(
@@ -358,19 +359,35 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                             color: Color(0xff604FCC),
                                             fontWeight: FontWeight.bold),
                                       ),
-                                      Text(
-                                        "Quantity: ${cartController.cartItems[index].quantity}",
-                                        style: TextStyle(
-                                            color: Color(0xff604FCC),
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text(
-                                        "Selected Colour: ${cartController.cartItems[index].colorName}",
-                                        style: TextStyle(
-                                            color: Color(0xff604FCC),
-                                            fontWeight: FontWeight.bold),
-                                      )
-                                    ]
+                                    ],
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    Text(
+                                      "Quantity: ${cartController.cartItems[index].quantity}",
+                                      style: TextStyle(
+                                          color: Color(0xff604FCC),
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    Text.rich(
+                                      TextSpan(
+                                          text: 'Color: ',
+                                          children: [
+                                            TextSpan(
+                                              text: cartController
+                                                  .cartItems[index].colorName,
+                                              style: TextStyle(
+                                                  color: Color(cartController
+                                                      .cartItems[index].color)),
+                                            ),
+                                          ],
+                                          style: TextStyle(
+                                              color: KConstants.kPrimary100,
+                                              fontWeight: FontWeight.bold)),
+                                    ),
                                   ],
                                 )
                               ],

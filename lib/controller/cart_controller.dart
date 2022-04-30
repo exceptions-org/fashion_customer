@@ -14,6 +14,17 @@ class CartController {
     cartItems = await spHelper.getCart() ?? [];
   }
 
+  bool isExist(
+    String id,
+    int color,
+    String size,
+  ) {
+    return cartItems.any((element) =>
+        element.productId == id &&
+        element.color == color &&
+        size == element.selectedSize);
+  }
+
   double getTotal() {
     return cartItems.fold(0, (total, cartItem) {
       return total + cartItem.price;

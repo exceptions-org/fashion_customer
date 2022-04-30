@@ -67,10 +67,10 @@ class _SplashScreenState extends State<SplashScreen> with AfterLayoutMixin {
       getIt<CartController>().init();
       await controller.getUser();
       controller.saveAdminToken();
-      // Navigator.pushAndRemoveUntil(
-      //     context,
-      //     CupertinoPageRoute(builder: (c) => BottomNavigation()),
-      //     (route) => false);
+      Navigator.pushAndRemoveUntil(
+          context,
+          CupertinoPageRoute(builder: (c) => BottomNavigation()),
+          (route) => false);
     } else {
       Navigator.pushAndRemoveUntil(context,
           CupertinoPageRoute(builder: (c) => LoginPage()), (route) => false);
