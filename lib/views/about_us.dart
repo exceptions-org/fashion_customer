@@ -1,4 +1,5 @@
 import 'package:fashion_customer/utils/constants.dart';
+import 'package:fashion_customer/views/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -9,7 +10,14 @@ class AboutUs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(58),
+        child: CustomAppBar(
+          isCenterTitle: true,
+          title: "About Us",
+        ),
+      ),
+      /* AppBar(
         automaticallyImplyLeading: false,
         elevation: 1,
         backgroundColor: Colors.white,
@@ -28,7 +36,7 @@ class AboutUs extends StatelessWidget {
           },
         ),
         centerTitle: true,
-      ),
+      ), */
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

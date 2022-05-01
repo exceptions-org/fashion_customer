@@ -39,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen> with AfterLayoutMixin {
                 child: Material(
                   type: MaterialType.transparency,
                   child: Text(
-                    "Fashio",
+                    "",
                     style: GoogleFonts.montserratAlternates(
                       color: KConstants.kPrimary100,
                       fontSize: 25,
