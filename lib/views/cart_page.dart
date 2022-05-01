@@ -2,6 +2,7 @@ import 'package:fashion_customer/controller/cart_controller.dart';
 import 'package:fashion_customer/main.dart';
 import 'package:fashion_customer/utils/constants.dart';
 import 'package:fashion_customer/views/checkout_page.dart';
+import 'package:fashion_customer/views/custom_app_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +22,14 @@ class _CartpageState extends State<Cartpage> {
     double totalAmount = cartController.getTotal();
     return Scaffold(
       backgroundColor: Color(0xffFAFAFF),
-      appBar: AppBar(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(58),
+        child: CustomAppBar(
+          isCenterTitle: true,
+          title: "Cart Page",
+        ),
+      ),
+      /* AppBar(
         leading: IconButton(
           icon: Image.asset(
             "Icons/Arrow.png",
@@ -36,7 +44,7 @@ class _CartpageState extends State<Cartpage> {
         centerTitle: true,
         title:
             Text("Cart Page", style: TextStyle(color: KConstants.kPrimary100)),
-      ),
+      ), */
       body: Column(
         children: [
           if (cartController.cartItems.isNotEmpty)

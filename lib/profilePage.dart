@@ -6,6 +6,7 @@ import 'package:fashion_customer/main.dart';
 import 'package:fashion_customer/model/user_model.dart';
 import 'package:fashion_customer/views/about_us.dart';
 import 'package:fashion_customer/views/add_address.dart';
+import 'package:fashion_customer/views/custom_app_bar.dart';
 import 'package:fashion_customer/views/login_page.dart';
 import 'package:fashion_customer/views/view_order.dart';
 import 'package:fashion_customer/views/wishlist.dart';
@@ -27,6 +28,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final UserController controller = getIt<UserController>();
+  Size get preferredSize => const Size.fromHeight(100);
 
   TextEditingController name = TextEditingController();
 
@@ -36,16 +38,23 @@ class _ProfilePageState extends State<ProfilePage> {
     controller.getUser();
     return Scaffold(
       backgroundColor: Color(0XFFFAFAFF),
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        elevation: 1,
-        backgroundColor: Colors.white,
-        title: const Text(
-          'Profile',
-          style: TextStyle(color: KConstants.kPrimary100),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(58),
+        child: CustomAppBar(
+          isCenterTitle: true,
+          title: "Profile",
         ),
-        centerTitle: true,
       ),
+      // AppBar(
+      //   automaticallyImplyLeading: false,
+      //   elevation: 1,
+      //   backgroundColor: Colors.white,
+      //   title: const Text(
+      //     'Profile',
+      //     style: TextStyle(color: KConstants.kPrimary100),
+      //   ),
+      //   centerTitle: true,
+      // ),
       body: Padding(
         padding: const EdgeInsets.only(top: 50),
         child: Center(
