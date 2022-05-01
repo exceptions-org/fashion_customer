@@ -7,7 +7,7 @@ void launchMap(String address) async {
   var url = '';
   url =
       'https://www.google.com/maps/dir/?api=1&destination=${address}&travelmode=driving&dir_action=navigate';
-
+  
   await launch(url);
 }
 

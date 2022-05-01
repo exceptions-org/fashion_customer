@@ -137,9 +137,12 @@ class Loading extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Hero(
-              tag: 'img',
-              child: Image.asset("Icons/OTP.png"),
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Hero(
+                tag: 'img',
+                child: Image.asset("Icons/OTP.png"),
+              ),
             ),
             SizedBox(
               height: 10,

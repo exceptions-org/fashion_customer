@@ -64,21 +64,19 @@ class _StartupPageState extends State<StartupPage> {
                     fontWeight: FontWeight.w400),
               ),
             ),
-            Spacer(),
-            SizedBox(
-              height: size.height * .5,
-              // color: Colors.blue,
+            Expanded(
               child: PageView(
                 onPageChanged: pageChange,
                 controller: pageController,
                 physics: BouncingScrollPhysics(),
                 children: [
                   Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: const [
                       Text(
                         "Welcome",
-                        style:
-                            TextStyle(fontSize: 40, color: KConstants.kPrimary100),
+                        style: TextStyle(
+                            fontSize: 40, color: KConstants.kPrimary100),
                       ),
                       SizedBox(
                         height: 25,
@@ -86,7 +84,7 @@ class _StartupPageState extends State<StartupPage> {
                       Padding(
                         padding: EdgeInsets.only(left: 20, right: 20),
                         child: Text(
-                          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+                          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever ",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 20,
@@ -98,6 +96,7 @@ class _StartupPageState extends State<StartupPage> {
                     ],
                   ),
                   Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: const [
                       Text(
                         "Choose",
@@ -112,7 +111,7 @@ class _StartupPageState extends State<StartupPage> {
                       Padding(
                         padding: EdgeInsets.only(left: 20, right: 20),
                         child: Text(
-                          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+                          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever ",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 20,
@@ -124,6 +123,7 @@ class _StartupPageState extends State<StartupPage> {
                     ],
                   ),
                   Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: const [
                       Text(
                         "Order",
@@ -135,19 +135,25 @@ class _StartupPageState extends State<StartupPage> {
                       SizedBox(
                         height: 20,
                       ),
-                      Text(
-                        "Lorem Ipsum is simply dummy text of the printing and typesetting industry.\nLorem Ipsum has been the industry's standard dummy text ever\nsince the 1500s, when an unknown printer took a galley of type and scrambled it to make\na type specimen book.",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.grey,
-                          wordSpacing: 8,
+                      Padding(
+                        padding: EdgeInsets.only(left: 20, right: 20),
+                        child: Text(
+                          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever ",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.grey,
+                            wordSpacing: 8,
+                          ),
                         ),
                       )
                     ],
                   ),
                 ],
               ),
+            ),
+            SizedBox(
+              height: 20,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -159,8 +165,8 @@ class _StartupPageState extends State<StartupPage> {
                           duration: const Duration(milliseconds: 300),
                           decoration: BoxDecoration(
                               color: pageIndex == index
-                                  ?  KConstants.kPrimary100
-                                  :  KConstants.kPrimary100.withOpacity(0.2),
+                                  ? KConstants.kPrimary100
+                                  : KConstants.kPrimary100.withOpacity(0.2),
                               borderRadius: BorderRadius.circular(10)),
                           height: 10,
                           width: pageIndex == index ? 25 : 10,
@@ -183,7 +189,8 @@ class _StartupPageState extends State<StartupPage> {
                   },
                   child: const Text(
                     "Skip",
-                    style: TextStyle(color: KConstants.kPrimary100, fontSize: 18),
+                    style:
+                        TextStyle(color: KConstants.kPrimary100, fontSize: 18),
                   ),
                 ),
                 /*  const Text(
@@ -193,7 +200,7 @@ class _StartupPageState extends State<StartupPage> {
                 MaterialButton(
                   height: 50,
                   minWidth: 150,
-                  color:  KConstants.kPrimary100,
+                  color: KConstants.kPrimary100,
                   onPressed: () async {
                     if (pageIndex != 2) {
                       onNext(pageIndex + 1);

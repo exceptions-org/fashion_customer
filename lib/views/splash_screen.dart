@@ -4,13 +4,11 @@ import 'package:fashion_customer/controller/cart_controller.dart';
 import 'package:fashion_customer/controller/controller.dart';
 import 'package:fashion_customer/main.dart';
 import 'package:fashion_customer/startup_page.dart';
-import 'package:fashion_customer/utils/constants.dart';
 import 'package:fashion_customer/utils/fcm_service.dart';
 import 'package:fashion_customer/views/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -34,19 +32,6 @@ class _SplashScreenState extends State<SplashScreen> with AfterLayoutMixin {
                 "Icons/FashioLogo.png",
                 height: 100,
               ),
-              Hero(
-                tag: 'title',
-                child: Material(
-                  type: MaterialType.transparency,
-                  child: Text(
-                    "Fashio",
-                    style: GoogleFonts.montserratAlternates(
-                      color: KConstants.kPrimary100,
-                      fontSize: 25,
-                    ),
-                  ),
-                ),
-              )
             ]),
       ),
     );

@@ -68,7 +68,6 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               SizedBox(height: 20),
               Row(
-                //mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Spacer(),
                   Text(
