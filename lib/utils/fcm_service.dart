@@ -86,7 +86,7 @@ class FirebaseMessagingService {
             AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(androidNotificationChannel);
     AndroidInitializationSettings androidInitializationSettings =
-        AndroidInitializationSettings("@mipmap/ic_launcher");
+        AndroidInitializationSettings("@drawable/ic_notification");
     IOSInitializationSettings iosInitializationSettings =
         IOSInitializationSettings(
             requestAlertPermission: true, requestSoundPermission: true);
