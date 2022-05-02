@@ -5,10 +5,10 @@ import 'package:collection/collection.dart';
 import 'package:fashion_customer/model/order_model.dart';
 import 'package:fashion_customer/model/review_model.dart';
 import 'package:fashion_customer/utils/constants.dart';
+import 'package:fashion_customer/views/custom_app_bar.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 
@@ -218,7 +218,24 @@ class _AddReviewState extends State<AddReview> {
           ],
         ),
       ),
-      appBar: AppBar(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(58),
+        child: CustomAppBar(
+          isCenterTitle: true,
+          title: "Add Review",
+          isleading: IconButton(
+            icon: Image.asset(
+              "Icons/Arrow.png",
+              color: KConstants.kPrimary100,
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          isaction: [Icon(Icons.abc)],
+        ),
+      ),
+      /* AppBar(
         title: Text(
           'Add Review',
           style: GoogleFonts.montserratAlternates(
@@ -234,7 +251,7 @@ class _AddReviewState extends State<AddReview> {
             Navigator.of(context).pop();
           },
         ),
-      ),
+      ), */
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Column(

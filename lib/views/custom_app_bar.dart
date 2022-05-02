@@ -6,7 +6,7 @@ class CustomAppBar extends StatelessWidget {
   final String title;
   final bool isCenterTitle;
   final Widget? isleading;
-  final List<Widget>?isaction;
+  final List<Widget>? isaction;
 
   CustomAppBar(
       {Key? key,
@@ -30,7 +30,8 @@ class CustomAppBar extends StatelessWidget {
       ),
       centerTitle: isCenterTitle,
       actions: [
-        isaction!.first , isaction!.last,
+        isaction!.first,
+        isaction!.last,
       ],
     );
   }

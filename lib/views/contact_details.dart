@@ -7,6 +7,7 @@ import 'package:fashion_customer/controller/controller.dart';
 import 'package:fashion_customer/main.dart';
 import 'package:fashion_customer/model/user_model.dart';
 import 'package:fashion_customer/utils/constants.dart';
+import 'package:fashion_customer/views/custom_app_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geocode/geocode.dart';
@@ -65,7 +66,15 @@ class _SignupPage2State extends State<SignupPage2> {
             )),
       ),
       backgroundColor: Color(0XFFFAFAFF),
-      appBar: AppBar(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(58),
+        child: CustomAppBar(
+          isCenterTitle: true,
+          title: "Contact Details",
+          isaction: [Icon(Icons.abc)],
+        ),
+      ),
+      /*  AppBar(
         automaticallyImplyLeading: false,
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -76,7 +85,7 @@ class _SignupPage2State extends State<SignupPage2> {
           ),
         ),
         centerTitle: true,
-      ),
+      ), */
       body: SingleChildScrollView(
         child: Form(
           key: _formKey,
