@@ -8,6 +8,7 @@ import 'package:fashion_customer/model/order_model.dart';
 import 'package:fashion_customer/utils/constants.dart';
 import 'package:fashion_customer/utils/select_address_sheet.dart';
 import 'package:fashion_customer/utils/spHelper.dart';
+import 'package:fashion_customer/views/custom_app_bar.dart';
 import 'package:fashion_customer/views/custom_grid_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -272,7 +273,24 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 ),
               ),
         backgroundColor: Color(0xffFAFAFF),
-        appBar: AppBar(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(58),
+          child: CustomAppBar(
+            isaction: [],
+            isCenterTitle: true,
+            title: "CheckOut",
+            isleading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Image.asset(
+                "Icons/Arrow.png",
+                color: KConstants.kPrimary100,
+              ),
+            ),
+          ),
+        ),
+        /* AppBar(
           iconTheme: IconThemeData(
             color: KConstants.kPrimary100,
           ),
@@ -285,7 +303,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
               color: KConstants.kPrimary100,
             ),
           ),
-        ),
+        ), */
         body: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
           child: Column(

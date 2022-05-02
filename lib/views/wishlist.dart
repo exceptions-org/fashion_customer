@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fashion_customer/controller/controller.dart';
 import 'package:fashion_customer/model/product_model.dart';
 import 'package:fashion_customer/utils/constants.dart';
+import 'package:fashion_customer/views/custom_app_bar.dart';
 import 'package:fashion_customer/views/custom_grid_view.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../main.dart';
 
@@ -16,7 +16,24 @@ class WishlistWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(58),
+        child: CustomAppBar(
+          isaction: [Icon(Icons.abc)],
+          title: "Wishlist",
+          isCenterTitle: true,
+          isleading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Image.asset(
+              "Icons/Arrow.png",
+              color: KConstants.kPrimary100,
+            ),
+          ),
+        ),
+      ),
+      /*  AppBar(
         automaticallyImplyLeading: false,
         elevation: 1,
         backgroundColor: Colors.white,
@@ -35,7 +52,7 @@ class WishlistWidget extends StatelessWidget {
           },
         ),
         centerTitle: true,
-      ),
+      ), */
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: StreamBuilder<QuerySnapshot<ProductModel>>(

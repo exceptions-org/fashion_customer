@@ -5,12 +5,12 @@ import 'package:fashion_customer/main.dart';
 import 'package:fashion_customer/model/carousel_model.dart';
 import 'package:fashion_customer/model/category_model.dart';
 import 'package:fashion_customer/utils/select_address_sheet.dart';
+import 'package:fashion_customer/views/custom_app_bar.dart';
 import 'package:fashion_customer/views/custom_grid_view.dart';
 import 'package:fashion_customer/views/product_details.dart';
 import 'package:fashion_customer/views/search_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'model/product_model.dart';
 import 'utils/constants.dart';
@@ -125,7 +125,26 @@ class _HomePageState extends State<HomePage> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Color(0XFFFAFAFF),
-        appBar: AppBar(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(58),
+          child: CustomAppBar(
+            isCenterTitle: false,
+            title: "Fashio",
+            isaction: [
+              InkWell(
+                  onTap: () {
+                    widget.onChange(2);
+                  },
+                  child: Image.asset("Icons/Bag.png")),
+              InkWell(
+                  onTap: () {
+                    widget.onChange(3);
+                  },
+                  child: Image.asset("Icons/User.png")),
+            ],
+          ),
+        ),
+        /*  AppBar(
           backgroundColor: Colors.white,
           elevation: 1,
           centerTitle: false,
@@ -155,7 +174,7 @@ class _HomePageState extends State<HomePage> {
                 },
                 child: Image.asset("Icons/User.png")),
           ],
-        ),
+        ), */
         body: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
           child: Column(

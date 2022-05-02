@@ -3,16 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomAppBar extends StatelessWidget {
-  String title;
-  bool isCenterTitle;
-  late Icon icon;
+  final String title;
+  final bool isCenterTitle;
+  final Widget? isleading;
+  final List<Widget>?isaction;
 
-  CustomAppBar({Key? key, required this.title, required this.isCenterTitle,Icon? icon})
+  CustomAppBar(
+      {Key? key,
+      required this.title,
+      required this.isCenterTitle,
+      this.isleading,
+      required this.isaction})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      automaticallyImplyLeading: false,
+      leading: isleading,
       backgroundColor: Colors.white,
       elevation: 1,
       title: Text(
@@ -21,6 +29,9 @@ class CustomAppBar extends StatelessWidget {
             color: KConstants.kPrimary100, fontSize: 25),
       ),
       centerTitle: isCenterTitle,
+      actions: [
+        isaction!.first , isaction!.last,
+      ],
     );
   }
 }

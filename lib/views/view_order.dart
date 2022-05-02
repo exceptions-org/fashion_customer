@@ -7,6 +7,7 @@ import 'package:fashion_customer/utils/constants.dart';
 import 'package:fashion_customer/utils/generate_pdf.dart';
 import 'package:fashion_customer/utils/spHelper.dart';
 import 'package:fashion_customer/views/add_review.dart';
+import 'package:fashion_customer/views/custom_app_bar.dart';
 import 'package:file_saver/file_saver.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -543,7 +544,24 @@ class _OrderDetailsState extends State<OrderDetails> {
                 ],
               ),
             ),
-            appBar: AppBar(
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(58),
+              child: CustomAppBar(
+                isaction: [Icon(Icons.abc)],
+                title: "Your Orders",
+                isCenterTitle: true,
+                isleading: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Image.asset(
+                    "Icons/Arrow.png",
+                    color: KConstants.kPrimary100,
+                  ),
+                ),
+              ),
+            ),
+            /*  AppBar(
               automaticallyImplyLeading: false,
               elevation: 1,
               backgroundColor: Colors.white,
@@ -562,7 +580,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                 },
               ),
               centerTitle: true,
-            ),
+            ), */
             body: SingleChildScrollView(
               child: Column(
                 children: [

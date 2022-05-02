@@ -13,6 +13,16 @@ class AboutUs extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(58),
         child: CustomAppBar(
+          isaction: [Icon(Icons.abc)],
+          isleading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Image.asset(
+              "Icons/Arrow.png",
+              color: KConstants.kPrimary100,
+            ),
+          ),
           isCenterTitle: true,
           title: "About Us",
         ),

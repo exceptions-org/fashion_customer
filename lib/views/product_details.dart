@@ -11,6 +11,7 @@ import 'package:fashion_customer/utils/constants.dart';
 import 'package:fashion_customer/utils/review_card.dart';
 import 'package:fashion_customer/utils/spHelper.dart';
 import 'package:fashion_customer/views/cart_page.dart';
+import 'package:fashion_customer/views/custom_app_bar.dart';
 import 'package:fashion_customer/views/reviews.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -70,8 +71,6 @@ class _ProductDetailsState extends State<ProductDetails> {
     color: Colors.white,
     border: Border.all(color: KConstants.kBorderColor),
   );
-
-
 
   final UserController userController = getIt.get<UserController>();
 
@@ -389,7 +388,35 @@ class _ProductDetailsState extends State<ProductDetails> {
                         ), */
             //width: double.infinity,
           ), */
-          appBar: AppBar(
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(58),
+            child: CustomAppBar(
+              isaction: [
+                Icon(Icons.abc),
+                InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                              builder: (context) =>
+                                  Cartpage(onChange: onPageChange)));
+                    },
+                    child: Image.asset("Icons/Bag.png")),
+              ],
+              isCenterTitle: true,
+              title: "Product Details",
+              isleading: IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: Image.asset(
+                  "Icons/Arrow.png",
+                  color: KConstants.kPrimary100,
+                ),
+              ),
+            ),
+          ),
+          /* AppBar(
             //automaticallyImplyLeading: false,
             elevation: 1,
             leading: IconButton(
@@ -417,7 +444,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                   },
                   child: Image.asset("Icons/Bag.png")),
             ],
-          ),
+          ), */
           body: SingleChildScrollView(
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -541,6 +568,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                           color: KConstants.txtColor75,
                           letterSpacing: 1),
                     ),
+                    Text(productModel.brand),
+                    Text(size)
                   ],
                 ),
               ),

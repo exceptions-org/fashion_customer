@@ -25,6 +25,7 @@ class _CartpageState extends State<Cartpage> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(58),
         child: CustomAppBar(
+          isaction: [Icon(Icons.abc)],
           isCenterTitle: true,
           title: "Cart Page",
         ),
