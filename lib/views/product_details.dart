@@ -549,25 +549,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                     SizedBox(
                       height: 10,
                     ),
-                    Row(
-                      children: [
-                        Text(
-                          productModel.name.toTitleCase(),
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: height * 0.02,
-                              color: KConstants.textColor50,
-                              letterSpacing: 1),
-                        ),
-                        Text(
-                          size,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: height * 0.02,
-                              color: KConstants.textColor50,
-                              letterSpacing: 1),
-                        )
-                      ],
+                    Text(
+                      productModel.name.toTitleCase(),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: height * 0.02,
+                          color: KConstants.textColor50,
+                          letterSpacing: 1),
                     ),
                     const SizedBox(
                       height: 10,
@@ -583,14 +571,14 @@ class _ProductDetailsState extends State<ProductDetails> {
                     SizedBox(
                       height: 10,
                     ),
-                    Text(
+                    /*  Text(
                       "Brand : ${productModel.brand}",
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: height * 0.015,
                           color: KConstants.textColor50,
                           letterSpacing: 1),
-                    ),
+                    ), */
                   ],
                 ),
               ),
@@ -743,6 +731,17 @@ class _ProductDetailsState extends State<ProductDetails> {
                       style: TextStyle(
                           fontSize: height * 0.015,
                           color: Colors.grey,
+                          letterSpacing: 1),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      size,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: height * 0.02,
+                          color: KConstants.textColor50,
                           letterSpacing: 1),
                     ),
                     SizedBox(
