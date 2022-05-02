@@ -276,7 +276,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(58),
           child: CustomAppBar(
-            isaction: [],
+            isaction: [Icon(Icons.abc)],
             isCenterTitle: true,
             title: "CheckOut",
             isleading: IconButton(

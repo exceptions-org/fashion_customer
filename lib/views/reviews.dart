@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fashion_customer/model/review_model.dart';
 import 'package:fashion_customer/utils/constants.dart';
 import 'package:fashion_customer/utils/review_card.dart';
+import 'package:fashion_customer/views/custom_app_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class ReviewScreen extends StatelessWidget {
   final String productId;
@@ -13,7 +13,23 @@ class ReviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(58),
+        child: CustomAppBar(
+          isCenterTitle: true,
+          title: "Reviews",
+          isleading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Image.asset(
+                'Icons/Arrow.png',
+                color: KConstants.kPrimary100,
+              )),
+          isaction: [Icon(Icons.abc)],
+        ),
+      ),
+      /* AppBar(
         //automaticallyImplyLeading: false,
         elevation: 1,
         leading: IconButton(
@@ -31,7 +47,7 @@ class ReviewScreen extends StatelessWidget {
               GoogleFonts.montserratAlternates(color: KConstants.kPrimary100),
         ),
         centerTitle: true,
-      ),
+      ), */
       body: StreamBuilder<QuerySnapshot<ReviewModel>>(
         stream: FirebaseFirestore.instance
             .collection("reviews")
