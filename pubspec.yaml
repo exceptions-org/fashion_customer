@@ -55,6 +55,7 @@ dependencies:
   shared_preferences: ^2.0.13
   smooth_star_rating_null_safety: ^1.0.4+2
   url_launcher: ^6.0.20
+  flutter_native_splash: ^2.1.6
 
 dev_dependencies:
   flutter_lints: ^1.0.0
@@ -65,6 +66,7 @@ dev_dependencies:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter.
+
 flutter:
 
   # The following line ensures that the Material Icons font is

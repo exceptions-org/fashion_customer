@@ -402,8 +402,8 @@ class _HomePageState extends State<HomePage> {
                                 ? Container()
                                 : Column(
                                     children: [
-                                      SizedBox(
-                                          height: 160,
+                                      AspectRatio(
+                                          aspectRatio: 3.2 / 1,
                                           child: PageView(
                                             onPageChanged: onPageChange,
                                             controller: pageController,
