@@ -82,13 +82,29 @@ class ProductCard extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 15),
-                child: Text(
-                  "Rs. ${data.prices.first.colorPrice.first.price}",
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: KConstants.kPrimary100,
-                    fontWeight: FontWeight.bold,
-                  ),
+                child: Row(
+                  children: [
+                    Text(
+                      "Rs. ${data.highPrice}",
+                      style: const TextStyle(
+                        decoration: TextDecoration.lineThrough,
+                        fontSize: 16,
+                        color: Colors.orange,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Rs. ${data.prices.first.colorPrice.first.price}",
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: KConstants.kPrimary100,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               /* Container(

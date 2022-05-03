@@ -560,13 +560,29 @@ class _ProductDetailsState extends State<ProductDetails> {
                     const SizedBox(
                       height: 10,
                     ),
-                    Text(
-                      "Rs $price",
-                      style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: height * 0.03,
-                          color: KConstants.txtColor75,
-                          letterSpacing: 1),
+                    Row(
+                      children: [
+                        Text(
+                          "Rs ${productModel.highPrice}",
+                          style: TextStyle(
+                              decoration: TextDecoration.lineThrough,
+                              fontWeight: FontWeight.w600,
+                              fontSize: height * 0.03,
+                              color: Colors.orange,
+                              letterSpacing: 1),
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Text(
+                          "Rs $price",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: height * 0.03,
+                              color: KConstants.txtColor75,
+                              letterSpacing: 1),
+                        ),
+                      ],
                     ),
                     SizedBox(
                       height: 10,
