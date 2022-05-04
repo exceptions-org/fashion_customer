@@ -85,11 +85,10 @@ class ProductCard extends StatelessWidget {
                 child: Row(
                   children: [
                     Text(
-                      "Rs. ${data.highPrice}",
+                      "Rs. ${data.prices.first.colorPrice.first.price}",
                       style: const TextStyle(
-                        decoration: TextDecoration.lineThrough,
                         fontSize: 16,
-                        color: Colors.orange,
+                        color: KConstants.kPrimary100,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -97,10 +96,11 @@ class ProductCard extends StatelessWidget {
                       width: 10,
                     ),
                     Text(
-                      "Rs. ${data.prices.first.colorPrice.first.price}",
+                      "Rs. ${data.highPrice}",
                       style: const TextStyle(
-                        fontSize: 16,
-                        color: KConstants.kPrimary100,
+                        decoration: TextDecoration.lineThrough,
+                        fontSize: 12,
+                        color: Colors.red,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

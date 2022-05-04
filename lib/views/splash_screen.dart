@@ -43,7 +43,6 @@ class _SplashScreenState extends State<SplashScreen> with AfterLayoutMixin {
     controller.setEmptyUser();
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     bool? isfirst = sharedPreferences.getBool("first");
-    await Future.delayed(Duration(seconds: 2));
     if (isfirst != true) {
       Navigator.pushAndRemoveUntil(context,
           CupertinoPageRoute(builder: (c) => StartupPage()), (route) => false);

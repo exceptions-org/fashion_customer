@@ -561,25 +561,27 @@ class _ProductDetailsState extends State<ProductDetails> {
                       height: 10,
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
+                        Text(
+                          "Rs $price",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: height * 0.025,
+                              color: KConstants.txtColor75,
+                              letterSpacing: 1),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
                         Text(
                           "Rs ${productModel.highPrice}",
                           style: TextStyle(
                               decoration: TextDecoration.lineThrough,
                               fontWeight: FontWeight.w600,
-                              fontSize: height * 0.03,
-                              color: Colors.orange,
-                              letterSpacing: 1),
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Text(
-                          "Rs $price",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: height * 0.03,
-                              color: KConstants.txtColor75,
+                              fontSize: height * 0.018,
+                              color: Colors.red,
                               letterSpacing: 1),
                         ),
                       ],
