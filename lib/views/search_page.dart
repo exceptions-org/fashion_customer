@@ -207,6 +207,7 @@ class _SearchPageState extends State<SearchPage> {
                           builder: (context) {
                             return StatefulBuilder(builder: (context, s) {
                               return Stack(
+                                alignment: Alignment.bottomCenter,
                                 children: [
                                   Container(
                                     decoration: BoxDecoration(
@@ -225,6 +226,7 @@ class _SearchPageState extends State<SearchPage> {
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Padding(
                                             padding: const EdgeInsets.all(18.0),

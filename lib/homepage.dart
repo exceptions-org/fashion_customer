@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fashion_customer/controller/controller.dart';
@@ -116,6 +118,29 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  int page = 0;
+  Timer? timer;
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
+  void autoScrollPage() {
+    if (timer != null) timer?.cancel();
+    timer = Timer.periodic(Duration(seconds: 4), (timer) {
+      this.timer = timer;
+      if (pageIndex == page - 1) {
+        pageController.animateToPage(0,
+            duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+      } else {
+        pageController.animateToPage(pageIndex + 1,
+            duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -144,37 +169,6 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
-        /*  AppBar(
-          backgroundColor: Colors.white,
-          elevation: 1,
-          centerTitle: false,
-          title: Hero(
-            tag: 'title',
-            child: Material(
-              type: MaterialType.transparency,
-              child: Text(
-                "Fashio",
-                style: GoogleFonts.montserratAlternates(
-                  fontSize: 25,
-                  color: KConstants.kPrimary100,
-                  fontWeight: FontWeight.normal,
-                ),
-              ),
-            ),
-          ),
-          actions: [
-            InkWell(
-                onTap: () {
-                  widget.onChange(2);
-                },
-                child: Image.asset("Icons/Bag.png")),
-            InkWell(
-                onTap: () {
-                  widget.onChange(3);
-                },
-                child: Image.asset("Icons/User.png")),
-          ],
-        ), */
         body: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
           child: Column(
@@ -296,8 +290,6 @@ class _HomePageState extends State<HomePage> {
                                                     e.data().category.imageUrl,
                                                     height: width * 0.12,
                                                     width: width * 0.12,
-                                                    color:
-                                                        KConstants.kPrimary100,
                                                   ),
                                                   SizedBox(
                                                     height: 12,
@@ -414,58 +406,56 @@ class _HomePageState extends State<HomePage> {
                             toFirestore: (CarouselModel v, s) => v.toMap())
                         .get(),
                     builder: (context, snapshot) {
-                      return SizedBox(
-                        width: double.infinity,
-                        child: snapshot.hasData && snapshot.data != null
-                            ? snapshot.data!.docs.isEmpty
-                                ? Container()
-                                : Column(
-                                    children: [
-                                      AspectRatio(
-                                          aspectRatio: 3.2 / 1,
-                                          child: PageView(
-                                            onPageChanged: onPageChange,
-                                            controller: pageController,
-                                            scrollDirection: Axis.horizontal,
-                                            children: snapshot.data!.docs
-                                                .map((e) =>
-                                                    carouselContainer(e.data()))
-                                                .toList(),
-                                          )),
-                                      const SizedBox(height: 5),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: List.generate(
-                                          snapshot.data!.docs.length,
-                                          (index) => Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: AnimatedContainer(
-                                              duration: const Duration(
-                                                  milliseconds: 300),
-                                              height: 10,
-                                              width:
-                                                  pageIndex == index ? 15 : 10,
-                                              decoration: BoxDecoration(
-                                                  color: pageIndex == index
-                                                      ? KConstants.kPrimary100
-                                                      : KConstants.kPrimary100
-                                                          .withOpacity(.2),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          20)),
-                                            ),
-                                          ),
-                                        ),
+                      if (snapshot.hasData && snapshot.data != null) {
+                        if (snapshot.data!.docs.isNotEmpty) {
+                          page = snapshot.data!.docs.length;
+                          autoScrollPage();
+                          return SizedBox(
+                            width: double.infinity,
+                            child: Column(
+                              children: [
+                                AspectRatio(
+                                    aspectRatio: 3.2 / 1,
+                                    child: PageView(
+                                      onPageChanged: onPageChange,
+                                      controller: pageController,
+                                      scrollDirection: Axis.horizontal,
+                                      children: snapshot.data!.docs
+                                          .map((e) =>
+                                              carouselContainer(e.data()))
+                                          .toList(),
+                                    )),
+                                const SizedBox(height: 5),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: List.generate(
+                                    snapshot.data!.docs.length,
+                                    (index) => Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: AnimatedContainer(
+                                        duration:
+                                            const Duration(milliseconds: 300),
+                                        height: 10,
+                                        width: pageIndex == index ? 15 : 10,
+                                        decoration: BoxDecoration(
+                                            color: pageIndex == index
+                                                ? KConstants.kPrimary100
+                                                : KConstants.kPrimary100
+                                                    .withOpacity(.2),
+                                            borderRadius:
+                                                BorderRadius.circular(20)),
                                       ),
-                                    ],
-                                  )
-                            : Center(
-                                child: CircularProgressIndicator(
-                                  color: KConstants.kPrimary100,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                      );
+                              ],
+                            ),
+                          );
+                        } else {
+                          return Container();
+                        }
+                      }
+                      return Container();
                     }),
               ),
               const SizedBox(height: 5),
