@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -7,7 +8,7 @@ void launchMap(String address) async {
   var url = '';
   url =
       'https://www.google.com/maps/dir/?api=1&destination=${address}&travelmode=driving&dir_action=navigate';
-  
+
   await launch(url);
 }
 

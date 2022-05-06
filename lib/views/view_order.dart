@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fashion_customer/model/order_model.dart';
 import 'package:fashion_customer/utils/constants.dart';
 import 'package:fashion_customer/utils/generate_pdf.dart';
-import 'package:fashion_customer/utils/spHelper.dart';
 import 'package:fashion_customer/views/add_review.dart';
 import 'package:fashion_customer/views/custom_app_bar.dart';
 import 'package:file_saver/file_saver.dart';
@@ -484,7 +483,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                                 KConstants.sendFCMMessage(
                                     'Order Cancelled',
                                     'Order ${orderModel.data()!.orderId} was cancelled by user because $finalReason',
-                                    "/topic/admin");
+                                    "/topics/admin");
                               
 
                             setState(() {

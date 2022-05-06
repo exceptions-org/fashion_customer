@@ -211,7 +211,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         }
                       } */
                              KConstants.sendFCMMessage(
-                            'New Order', 'New Order Received', "/topic/admin");
+                            'New Order', 'New Order Received', "/topics/admin");
                       if (couponModel != null) {
                         await FirebaseFirestore.instance
                             .collection('coupons')
