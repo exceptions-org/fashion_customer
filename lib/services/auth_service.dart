@@ -88,7 +88,7 @@ class AuthService {
         (await SharedPreferences.getInstance())
             .setString('user', userModel.toJson());
         await userController.getUser();
-        userController.saveAdminToken();
+        // userController.saveAdminToken();
         Navigator.pushAndRemoveUntil(
             context,
             CupertinoPageRoute(builder: (context) => BottomNavigation()),

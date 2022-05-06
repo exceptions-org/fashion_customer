@@ -202,15 +202,16 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             createdAt: Timestamp.now(),
                           )
                           .toMap());
-                      List<String>? tokens = await SPHelper().getAdminToken();
+                      // List<String>? tokens = await SPHelper().getAdminToken();
 
-                      if (tokens != null) {
+                     /*  if (tokens != null) {
                         for (var token in tokens) {
                           KConstants.sendFCMMessage(
                               'New Order', 'New Order Received', token);
                         }
-                      }
-
+                      } */
+                             KConstants.sendFCMMessage(
+                            'New Order', 'New Order Received', "/topic/admin");
                       if (couponModel != null) {
                         await FirebaseFirestore.instance
                             .collection('coupons')

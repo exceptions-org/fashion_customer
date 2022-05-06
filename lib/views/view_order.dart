@@ -476,17 +476,16 @@ class _OrderDetailsState extends State<OrderDetails> {
                               'cancellationReason': finalReason
                             });
 
-                            List<String>? tokens =
-                                await SPHelper().getAdminToken();
 
-                            if (tokens != null) {
-                              for (String token in tokens) {
+                            // List<String>? tokens =
+                            //     await SPHelper().getAdminToken();
+
+                          
                                 KConstants.sendFCMMessage(
                                     'Order Cancelled',
                                     'Order ${orderModel.data()!.orderId} was cancelled by user because $finalReason',
-                                    token);
-                              }
-                            }
+                                    "/topic/admin");
+                              
 
                             setState(() {
                               loadingText = '';

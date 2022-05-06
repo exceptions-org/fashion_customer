@@ -108,7 +108,7 @@ class FirebaseMessagingService {
     UserModel? userId = await SPHelper().getUser();
     try {
       if (userId != null) {
-        FirebaseFirestore.instance
+       await FirebaseFirestore.instance
             .collection('users')
             .doc(userId.number)
             .update(
@@ -116,6 +116,13 @@ class FirebaseMessagingService {
             'pushToken': token,
           },
         );
+       
+       var doc = await FirebaseFirestore.instance.collection("orders").where("userPhone",isEqualTo: userId.number).get();
+        if(doc.docs.isNotEmpty){
+          for(var d in doc.docs){
+            d.reference.update({"pushToken":token});
+          }
+        }
       }
     } catch (e) {
       print(e.toString());

@@ -50,7 +50,7 @@ class _SplashScreenState extends State<SplashScreen> with AfterLayoutMixin {
       FirebaseMessagingService();
       getIt<CartController>().init();
       await controller.getUser();
-      controller.saveAdminToken();
+      // controller.saveAdminToken();
       Navigator.pushAndRemoveUntil(
           context,
           CupertinoPageRoute(builder: (c) => BottomNavigation()),
