@@ -79,7 +79,8 @@ class _CartpageState extends State<Cartpage> {
                                     padding: const EdgeInsets.only(
                                       top: 10,
                                       left: 10,
-                                    ),
+                                    
+                                      ),
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
