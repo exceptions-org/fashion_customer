@@ -79,8 +79,7 @@ class _CartpageState extends State<Cartpage> {
                                     padding: const EdgeInsets.only(
                                       top: 10,
                                       left: 10,
-                                    
-                                      ),
+                                    ),
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -121,55 +120,59 @@ class _CartpageState extends State<Cartpage> {
                                                 color: KConstants.kPrimary100,
                                               )),
                                         ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              4,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              InkWell(
+                                                onTap: () {
+                                                  cartController.increment(
+                                                      e.productId,
+                                                      e.selectedSize,
+                                                      e.color);
+                                                  setState(() {});
+                                                },
+                                                child: Image.asset(
+                                                  "Icons/add.png",
+                                                  height: 25,
+                                                  color: KConstants.kPrimary100,
+                                                ),
+                                              ),
+                                              SizedBox(height: 10),
+                                              Text(
+                                                "${e.quantity}",
+                                                style: TextStyle(fontSize: 18),
+                                              ),
+                                              // Text(cartController.cartItems[index].productId),
+                                              SizedBox(height: 10),
+                                              InkWell(
+                                                onTap: () {
+                                                  cartController.decrement(
+                                                      e.productId,
+                                                      e.selectedSize,
+                                                      e.color);
+                                                  setState(() {});
+                                                },
+                                                child: Image.asset(
+                                                  "Icons/remove.png",
+                                                  height: 25,
+                                                  color: KConstants.kPrimary100,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),
-                                  Spacer(),
-                                  Padding(
-                                    padding: const EdgeInsets.all(10),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10),
-                                      child: Column(
-                                        children: [
-                                          InkWell(
-                                            onTap: () {
-                                              cartController.increment(
-                                                  e.productId,
-                                                  e.selectedSize,
-                                                  e.color);
-                                              setState(() {});
-                                            },
-                                            child: Image.asset(
-                                              "Icons/add.png",
-                                              height: 25,
-                                              color: KConstants.kPrimary100,
-                                            ),
-                                          ),
-                                          SizedBox(height: 10),
-                                          Text(
-                                            "${e.quantity}",
-                                            style: TextStyle(fontSize: 18),
-                                          ),
-                                          // Text(cartController.cartItems[index].productId),
-                                          SizedBox(height: 10),
-                                          InkWell(
-                                            onTap: () {
-                                              cartController.decrement(
-                                                  e.productId,
-                                                  e.selectedSize,
-                                                  e.color);
-                                              setState(() {});
-                                            },
-                                            child: Image.asset(
-                                              "Icons/remove.png",
-                                              height: 25,
-                                              color: KConstants.kPrimary100,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )
                                 ],
                               ),
                             ),

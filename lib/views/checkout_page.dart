@@ -7,7 +7,6 @@ import 'package:fashion_customer/model/offer_model.dart';
 import 'package:fashion_customer/model/order_model.dart';
 import 'package:fashion_customer/utils/constants.dart';
 import 'package:fashion_customer/utils/select_address_sheet.dart';
-import 'package:fashion_customer/utils/spHelper.dart';
 import 'package:fashion_customer/views/custom_app_bar.dart';
 import 'package:fashion_customer/views/custom_grid_view.dart';
 import 'package:flutter/cupertino.dart';
@@ -204,14 +203,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           .toMap());
                       // List<String>? tokens = await SPHelper().getAdminToken();
 
-                     /*  if (tokens != null) {
+                      /*  if (tokens != null) {
                         for (var token in tokens) {
                           KConstants.sendFCMMessage(
                               'New Order', 'New Order Received', token);
                         }
                       } */
-                             KConstants.sendFCMMessage(
-                            'New Order', 'New Order Received', "/topics/admin");
+                      KConstants.sendFCMMessage(
+                          'New Order', 'New Order Received', "/topics/admin");
                       if (couponModel != null) {
                         await FirebaseFirestore.instance
                             .collection('coupons')
