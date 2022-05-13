@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fashion_customer/bottom_navigation.dart';
 import 'package:fashion_customer/controller/controller.dart';
 import 'package:fashion_customer/main.dart';
+import 'package:fashion_customer/model/geocode_model.dart';
 import 'package:fashion_customer/model/user_model.dart';
 import 'package:fashion_customer/utils/constants.dart';
 import 'package:fashion_customer/views/custom_app_bar.dart';
@@ -13,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:geocode/geocode.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart';
 
 class SignupPage2 extends StatefulWidget {
   final String number;
@@ -463,6 +465,29 @@ class _MapScreenState extends State<MapScreen> {
   late LatLng latLng =
       widget.latLng ?? LatLng(19.283872311756532, 73.0539163835629);
 
+/*   Future<GeoCodeModel?> getAddress(LatLng latLng) async {
+    HttpClient client = HttpClient();
+    HttpClientRequest request = await client.getUrl(Uri.parse(
+        "https://geocode.xyz/${latLng.latitude}, ${latLng.longitude}?geoit=json&auth=36479712395713737844x110931"));
+    HttpClientResponse response = await request.close();
+    if (response.statusCode == 200) {
+      String json = await response.transform(utf8.decoder).join();
+      return GeoCodeModel.fromJson(json);
+    }
+    return null;
+  } */
+
+  Future<GeoCodeModel?> getAddress(LatLng latLng) async {
+//    HttpClientRequest request = await client.postUrl();
+    Response response = await get(Uri.parse(
+        "https://geocode.xyz/${latLng.latitude}, ${latLng.longitude}?geoit=json&auth=36479712395713737844x110931"));
+    if (response.statusCode == 200) {
+      String json = response.body;
+      return GeoCodeModel.fromJson(json);
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -482,8 +507,20 @@ class _MapScreenState extends State<MapScreen> {
               latLng = l.target;
             },
             onCameraIdle: () async {
-              address = await GeoCode().reverseGeocoding(
-                  latitude: latLng.latitude, longitude: latLng.longitude);
+              final value = await getAddress(latLng);
+
+              if (value != null) {
+                address = Address(
+                  streetAddress: value.staddress,
+                  streetNumber: int.tryParse(value.stnumber ?? ''),
+                  city: value.city,
+                  postal: value.postal,
+                  region: value.region,
+                );
+              }
+              /*  GeoCode(apiKey: '36479712395713737844x110931')
+                  .reverseGeocoding(
+                      latitude: latLng.latitude, longitude: latLng.longitude); */
               setState(() {});
             },
           ),
