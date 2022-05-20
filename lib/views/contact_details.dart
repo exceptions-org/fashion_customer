@@ -478,7 +478,6 @@ class _MapScreenState extends State<MapScreen> {
   } */
 
   Future<GeoCodeModel?> getAddress(LatLng latLng) async {
-//    HttpClientRequest request = await client.postUrl();
     Response response = await get(Uri.parse(
         "https://geocode.xyz/${latLng.latitude}, ${latLng.longitude}?geoit=json&auth=36479712395713737844x110931"));
     if (response.statusCode == 200) {
