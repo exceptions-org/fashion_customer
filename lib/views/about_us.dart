@@ -60,7 +60,7 @@ class AboutUs extends StatelessWidget {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.32,
                   child: FittedBox(
-                    child: Text('Fashio',
+                    child: Text('Fasheo',
                         style: GoogleFonts.montserratAlternates(
                             fontSize: MediaQuery.of(context).size.width * 0.1,
                             fontWeight: FontWeight.normal,

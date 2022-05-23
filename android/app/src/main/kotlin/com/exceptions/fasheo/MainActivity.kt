@@ -1,4 +1,4 @@
-package com.exceptions.fashio
+package com.exceptions.fasheo
 
 import android.os.Build
 import android.os.Bundle

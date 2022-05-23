@@ -76,7 +76,7 @@ Future<Uint8List> generatePdf(OrderModel orderModel) async {
               decoration: defContainerDec,
               padding: pw.EdgeInsets.all(16),
               child: pw.Text(
-                'FASHIO ORDER INVOICE INV${orderModel.orderId}',
+                'FASHEO ORDER INVOICE INV${orderModel.orderId}',
                 textScaleFactor: 1.1,
               ),
             ),

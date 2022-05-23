@@ -196,7 +196,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             deliveryDate: Timestamp.now(),
                             couponModel: couponModel,
                             totalDiscountPrice: couponDiscount,
-                            orderId: 'FASHIO${orders.docs.length + 1}',
+                            orderId: 'FASHEO${orders.docs.length + 1}',
                             orderState: OrderState.placed,
                             createdAt: Timestamp.now(),
                           )

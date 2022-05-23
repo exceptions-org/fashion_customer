@@ -28,8 +28,8 @@ class FirebaseMessagingService {
 
     AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
-      'Fashio',
-      'Fashio',
+      'Fasheo',
+      'Fasheo',
       priority: Priority.max,
       importance: Importance.max,
       enableVibration: true,
@@ -79,7 +79,7 @@ class FirebaseMessagingService {
         FlutterLocalNotificationsPlugin();
 
     AndroidNotificationChannel androidNotificationChannel =
-        AndroidNotificationChannel('Fashio', 'Fashio',
+        AndroidNotificationChannel('Fasheo', 'Fasheo',
             playSound: true, importance: Importance.max, enableVibration: true);
     flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<

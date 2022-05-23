@@ -154,7 +154,7 @@ class _HomePageState extends State<HomePage> {
           preferredSize: Size.fromHeight(58),
           child: CustomAppBar(
             isCenterTitle: false,
-            title: "Fashio",
+            title: "Fasheo",
             isaction: [
               InkWell(
                   onTap: () {
