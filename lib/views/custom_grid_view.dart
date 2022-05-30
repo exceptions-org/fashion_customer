@@ -13,21 +13,24 @@ class CustomGridView extends StatelessWidget {
     var size = MediaQuery.of(context).size;
     var height = size.height;
     var width = size.width;
-    return GridView.count(
-        physics: BouncingScrollPhysics(),
-        childAspectRatio: width / width * 0.9,
-        shrinkWrap: true,
-        mainAxisSpacing: 8,
-        crossAxisSpacing: 8,
-        crossAxisCount: 2,
-        children: products
-            .mapIndexed((i, element) => AnimationConfiguration.staggeredGrid(
-                duration: Duration(milliseconds: 300),
-                columnCount: 2,
-                position: i,
-                child: ScaleAnimation(
-                  child: ProductCard(data: element),
-                )))
-            .toList());
+    return AnimationLimiter(
+      child: GridView.count(
+          physics: BouncingScrollPhysics(),
+          childAspectRatio: width / width * 0.9,
+          shrinkWrap: true,
+          mainAxisSpacing: 8,
+          crossAxisSpacing: 8,
+          crossAxisCount: 2,
+          children: products
+              .mapIndexed((i, element) => AnimationConfiguration.staggeredGrid(
+                  duration: Duration(milliseconds: 350),
+                  delay: Duration(milliseconds: 200),
+                  columnCount: 2,
+                  position: i,
+                  child: ScaleAnimation(
+                    child: ProductCard(data: element),
+                  )))
+              .toList()),
+    );
   }
 }
