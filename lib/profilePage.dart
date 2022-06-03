@@ -235,7 +235,20 @@ class _ProfilePageState extends State<ProfilePage> {
                       margin: const EdgeInsets.symmetric(vertical: 2),
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       width: double.maxFinite,
-                      height: MediaQuery.of(context).size.height / 15,
+                      child: ListTile(
+                        leading: Icon(Icons.phone, color: Colors.blue),
+                        title: Text("User Contact No"),
+                        trailing: Text(controller.userModel.number),
+
+                        /*  trailing: RotatedBox(
+                      quarterTurns: 2,
+                      child: Image.asset(
+                        "Icons/Arrow.png",
+                        height: 25,
+                        color: KConstants.kPrimary100,
+                      ),
+                    ), */
+                      ),
                       decoration: BoxDecoration(
                           color: Colors.white,
                           border: Border.all(
