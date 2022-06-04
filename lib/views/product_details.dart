@@ -540,6 +540,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                           letterSpacing: 1),
                     ),
                     SingleChildScrollView(
+physics: AlwaysScrollableScrollPhysics(),
                       child: Row(
                           children: productModel.images
                               .map((e) => customContainer(
