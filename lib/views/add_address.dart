@@ -173,7 +173,6 @@ class _AddAdressState extends State<AddAdress> {
                   ),
                   Container(
                     padding: EdgeInsets.all(24),
-                    // height: 500,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       border: Border.all(

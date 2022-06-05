@@ -1,4 +1,6 @@
 // ignore_for_file: unused_local_variable
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:fashion_customer/bottom_navigation.dart';
@@ -25,14 +27,14 @@ import '../utils/product_card.dart';
 class ProductDetails extends StatefulWidget {
   final ProductModel productModel;
   final bool notFromHome;
-  // final DocumentReference documentReference;
+
   const ProductDetails({
     Key? key,
     required this.productModel,
     required this.notFromHome,
   }
-      // this.documentReference,
       ) : super(key: key);
+
   @override
   State<ProductDetails> createState() => _ProductDetailsState();
 }
@@ -45,7 +47,15 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   late List<String> listOfImage = productModel.images.first.images;
 
+  late List<String> allImages = productModel.images
+      .map((e) => e.images)
+      .fold<List<String>>(
+          [],
+          (previousValue, element) =>
+              previousValue..addAll(element.map((e) => e)));
+
   CartController cartController = getIt<CartController>();
+  final PageController pageController = PageController();
 
   ProductModel get productModel => widget.productModel;
   late Color selectedColor = Color(productModel.images.first.colorCode);
@@ -58,7 +68,7 @@ class _ProductDetailsState extends State<ProductDetails> {
               (index + int.parse(productModel.sizeUnit.split(',,').first))
                   .toString())
       : [];
-  // DocumentReference get documentReference => widget.documentReference;
+
   String size = '';
   late String price = productModel.prices.first.colorPrice
       .firstWhere(
@@ -257,14 +267,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                                               selectedColor.value)
                                           .colorName);
                                   SPHelper().setCart(cartController.cartItems);
-                                  ScaffoldMessenger.of(context).showSnackBar(
+                                  ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(
                                       SnackBar(
                                           duration: Duration(seconds: 1),
                                           content: Text(
                                               "Product added to the cart")));
 
                                   setState(() {});
-                                  // Navigator.pop(context);
                                 },
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10)),
@@ -285,109 +294,6 @@ class _ProductDetailsState extends State<ProductDetails> {
               ),
             ),
           ),
-          /* Container(
-            height: 70,
-            width: width * 0.5,
-            child: cartController.cartItems
-                    .any((element) => element.productId == productModel.id)
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      IconButton(
-                          onPressed: () {
-                            int index = cartController.cartItems.indexOf(cartController.cartItems.firstWhere(
-                                (element) =>
-                                    element.productId == productModel.id));
-                            if (cartController.cartItems[index].quantity > 1) {
-                              double singleProdPrice = cartController.cartItems[index].price /
-                                  cartController.cartItems[index].quantity;
-                              setState(() {
-                                cartController.cartItems[index].quantity--;
-                                cartController.cartItems[index].price =
-                                    cartController.cartItems[index].price - singleProdPrice;
-                              });
-                            } else {
-                              cartController.cartItems.removeAt(index);
-                              setState(() {});
-                            }
-                            SPHelper().setCart(cartController.cartItems);
-                          },
-                          icon: Icon(Icons.remove, color: Colors.white)),
-                      Text(
-                        cartController.cartItems
-                            .firstWhere(
-                                (element) => element.productId == productModel.id)
-                            .quantity
-                            .toString(),
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: height * 0.025,
-                            letterSpacing: 1),
-                      ),
-                      IconButton(
-                          onPressed: () {
-                            int index = cartController.cartItems.indexOf(cartController.cartItems.firstWhere(
-                                (element) =>
-                                    element.productId == productModel.id));
-                            double singleProdPrice = cartController.cartItems[index].price /
-                                cartController.cartItems[index].quantity;
-    
-                            setState(() {
-                              cartController.cartItems[index].quantity++;
-                              cartController.cartItems[index].price = cartController.cartItems[index].price +
-                                  singleProdPrice; /* cartController.cartItems[index].price +
-                                    cartController.cartItems[index].price; */
-                            });
-                            SPHelper().setCart(cartController.cartItems);
-                          },
-                          icon: Icon(Icons.add, color: Colors.white)),
-                    ],
-                  )
-                : TextButton.icon(
-                    onPressed: () {
-                      if (sizes.isNotEmpty && size == '') {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Please select a size')));
-                        return;
-                      }
-                      cartController.cartItems.add(CartModel(
-                          image: listOfImage,
-                          name: productModel.name,
-                          price: double.parse(price),
-                          quantity: 1,
-                          productId: productModel.id,
-                          color: selectedColor.value,
-                          discountPrice: 100,
-                          selectedSize: size));
-                      SPHelper().setCart(cartController.cartItems);
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          duration: Duration(seconds: 1),
-                          content: Text("Product added to the cart")));
-    
-                      setState(() {});
-                      // Navigator.pop(context);
-                    },
-                    icon: Image.asset('Icons/Bag.png', color: Colors.white),
-                    label: Text(
-                      "Add to Cart",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: height * 0.025,
-                          letterSpacing: 1),
-                    ),
-                  ),
-            decoration: BoxDecoration(
-              color: KConstants.kPrimary100,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            alignment: Alignment.center,
-            /* margin: EdgeInsets.only(
-                          top: height * 0.03,
-                          bottom: 10,
-                        ), */
-            //width: double.infinity,
-          ), */
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(58),
             child: CustomAppBar(
@@ -416,35 +322,6 @@ class _ProductDetailsState extends State<ProductDetails> {
               ),
             ),
           ),
-          /* AppBar(
-            //automaticallyImplyLeading: false,
-            elevation: 1,
-            leading: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Image.asset(
-                  'Icons/Arrow.png',
-                  color: KConstants.kPrimary100,
-                )),
-            backgroundColor: Colors.white,
-            title: const Text(
-              'Product Details',
-              style: TextStyle(color: KConstants.kPrimary100),
-            ),
-            centerTitle: true,
-            actions: [
-              InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        CupertinoPageRoute(
-                            builder: (context) =>
-                                Cartpage(onChange: onPageChange)));
-                  },
-                  child: Image.asset("Icons/Bag.png")),
-            ],
-          ), */
           body: SingleChildScrollView(
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -453,12 +330,18 @@ class _ProductDetailsState extends State<ProductDetails> {
                   children: [
                     Expanded(
                       child: PageView(
+                          controller: pageController,
                           onPageChanged: (value) {
+                            String selectedImage = allImages[value];
+                            selectedColor = Color(productModel.images
+                                .firstWhere((element) => element.images
+                                    .any((element) => element == selectedImage))
+                                .colorCode);
                             setState(() {
                               pageIndex = value;
                             });
                           },
-                          children: listOfImage
+                          children: allImages
                               .mapIndexed((i, e) => InkWell(
                                     onTap: () {
                                       Navigator.push(context,
@@ -466,28 +349,134 @@ class _ProductDetailsState extends State<ProductDetails> {
                                         PageController controller =
                                             PageController(initialPage: i);
                                         return Scaffold(
-                                          body: PageView(
-                                              controller: controller,
-                                              children: listOfImage
-                                                  .map(
-                                                    (e) => Center(
-                                                      child: InteractiveViewer(
-                                                        child: Image.network(
-                                                          e,
-                                                          width: width,
-                                                          height: height,
+                                          body: SafeArea(
+                                            child: StatefulBuilder(
+                                                builder: (context, setState) {
+                                              ImageColorModel imageColorModel =
+                                                  productModel.images
+                                                      .firstWhere((element) =>
+                                                          element.colorCode ==
+                                                          selectedColor.value);
+                                              return Column(
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            18.0),
+                                                    child: AnimatedSwitcher(
+                                                      duration: Duration(
+                                                          milliseconds: 500),
+                                                      key: UniqueKey(),
+                                                      child: Hero(
+                                                        tag:
+                                                            selectedColor.value,
+                                                        child: Card(
+                                                          color: selectedColor,
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        12.0,
+                                                                    vertical:
+                                                                        8),
+                                                            child: Text(
+                                                              imageColorModel
+                                                                  .colorName
+                                                                  .toTitleCase(),
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize: 20,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
-                                                  )
-                                                  .toList()),
+                                                  ),
+                                                  Expanded(
+                                                    child: PageView(
+                                                        controller: controller,
+                                                        onPageChanged: (value) {
+                                                          String selectedImage =
+                                                              allImages[value];
+                                                          selectedColor = Color(productModel
+                                                              .images
+                                                              .firstWhere((element) => element
+                                                                  .images
+                                                                  .any((element) =>
+                                                                      element ==
+                                                                      selectedImage))
+                                                              .colorCode);
+                                                          setState(() {
+                                                            pageIndex = value;
+                                                          });
+                                                          this.setState(() {});
+                                                        },
+                                                        children: allImages
+                                                            .map(
+                                                              (e) => Center(
+                                                                child:
+                                                                    InteractiveViewer(
+                                                                  child:
+                                                                      CachedNetworkImage(
+                                                                    imageUrl: e,
+                                                                    progressIndicatorBuilder:
+                                                                        (context,
+                                                                            url,
+                                                                            downloadProgress) {
+                                                                      return Center(
+                                                                        child:
+                                                                            CircularProgressIndicator(
+                                                                          value:
+                                                                              downloadProgress.progress,
+                                                                          strokeWidth:
+                                                                              2,
+                                                                          valueColor:
+                                                                              AlwaysStoppedAnimation(KConstants.kPrimary100),
+                                                                        ),
+                                                                      );
+                                                                    },
+                                                                    width:
+                                                                        width,
+                                                                    height:
+                                                                        height,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            )
+                                                            .toList()),
+                                                  ),
+                                                ],
+                                              );
+                                            }),
+                                          ),
                                         );
                                       }));
                                     },
-                                    child: InteractiveViewer(
-                                      child: Image.network(
-                                        e,
-                                        fit: BoxFit.contain,
+                                    child: SizedBox(
+                                      width: width,
+                                      child: InteractiveViewer(
+                                        child: CachedNetworkImage(
+                                          imageUrl: e,
+                                          progressIndicatorBuilder:
+                                              (context, url, downloadProgress) {
+                                            return Center(
+                                              child: CircularProgressIndicator(
+                                                value:
+                                                    downloadProgress.progress,
+                                                strokeWidth: 2,
+                                                valueColor:
+                                                    AlwaysStoppedAnimation(
+                                                        KConstants.kPrimary100),
+                                              ),
+                                            );
+                                          },
+                                          fit: BoxFit.contain,
+                                        ),
                                       ),
                                     ),
                                   ))
@@ -497,13 +486,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: List.generate(
-                        listOfImage.length,
+                        allImages.length,
                         (index) => Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(4.0),
                           child: AnimatedContainer(
                             duration: const Duration(milliseconds: 300),
-                            height: 10,
-                            width: pageIndex == index ? 15 : 10,
+                            height: 7,
+                            width: pageIndex == index ? 18 : 7,
                             decoration: BoxDecoration(
                                 color: pageIndex == index
                                     ? KConstants.kPrimary100
@@ -540,11 +529,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                           letterSpacing: 1),
                     ),
                     SingleChildScrollView(
-physics: AlwaysScrollableScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      physics: BouncingScrollPhysics(),
                       child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: productModel.images
-                              .map((e) => customContainer(
-                                  Color(e.colorCode), e.colorName))
+                              .mapIndexed((i, e) => customContainer(
+                                  Color(e.colorCode), e.colorName, i))
                               .toList()),
                     ),
                     SizedBox(
@@ -590,14 +581,7 @@ physics: AlwaysScrollableScrollPhysics(),
                     SizedBox(
                       height: 10,
                     ),
-                    /*  Text(
-                      "Brand : ${productModel.brand}",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: height * 0.015,
-                          color: KConstants.textColor50,
-                          letterSpacing: 1),
-                    ), */
+
                   ],
                 ),
               ),
@@ -846,7 +830,6 @@ physics: AlwaysScrollableScrollPhysics(),
                         }
 
                         return Column(
-                            // shrinkWrap: true,
                             children: snapshot.data!.docs
                                 .map((e) => ReviewCard(reviewModel: e.data()))
                                 .toList());
@@ -925,100 +908,34 @@ physics: AlwaysScrollableScrollPhysics(),
     );
   }
 
-  // Padding(
-  //   padding: const EdgeInsets.all(8.0),
-  //   child: Padding(
-  //     padding: const EdgeInsets.only(left: 20, right: 20),
-  //     child: Column(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         Container(
-  //           decoration: BoxDecoration(
-  //               color: selectedColor,
-  //               borderRadius: BorderRadius.circular(15)),
-  //           margin: EdgeInsets.only(top: 20, bottom: 30),
-  //           width: double.infinity,
-  //           height: 200,
-  //         ),
-  //         Text(
-  //           "Available Colors",
-  //           style: TextStyle(
-  //               fontSize: height * 0.02,
-  //               color: Colors.grey,
-  //               letterSpacing: 1),
-  //         ),
-  //         Row(
-  //           children: [
-  //             customContainer(Colors.amber),
-  //             customContainer(Colors.grey)
-  //           ],
-  //         ),
-  //         SizedBox(
-  //           height: 10,
-  //         ),
-  //         Text(
-  //           "Gold Lace".toUpperCase(),
-  //           style: TextStyle(
-  //               fontWeight: FontWeight.bold,
-  //               fontSize: height * 0.03,
-  //               color: Colors.grey,
-  //               letterSpacing: 1),
-  //         ),
-  //         SizedBox(
-  //           height: 10,
-  //         ),
-  //         Text(
-  //           '''Gold Lace jsdkh sajkd juasdgdg jkawdty asdiumn uiydiuqwddb iodyiu  8wdy9y isidhydihd jhdiduhghgdiua d udiu sds duisds dusudg iugdisgdgiuu d d gddiugiugsaiuddgsiuuidgdaiuid d  dgduisadiudhdiua ''',
-  //           style: TextStyle(
-  //               fontSize: height * 0.02,
-  //               color: Colors.grey,
-  //               letterSpacing: 1),
-  //         ),
-  //         SizedBox(
-  //           height: 20,
-  //         ),
-  //         Row(
-  //           children: [
-  //             Text(
-  //               "Rs 320",
-  //               style: TextStyle(
-  //                   fontWeight: FontWeight.bold,
-  //                   fontSize: height * 0.03,
-  //                   color: Colors.grey,
-  //                   letterSpacing: 1),
-  //             ),
-  //             SizedBox(
-  //               width: 20,
-  //             ),
-  //             Text(
-  //               "Free Delivery",
-  //               style: TextStyle(
-  //                   fontSize: height * 0.02,
-  //                   color: Colors.grey,
-  //                   letterSpacing: 1),
-  //             ),
-  //           ],
-  //         )
-  //       ],
-  //     ),
-  //   ),
-  // ),
-  Widget customContainer(Color color, String colorName) {
+  Widget customContainer(Color color, String colorName, int index) {
     return InkWell(
       onTap: () {
         ImageColorModel imageColorModel = productModel.images
             .firstWhere((element) => element.colorCode == color.value);
+        int movingIndex = allImages.indexOf(imageColorModel.images.first);
+        int diff = movingIndex - pageIndex;
+        if (diff.isNegative) {
+          diff = -diff;
+        }
+        Duration duration = movingIndex > 6
+            ? Duration(milliseconds: 1500)
+            : movingIndex > 3
+                ? Duration(milliseconds: 700)
+                : Duration(milliseconds: 300);
+        pageController.jumpToPage(movingIndex);
         setState(() {
           selectedColor = color;
-          listOfImage = imageColorModel.images;
+
           price = productModel.prices.first.colorPrice
               .firstWhere(
                   (element) => element.colorName == imageColorModel.colorName)
               .price;
         });
       },
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
+      child: Container(
+        margin: const EdgeInsets.all(5.0),
+        width: 60,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -1028,35 +945,41 @@ physics: AlwaysScrollableScrollPhysics(),
             ),
             AnimatedContainer(
               duration: Duration(milliseconds: 300),
-              padding: EdgeInsets.all(5),
+              padding: EdgeInsets.all(3),
               decoration: ShapeDecoration(
                 shape: CircleBorder(
                     side: BorderSide(
-                        width: 2,
+                        width: 1,
                         color: color == selectedColor
                             ? KConstants.kPrimary100
                             : Colors.transparent)),
               ),
-              child: CircleAvatar(
-                radius: 18,
-                /* margin:
-                    const EdgeInsets.only(right: 15, top: 8, bottom: 8, left: 15), */
-                /* height: 80,
-                width: 50, */
-                backgroundColor: color,
-                /* decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10), color: color), */
+              child: Hero(
+                tag: color.value,
+                child: CircleAvatar(
+                  radius: 15,
+                  backgroundColor: color,
+                ),
               ),
             ),
             const SizedBox(
               height: 10,
             ),
-            Text(
-              colorName,
-              style: TextStyle(
-                  fontSize: MediaQuery.of(context).size.height * 0.02,
-                  color: color,
-                  letterSpacing: 1),
+            Hero(
+              tag: color.value.toString() + 'text',
+              child: Card(
+                color: Colors.transparent,
+                elevation: 0,
+                child: AutoSizeText(
+                  colorName.toTitleCase(),
+                  maxFontSize: 14,
+                  minFontSize: 12,
+                  style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.height * 0.02,
+                      color: color,
+                      letterSpacing: 1),
+                ),
+              ),
             )
           ],
         ),

@@ -99,7 +99,6 @@ class _SearchPageState extends State<SearchPage> {
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
     return Scaffold(
-      // backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: KConstants.kPrimary100,
         elevation: 0,
@@ -131,7 +130,7 @@ class _SearchPageState extends State<SearchPage> {
           child: Container(
             alignment: Alignment.center,
             margin: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
-            //height: 50,
+
             width: double.infinity,
             decoration: BoxDecoration(
               color: Colors.white30,
@@ -173,7 +172,6 @@ class _SearchPageState extends State<SearchPage> {
                 ),
               ],
             ),
-            // color: Colors.grey,
           ),
           preferredSize: const Size.fromHeight(kToolbarHeight * 1.6),
         ),
@@ -519,11 +517,7 @@ class _SearchPageState extends State<SearchPage> {
                       child: Text("something went wrong"),
                     );
                   }
-                  // if (snapshot.data!.docs.isEmpty) {
-                  //   return Center(child: Text("No such Product Found"));
-                  // }
                   if (snapshot.hasData && snapshot.data != null) {
-                    // var productLength = snapshot.data!.docs.length;
 
                     if (snapshot.data!.docs
                         .where((element) => element
@@ -632,104 +626,7 @@ class _SearchPageState extends State<SearchPage> {
                     }
                     return CustomGridView(
                       products: products,
-                      /* (context, index) {
-                        ProductModel data = snapshot.data.docs[index].data();
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                builder: (context) =>
-                                    ProductDetails(productModel: data),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(
-                                color: Colors.blueGrey.shade100,
-                                // width: 1,
-                              ),
-                              // color: Colors.white,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            margin: const EdgeInsets.all(10),
-                            // padding: const EdgeInsets.all(8),
-                            height: 200,
-                            width: 162,
-                            child: Column(
-                              // mainAxisSize: MainAxisSize.max,
-                              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  height: 120,
-                                  width: 142,
-                                  // padding: const EdgeInsets.only(left: 10),
-                                  margin: const EdgeInsets.only(top: 10, left: 15),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(4),
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                          data.images.first.images.first),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 15),
-                                  child: Text(
-                                    data.name,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 15),
-                                  child: Text(
-                                    "Rs. ${data.prices.first.colorPrice.first.price}",
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      color: KConstants.kPrimary100,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                /* Container(
-                              height: 50,
-                              width: 162,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4),
-                                color: Colors.white,
-                              ),
-                              child: const Center(
-                                child: Text(
-                                  "NameOfProduct",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ), */
-                              ],
-                            ),
-                          ),
-                        );
-                      } */
-                      // itemCount: productLength,
+
                     );
                   }
                   return const Center(child: Text('Loading...'));
@@ -739,97 +636,7 @@ class _SearchPageState extends State<SearchPage> {
           ),
         ],
       ),
-      /* body: GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 0.8,
-        ),
-        itemBuilder: (context, index) {
-          return Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(
-                color: Colors.blueGrey.shade100,
-                // width: 1,
-              ),
-              // color: Colors.white,
-              borderRadius: BorderRadius.circular(4),
-            ),
-            margin: const EdgeInsets.all(10),
-            // padding: const EdgeInsets.all(8),
-            height: 200,
-            width: 162,
-            child: Column(
-              // mainAxisSize: MainAxisSize.max,
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 120,
-                  width: 142,
-                  // padding: const EdgeInsets.only(left: 10),
-                  margin: const EdgeInsets.only(top: 10, left: 15),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(4),
-                    image: const DecorationImage(
-                      image: AssetImage("assets/icons/product.png"),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(left: 15),
-                  child: Text(
-                    "NameOfProduct",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(left: 15),
-                  child: Text(
-                    "Rs. 1000",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: KConstants.kPrimary100,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                /* Container(
-                    height: 50,
-                    width: 162,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      color: Colors.white,
-                    ),
-                    child: const Center(
-                      child: Text(
-                        "NameOfProduct",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ), */
-              ],
-            ),
-          );
-        },
-        itemCount: 10,
-      ), */
+
     );
   }
 }

@@ -27,7 +27,6 @@ class GeoCodeModel {
   final String? confidence;
   final String? inlongt;
   final String? cClass;
-  //final Adminareas? adminareas;
   final String? altgeocode;
   GeoCodeModel({
     required this.statename,
@@ -54,7 +53,6 @@ class GeoCodeModel {
     required this.confidence,
     required this.inlongt,
     required this.cClass,
-    //required this.adminareas,
     required this.altgeocode,
   });
 
@@ -83,7 +81,6 @@ class GeoCodeModel {
     String? confidence,
     String? inlongt,
     String? cClass,
-    //  Adminareas? adminareas,
     String? altgeocode,
   }) {
     return GeoCodeModel(
@@ -111,7 +108,6 @@ class GeoCodeModel {
       confidence: confidence ?? this.confidence,
       inlongt: inlongt ?? this.inlongt,
       cClass: cClass ?? this.cClass,
-      //   adminareas: adminareas ?? this.adminareas,
       altgeocode: altgeocode ?? this.altgeocode,
     );
   }
@@ -142,7 +138,6 @@ class GeoCodeModel {
       'confidence': confidence,
       'inlongt': inlongt,
       'class': cClass,
-      //'adminareas': adminareas?.toMap(),
       'altgeocode': altgeocode,
     };
   }
@@ -178,7 +173,7 @@ class GeoCodeModel {
       confidence: map['confidence'] is String ? map['confidence'] : null,
       inlongt: map['inlongt'] is String ? map['inlongt'] : null,
       cClass: map['class'] is String ? map['class'] : null,
-      //adminareas: Adminareas.fromMap(map['adminareas'] as Map<String, dynamic>),
+
       altgeocode: map['altgeocode'],
     );
   }
@@ -217,7 +212,6 @@ class GeoCodeModel {
         other.confidence == confidence &&
         other.inlongt == inlongt &&
         other.cClass == cClass &&
-        //    other.adminareas == adminareas &&
         other.altgeocode == altgeocode;
   }
 
@@ -247,7 +241,6 @@ class GeoCodeModel {
         confidence.hashCode ^
         inlongt.hashCode ^
         cClass.hashCode ^
-        //     adminareas.hashCode ^
         altgeocode.hashCode;
   }
 }
@@ -576,367 +569,3 @@ class Poi {
         poidist.hashCode;
   }
 }
-
-/* class Adminareas {
-  final Admin6 admin6;
-  final Admin8 admin8;
-  final Admin5 admin5;
-  Adminareas({
-    required this.admin6,
-    required this.admin8,
-    required this.admin5,
-  });
-
-  Adminareas copyWith({
-    Admin6? admin6,
-    Admin8? admin8,
-    Admin5? admin5,
-  }) {
-    return Adminareas(
-      admin6: admin6 ?? this.admin6,
-      admin8: admin8 ?? this.admin8,
-      admin5: admin5 ?? this.admin5,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'admin6': admin6.toMap(),
-      'admin8': admin8.toMap(),
-      'admin5': admin5.toMap(),
-    };
-  }
-
-  factory Adminareas.fromMap(Map<String, dynamic> map) {
-    return Adminareas(
-      admin6: Admin6.fromMap(map['admin6'] as Map<String, dynamic>),
-      admin8: Admin8.fromMap(map['admin8'] as Map<String, dynamic>),
-      admin5: Admin5.fromMap(map['admin5'] as Map<String, dynamic>),
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory Adminareas.fromJson(String source) =>
-      Adminareas.fromMap(json.decode(source) as Map<String, dynamic>);
-
-  @override
-  String toString() =>
-      'Adminareas(admin6: $admin6, admin8: $admin8, admin5: $admin5)';
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is Adminareas &&
-        other.admin6 == admin6 &&
-        other.admin8 == admin8 &&
-        other.admin5 == admin5;
-  }
-
-  @override
-  int get hashCode => admin6.hashCode ^ admin8.hashCode ^ admin5.hashCode;
-}
-
-class Admin6 {
-  final String level;
-  final String boundary;
-  final String name;
-  final String type;
-  final String admin_level;
-  Admin6({
-    required this.level,
-    required this.boundary,
-    required this.name,
-    required this.type,
-    required this.admin_level,
-  });
-
-  Admin6 copyWith({
-    String? level,
-    String? boundary,
-    String? name,
-    String? type,
-    String? admin_level,
-  }) {
-    return Admin6(
-      level: level ?? this.level,
-      boundary: boundary ?? this.boundary,
-      name: name ?? this.name,
-      type: type ?? this.type,
-      admin_level: admin_level ?? this.admin_level,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'level': level,
-      'boundary': boundary,
-      'name': name,
-      'type': type,
-      'admin_level': admin_level,
-    };
-  }
-
-  factory Admin6.fromMap(Map<String, dynamic> map) {
-    return Admin6(
-      level: map['level']  ,
-      boundary: map['boundary']  ,
-      name: map['name']  ,
-      type: map['type']  ,
-      admin_level: map['admin_level']  ,
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory Admin6.fromJson(String source) =>
-      Admin6.fromMap(json.decode(source) as Map<String, dynamic>);
-
-  @override
-  String toString() {
-    return 'Admin6(level: $level, boundary: $boundary, name: $name, type: $type, admin_level: $admin_level)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is Admin6 &&
-        other.level == level &&
-        other.boundary == boundary &&
-        other.name == name &&
-        other.type == type &&
-        other.admin_level == admin_level;
-  }
-
-  @override
-  int get hashCode {
-    return level.hashCode ^
-        boundary.hashCode ^
-        name.hashCode ^
-        type.hashCode ^
-        admin_level.hashCode;
-  }
-}
-
-class Admin8 {
-  final String level;
-  final String boundary;
-  final String name;
-  final String type;
-  final String admin_level;
-  Admin8({
-    required this.level,
-    required this.boundary,
-    required this.name,
-    required this.type,
-    required this.admin_level,
-  });
-
-  Admin8 copyWith({
-    String? level,
-    String? boundary,
-    String? name,
-    String? type,
-    String? admin_level,
-  }) {
-    return Admin8(
-      level: level ?? this.level,
-      boundary: boundary ?? this.boundary,
-      name: name ?? this.name,
-      type: type ?? this.type,
-      admin_level: admin_level ?? this.admin_level,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'level': level,
-      'boundary': boundary,
-      'name': name,
-      'type': type,
-      'admin_level': admin_level,
-    };
-  }
-
-  factory Admin8.fromMap(Map<String, dynamic> map) {
-    return Admin8(
-      level: map['level']  ,
-      boundary: map['boundary']  ,
-      name: map['name']  ,
-      type: map['type']  ,
-      admin_level: map['admin_level']  ,
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory Admin8.fromJson(String source) =>
-      Admin8.fromMap(json.decode(source) as Map<String, dynamic>);
-
-  @override
-  String toString() {
-    return 'Admin8(level: $level, boundary: $boundary, name: $name, type: $type, admin_level: $admin_level)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is Admin8 &&
-        other.level == level &&
-        other.boundary == boundary &&
-        other.name == name &&
-        other.type == type &&
-        other.admin_level == admin_level;
-  }
-
-  @override
-  int get hashCode {
-    return level.hashCode ^
-        boundary.hashCode ^
-        name.hashCode ^
-        type.hashCode ^
-        admin_level.hashCode;
-  }
-}
-
-class Admin5 {
-  final String wikipedia;
-  final String wikidata;
-  final String name_mr;
-  final String name;
-  final String admin_level;
-  final String level;
-  final String name_ar;
-  final String boundary;
-  final String name_pa;
-  final String type;
-  final String name_en;
-  final String name_hi;
-  Admin5({
-    required this.wikipedia,
-    required this.wikidata,
-    required this.name_mr,
-    required this.name,
-    required this.admin_level,
-    required this.level,
-    required this.name_ar,
-    required this.boundary,
-    required this.name_pa,
-    required this.type,
-    required this.name_en,
-    required this.name_hi,
-  });
-
-  Admin5 copyWith({
-    String? wikipedia,
-    String? wikidata,
-    String? name_mr,
-    String? name,
-    String? admin_level,
-    String? level,
-    String? name_ar,
-    String? boundary,
-    String? name_pa,
-    String? type,
-    String? name_en,
-    String? name_hi,
-  }) {
-    return Admin5(
-      wikipedia: wikipedia ?? this.wikipedia,
-      wikidata: wikidata ?? this.wikidata,
-      name_mr: name_mr ?? this.name_mr,
-      name: name ?? this.name,
-      admin_level: admin_level ?? this.admin_level,
-      level: level ?? this.level,
-      name_ar: name_ar ?? this.name_ar,
-      boundary: boundary ?? this.boundary,
-      name_pa: name_pa ?? this.name_pa,
-      type: type ?? this.type,
-      name_en: name_en ?? this.name_en,
-      name_hi: name_hi ?? this.name_hi,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'wikipedia': wikipedia,
-      'wikidata': wikidata,
-      'name_mr': name_mr,
-      'name': name,
-      'admin_level': admin_level,
-      'level': level,
-      'name_ar': name_ar,
-      'boundary': boundary,
-      'name_pa': name_pa,
-      'type': type,
-      'name_en': name_en,
-      'name_hi': name_hi,
-    };
-  }
-
-  factory Admin5.fromMap(Map<String, dynamic> map) {
-    return Admin5(
-      wikipedia: map['wikipedia']  ,
-      wikidata: map['wikidata']  ,
-      name_mr: map['name_mr']  ,
-      name: map['name']  ,
-      admin_level: map['admin_level']  ,
-      level: map['level']  ,
-      name_ar: map['name_ar']  ,
-      boundary: map['boundary']  ,
-      name_pa: map['name_pa']  ,
-      type: map['type']  ,
-      name_en: map['name_en']  ,
-      name_hi: map['name_hi']  ,
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory Admin5.fromJson(String source) =>
-      Admin5.fromMap(json.decode(source) as Map<String, dynamic>);
-
-  @override
-  String toString() {
-    return 'Admin5(wikipedia: $wikipedia, wikidata: $wikidata, name_mr: $name_mr, name: $name, admin_level: $admin_level, level: $level, name_ar: $name_ar, boundary: $boundary, name_pa: $name_pa, type: $type, name_en: $name_en, name_hi: $name_hi)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is Admin5 &&
-        other.wikipedia == wikipedia &&
-        other.wikidata == wikidata &&
-        other.name_mr == name_mr &&
-        other.name == name &&
-        other.admin_level == admin_level &&
-        other.level == level &&
-        other.name_ar == name_ar &&
-        other.boundary == boundary &&
-        other.name_pa == name_pa &&
-        other.type == type &&
-        other.name_en == name_en &&
-        other.name_hi == name_hi;
-  }
-
-  @override
-  int get hashCode {
-    return wikipedia.hashCode ^
-        wikidata.hashCode ^
-        name_mr.hashCode ^
-        name.hashCode ^
-        admin_level.hashCode ^
-        level.hashCode ^
-        name_ar.hashCode ^
-        boundary.hashCode ^
-        name_pa.hashCode ^
-        type.hashCode ^
-        name_en.hashCode ^
-        name_hi.hashCode;
-  }
-}
- */

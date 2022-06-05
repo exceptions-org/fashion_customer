@@ -6,6 +6,7 @@ import 'package:fashion_customer/views/custom_app_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:cached_network_image/cached_network_image.dart';
 class Cartpage extends StatefulWidget {
   final Function(int) onChange;
   const Cartpage({Key? key, required this.onChange}) : super(key: key);
@@ -30,22 +31,7 @@ class _CartpageState extends State<Cartpage> {
           title: "Cart Page",
         ),
       ),
-      /* AppBar(
-        leading: IconButton(
-          icon: Image.asset(
-            "Icons/Arrow.png",
-            color: KConstants.kPrimary100,
-          ),
-          onPressed: () {
-            widget.onChange(0);
-          },
-        ),
-        elevation: 1,
-        backgroundColor: Colors.white,
-        centerTitle: true,
-        title:
-            Text("Cart Page", style: TextStyle(color: KConstants.kPrimary100)),
-      ), */
+
       body: Column(
         children: [
           if (cartController.cartItems.isNotEmpty)
@@ -59,9 +45,8 @@ class _CartpageState extends State<Cartpage> {
                               decoration: BoxDecoration(
                                   color: Colors.white,
                                   border: Border.all(color: Color(0XFFC8D5EF))),
-                              //color: Colors.grey,
+
                               width: double.infinity,
-                              //margin: EdgeInsets.only(top: 10, bottom: 10),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -72,8 +57,8 @@ class _CartpageState extends State<Cartpage> {
                                             color: Color(0xffC8DFEF))),
                                     height: 120,
                                     width: 140,
-                                    // color: Colors.blue,
-                                    child: Image.network(e.image.first),
+                                    child:  CachedNetworkImage(
+                              imageUrl: e.image.first),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
@@ -151,7 +136,6 @@ class _CartpageState extends State<Cartpage> {
                                                 "${e.quantity}",
                                                 style: TextStyle(fontSize: 18),
                                               ),
-                                              // Text(cartController.cartItems[index].productId),
                                               SizedBox(height: 10),
                                               InkWell(
                                                 onTap: () {
@@ -193,7 +177,6 @@ class _CartpageState extends State<Cartpage> {
                       Image.asset(
                         "Icons/empty-cart.png",
                         height: MediaQuery.of(context).size.height * 0.25,
-                        //color: KConstants.kPrimary100,
                       ),
                       SizedBox(
                         height: 20,

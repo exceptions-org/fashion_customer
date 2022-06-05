@@ -29,25 +29,7 @@ class ReviewScreen extends StatelessWidget {
           isaction: [Icon(Icons.abc)],
         ),
       ),
-      /* AppBar(
-        //automaticallyImplyLeading: false,
-        elevation: 1,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Image.asset(
-              'Icons/Arrow.png',
-              color: KConstants.kPrimary100,
-            )),
-        backgroundColor: Colors.white,
-        title: Text(
-          'Reviews',
-          style:
-              GoogleFonts.montserratAlternates(color: KConstants.kPrimary100),
-        ),
-        centerTitle: true,
-      ), */
+
       body: StreamBuilder<QuerySnapshot<ReviewModel>>(
         stream: FirebaseFirestore.instance
             .collection("reviews")

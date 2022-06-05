@@ -7,14 +7,11 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 class FirebaseMessagingService {
   int i = 0;
   FirebaseMessagingService() {
-    //if (i == 0) {
 
     print("Constructor called");
     initializeMessaging();
     initLocalNotification();
-    /* } else {
-      print("Not Calling");
-    } */
+
   }
 
   static FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -69,11 +66,10 @@ class FirebaseMessagingService {
     });
 
     FirebaseMessaging.onBackgroundMessage(showMessage);
-    //}
+
   }
 
   void initLocalNotification() {
-    // if (i < 2) {
     print("Init local notification called");
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         FlutterLocalNotificationsPlugin();
@@ -93,7 +89,7 @@ class FirebaseMessagingService {
     InitializationSettings initializationSettings = InitializationSettings(
         android: androidInitializationSettings, iOS: iosInitializationSettings);
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
-    //}
+
   }
 
   Future<String?> getToken() async {

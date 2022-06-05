@@ -16,8 +16,11 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../model/product_model.dart';
 
+import 'package:cached_network_image/cached_network_image.dart';
+
 class CheckoutPage extends StatefulWidget {
   final double totalAmount;
+
   const CheckoutPage({Key? key, required this.totalAmount}) : super(key: key);
 
   @override
@@ -201,14 +204,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             createdAt: Timestamp.now(),
                           )
                           .toMap());
-                      // List<String>? tokens = await SPHelper().getAdminToken();
 
-                      /*  if (tokens != null) {
-                        for (var token in tokens) {
-                          KConstants.sendFCMMessage(
-                              'New Order', 'New Order Received', token);
-                        }
-                      } */
                       KConstants.sendFCMMessage(
                           'New Order', 'New Order Received', "/topics/admin");
                       if (couponModel != null) {
@@ -239,21 +235,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       setState(() {
                         orderPlaced = true;
                       });
-                      /*  Navigator.pushAndRemoveUntil(
-                          context,
-                          CupertinoPageRoute(
-                              builder: (c) => BottomNavigation()),
-                          (route) => false);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            'Order Placed Successfully',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          backgroundColor: KConstants.kPrimary100,
-                          duration: Duration(seconds: 1),
-                        ),
-                      ); */
+
                     },
                     child: Container(
                       margin: EdgeInsets.all(20),
@@ -290,20 +272,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
             ),
           ),
         ),
-        /* AppBar(
-          iconTheme: IconThemeData(
-            color: KConstants.kPrimary100,
-          ),
-          centerTitle: true,
-          elevation: 1,
-          backgroundColor: Colors.white,
-          title: Text(
-            orderPlaced ? 'Order Placed' : 'Checkout',
-            style: TextStyle(
-              color: KConstants.kPrimary100,
-            ),
-          ),
-        ), */
+
         body: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
           child: Column(
@@ -340,8 +309,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                       color: Color(0xffC8D5EF),
                                     ),
                                   ),
-                                  child: Image.network(
-                                    cartController.cartItems[index].image.first,
+                                  child: CachedNetworkImage(
+                                    imageUrl: cartController
+                                        .cartItems[index].image.first,
                                     fit: BoxFit.contain,
                                   ),
                                 ),
@@ -501,6 +471,19 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           ),
                         )
                       ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 4.0,
+                  ),
+                  Container(
+                    width: width,
+                    decoration: defContainerDec,
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 15.0, vertical: 25),
+                    child: Text(
+                      "This Order will be placed on Cash On Delivery",
+                      style: TextStyle(color: Colors.black, fontSize: 16.0),
                     ),
                   ),
                   SizedBox(
@@ -812,6 +795,7 @@ class SelectCouponBottomSheet extends StatelessWidget {
   final Function(CouponModel) onSelected;
   final String user;
   static const String routeName = "SelectCouponBottomSheet";
+
   SelectCouponBottomSheet(
       {Key? key, required this.onSelected, required this.user})
       : super(key: key);
@@ -851,10 +835,8 @@ class SelectCouponBottomSheet extends StatelessWidget {
                 return Container(
                   margin: EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    //color: Colors.white,
                     border: Border(
                         bottom: BorderSide(color: KConstants.kBorderColor)),
-                    //borderRadius: BorderRadius.circular(10)
                   ),
                   child: ExpansionTile(
                     title: Text(e.couponCode),

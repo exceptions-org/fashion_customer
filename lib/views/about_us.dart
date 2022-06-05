@@ -27,26 +27,6 @@ class AboutUs extends StatelessWidget {
           title: "About Us",
         ),
       ),
-      /* AppBar(
-        automaticallyImplyLeading: false,
-        elevation: 1,
-        backgroundColor: Colors.white,
-        title: Text(
-          'About Us',
-          style:
-              GoogleFonts.montserratAlternates(color: KConstants.kPrimary100),
-        ),
-        leading: IconButton(
-          icon: Image.asset(
-            "Icons/Arrow.png",
-            color: KConstants.kPrimary100,
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        centerTitle: true,
-      ), */
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

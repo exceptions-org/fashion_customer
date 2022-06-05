@@ -43,11 +43,7 @@ class _StartupPageState extends State<StartupPage> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      /* appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: const Text("Fashion App"),
-      ), */
+
       body: Padding(
         padding:
             const EdgeInsets.only(left: 20, top: 20, right: 20, bottom: 20),
@@ -193,10 +189,7 @@ class _StartupPageState extends State<StartupPage> {
                         TextStyle(color: KConstants.kPrimary100, fontSize: 18),
                   ),
                 ),
-                /*  const Text(
-                  "Skip",
-                  style: TextStyle(color: KConstants.kPrimary100, fontSize: 15),
-                ), */
+
                 MaterialButton(
                   height: 50,
                   minWidth: 150,

@@ -88,7 +88,6 @@ class AuthService {
         (await SharedPreferences.getInstance())
             .setString('user', userModel.toJson());
         await userController.getUser();
-        // userController.saveAdminToken();
         Navigator.pushAndRemoveUntil(
             context,
             CupertinoPageRoute(builder: (context) => BottomNavigation()),
@@ -103,17 +102,7 @@ class AuthService {
                       number: phone,
                       latLng: LatLng(position.latitude, position.longitude),
                     )));
-      } /* 
-          (await SharedPreferences.getInstance()).setString('user', UserModel(name: "name", number: "number", adress: []).toJson());
-      String? user = (await SharedPreferences.getInstance()).getString('user');
-      if(user!=null){
-        UserModel userModel = UserModel.fromJson(user);
-       
       }
-      
-      if (userCredential.user != null) {
-        return true;
-      } */
     } catch (e) {}
     return false;
   }

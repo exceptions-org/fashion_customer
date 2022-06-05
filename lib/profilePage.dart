@@ -46,16 +46,7 @@ class _ProfilePageState extends State<ProfilePage> {
           title: "Profile",
         ),
       ),
-      // AppBar(
-      //   automaticallyImplyLeading: false,
-      //   elevation: 1,
-      //   backgroundColor: Colors.white,
-      //   title: const Text(
-      //     'Profile',
-      //     style: TextStyle(color: KConstants.kPrimary100),
-      //   ),
-      //   centerTitle: true,
-      // ),
+
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(top: 50),
@@ -206,29 +197,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ],
                 ),
                 SizedBox(height: 20),
-                /* Container(
-                  margin: const EdgeInsets.symmetric(vertical: 2),
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  width: double.maxFinite,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(
-                        //width: 1,
-                        color: Color(0XFFC8DFEF),
-                      )),
-                  child: ListTile(
-                    leading: Icon(Icons.person, color: Colors.blueGrey),
-                    title: Text("Personal Details"),
-                    trailing: RotatedBox(
-                      quarterTurns: 2,
-                      child: Image.asset(
-                        "Icons/Arrow.png",
-                        height: 25,
-                        color: KConstants.kPrimary100,
-                      ),
-                    ),
-                  ),
-                ), */
+
                 Stack(
                   children: [
                     Container(
@@ -240,19 +209,11 @@ class _ProfilePageState extends State<ProfilePage> {
                         title: Text("User Contact No"),
                         trailing: Text(controller.userModel.number),
 
-                        /*  trailing: RotatedBox(
-                      quarterTurns: 2,
-                      child: Image.asset(
-                        "Icons/Arrow.png",
-                        height: 25,
-                        color: KConstants.kPrimary100,
-                      ),
-                    ), */
+
                       ),
                       decoration: BoxDecoration(
                           color: Colors.white,
                           border: Border.all(
-                            //width: 1,
                             color: Color(0XFFC8DFEF),
                           )),
                     ),
@@ -263,7 +224,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       decoration: BoxDecoration(
                           color: Colors.white,
                           border: Border.all(
-                            //width: 1,
                             color: Color(0XFFC8DFEF),
                           )),
                       child: ExpansionTile(
@@ -397,7 +357,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(
-                        //width: 1,
                         color: Color(0XFFC8DFEF),
                       )),
                   child: ListTile(
@@ -405,39 +364,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     title: Text("User Contact No"),
                     trailing: Text(controller.userModel.number),
 
-                    /*  trailing: RotatedBox(
-                      quarterTurns: 2,
-                      child: Image.asset(
-                        "Icons/Arrow.png",
-                        height: 25,
-                        color: KConstants.kPrimary100,
-                      ),
-                    ), */
                   ),
                 ),
-                /* Container(
-                  margin: const EdgeInsets.symmetric(vertical: 2),
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  width: double.maxFinite,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(
-                        //width: 1,
-                        color: Color(0XFFC8DFEF),
-                      )),
-                  child: ListTile(
-                    leading: Icon(Icons.email, color: Colors.orange),
-                    title: Text("User Email ID"),
-                    trailing: RotatedBox(
-                      quarterTurns: 2,
-                      child: Image.asset(
-                        "Icons/Arrow.png",
-                        height: 25,
-                        color: KConstants.kPrimary100,
-                      ),
-                    ),
-                  ),
-                ), */
+
                 Container(
                   margin: const EdgeInsets.symmetric(vertical: 2),
                   padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -445,7 +374,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(
-                        //width: 1,
                         color: Color(0XFFC8DFEF),
                       )),
                   child: ListTile(
@@ -480,7 +408,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(
-                        //width: 1,
                         color: Color(0XFFC8DFEF),
                       )),
                   child: ListTile(
@@ -512,7 +439,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(
-                        //width: 1,
                         color: Color(0XFFC8DFEF),
                       )),
                   child: ListTile(
@@ -548,7 +474,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     decoration: BoxDecoration(
                         color: Colors.white,
                         border: Border.all(
-                          //width: 1,
                           color: Color(0XFFC8DFEF),
                         )),
                     child: ListTile(

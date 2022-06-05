@@ -76,18 +76,6 @@ class _SignupPage2State extends State<SignupPage2> {
           isaction: [Icon(Icons.abc)],
         ),
       ),
-      /*  AppBar(
-        automaticallyImplyLeading: false,
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        title: const Text(
-          'Contact Details',
-          style: TextStyle(
-            color: KConstants.kPrimary100,
-          ),
-        ),
-        centerTitle: true,
-      ), */
       body: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -141,7 +129,6 @@ class _SignupPage2State extends State<SignupPage2> {
               ),
               Container(
                 padding: EdgeInsets.all(24),
-                // height: 500,
                 width: double.infinity,
                 decoration: BoxDecoration(
                   border: Border.all(
@@ -465,17 +452,6 @@ class _MapScreenState extends State<MapScreen> {
   late LatLng latLng =
       widget.latLng ?? LatLng(19.283872311756532, 73.0539163835629);
 
-/*   Future<GeoCodeModel?> getAddress(LatLng latLng) async {
-    HttpClient client = HttpClient();
-    HttpClientRequest request = await client.getUrl(Uri.parse(
-        "https://geocode.xyz/${latLng.latitude}, ${latLng.longitude}?geoit=json&auth=36479712395713737844x110931"));
-    HttpClientResponse response = await request.close();
-    if (response.statusCode == 200) {
-      String json = await response.transform(utf8.decoder).join();
-      return GeoCodeModel.fromJson(json);
-    }
-    return null;
-  } */
 
   Future<GeoCodeModel?> getAddress(LatLng latLng) async {
     Response response = await get(Uri.parse(
@@ -517,9 +493,6 @@ class _MapScreenState extends State<MapScreen> {
                   region: value.region,
                 );
               }
-              /*  GeoCode(apiKey: '36479712395713737844x110931')
-                  .reverseGeocoding(
-                      latitude: latLng.latitude, longitude: latLng.longitude); */
               setState(() {});
             },
           ),

@@ -39,9 +39,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
   int k = 0;
 
-  void onChange(int i) async {/* 
-    pageController.animateToPage(i,
-        duration: Duration(microseconds: 250), curve: Curves.easeIn); */
+  void onChange(int i) async {
     switch (i) {
       case 0:
         setState(() {
@@ -128,18 +126,13 @@ class _BottomNavigationState extends State<BottomNavigation> {
       child: Scaffold(
         backgroundColor: Color(0XFFFAFAFF),
         body: routes[index],
-        /* PageView(
-          controller: pageController,
-          onPageChanged: onChange,
-          children: routes,
-        ), */
+
         bottomNavigationBar: SizedBox(
           height: kBottomNavigationBarHeight * 1.3,
           width: size.width,
           child: Column(
             children: [
               Row(
-                //mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   for (int i = 0; i < assets.length; i++)
                     InkWell(
@@ -162,7 +155,6 @@ class _BottomNavigationState extends State<BottomNavigation> {
               SizedBox(
                 width: size.width,
                 child: AnimatedContainer(
-                  //  curve: Curves.fastOutSlowIn,
                   margin:
                       EdgeInsets.only(left: leftPadding, right: rightPadding),
                   duration: Duration(milliseconds: 180),

@@ -175,7 +175,9 @@ class _PhoneVerificationState extends State<PhoneVerification> {
             child: Container(
               color: Colors.black.withOpacity(0.5),
               child: Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(
+                  color: KConstants.kPrimary100,
+                ),
               ),
             ),
           )

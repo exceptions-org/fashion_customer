@@ -1,6 +1,7 @@
 import 'package:fashion_customer/model/review_model.dart';
 import 'package:fashion_customer/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
@@ -79,7 +80,8 @@ class ReviewCard extends StatelessWidget {
                                           child: Hero(
                                               tag: e,
                                               child: InteractiveViewer(
-                                                  child: Image.network(e))),
+                                                  child:  CachedNetworkImage(
+                              imageUrl: e))),
                                         ),
                                       )));
                         },
@@ -89,7 +91,8 @@ class ReviewCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(15),
                             child: Hero(
                               tag: e,
-                              child: Image.network(
+                              child:  CachedNetworkImage(
+                              imageUrl: 
                                 e,
                                 height: 160,
                                 width: 100,

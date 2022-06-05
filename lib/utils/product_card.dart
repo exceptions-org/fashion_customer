@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fashion_customer/model/product_model.dart';
 import 'package:fashion_customer/views/product_details.dart';
 import 'package:flutter/cupertino.dart';
@@ -34,31 +35,26 @@ class ProductCard extends StatelessWidget {
             color: Colors.white,
             border: Border.all(
               color: Colors.blueGrey.shade100,
-              // width: 1,
+
             ),
-            // color: Colors.white,
             borderRadius: BorderRadius.circular(4),
           ),
-          //margin: const EdgeInsets.all(10),
-          // padding: const EdgeInsets.all(8),
           height: height * 0.100,
 
           width: width * 0.4,
           child: Column(
-            // mainAxisSize: MainAxisSize.max,
-            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 height: height * 0.15,
                 width: 142,
-                // padding: const EdgeInsets.only(left: 10),
                 margin: const EdgeInsets.only(top: 10, left: 15),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(4),
                   image: DecorationImage(
-                    image: NetworkImage(data.images.first.images.first),
+                    
+                    image: CachedNetworkImageProvider(data.images.first.images.first),
                     fit: BoxFit.contain,
                   ),
                 ),
@@ -109,24 +105,7 @@ class ProductCard extends StatelessWidget {
                   ],
                 ),
               ),
-              /* Container(
-                                              height: 50,
-                                              width: 162,
-                                              decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        color: Colors.white,
-                                              ),
-                                              child: const Center(
-                        child: Text(
-                          "NameOfProduct",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                                              ),
-                                            ), */
+
             ],
           ),
         ),

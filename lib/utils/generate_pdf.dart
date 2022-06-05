@@ -62,9 +62,8 @@ Future<Uint8List> generatePdf(OrderModel orderModel) async {
   pdf.PdfColor textColor50 = pdf.PdfColor.fromInt(KConstants.textColor50.value);
   pdf.PdfColor C8D5EF = pdf.PdfColor.fromInt(0xffC8D5EF);
 
-  //if (orderModel.products.length < 3) {
   var page = pw.MultiPage(
-    //maxPages: 5000,
+
     margin: pw.EdgeInsets.all(5),
     pageFormat: pdf.PdfPageFormat.a4,
     build: (context) {
@@ -101,7 +100,6 @@ Future<Uint8List> generatePdf(OrderModel orderModel) async {
                 padding: pw.EdgeInsets.all(16.0),
                 height: 150,
                 margin: pw.EdgeInsets.only(bottom: 4),
-                //width: double.infinity,
                 decoration: pw.BoxDecoration(
                   color: pdf.PdfColors.white,
                   border: pw.Border.all(
@@ -124,7 +122,6 @@ Future<Uint8List> generatePdf(OrderModel orderModel) async {
                         ),
                         height: 120,
                         width: 160,
-                        //'${orderModel.products[index].product.imageUrl}'),
                         fit: pw.BoxFit.contain,
                       ),
                     ),

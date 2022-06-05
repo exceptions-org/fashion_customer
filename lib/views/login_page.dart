@@ -157,7 +157,9 @@ class Loading extends StatelessWidget {
             SizedBox(
               height: 10,
             ),
-            CircularProgressIndicator(),
+            CircularProgressIndicator(
+              color: KConstants.kPrimary100,
+            ),
           ],
         ),
       ),

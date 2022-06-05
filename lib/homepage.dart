@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'model/product_model.dart';
 import 'utils/constants.dart';
 
+import 'package:cached_network_image/cached_network_image.dart';
 class HomePage extends StatefulWidget {
   final void Function(int) onChange;
 
@@ -186,7 +187,6 @@ class _HomePageState extends State<HomePage> {
                     setState(() {});
                   },
                   child: Row(
-                    //mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Icon(
@@ -286,7 +286,8 @@ class _HomePageState extends State<HomePage> {
                                               },
                                               child: Column(
                                                 children: [
-                                                  Image.network(
+                                                   CachedNetworkImage(
+                              imageUrl: 
                                                     e.data().category.imageUrl,
                                                     height: width * 0.12,
                                                     width: width * 0.12,
@@ -327,14 +328,7 @@ class _HomePageState extends State<HomePage> {
                                                 children: snapshot.data!.docs
                                                     .map(
                                                       (e) => ListTile(
-                                                        /*      leading: Image.network(
-                                                          e
-                                                              .data()
-                                                              .category
-                                                              .imageUrl,
-                                                          height: 30,
-                                                          width: 30,
-                                                        ), */
+
                                                         title: Text(
                                                           e
                                                               .data()
@@ -471,10 +465,6 @@ class _HomePageState extends State<HomePage> {
                     GestureDetector(
                       onTap: () {
                         widget.onChange(1);
-                        // Navigator.push(
-                        //     context,
-                        //     CupertinoPageRoute(
-                        //         builder: (context) => SearchPage()));
                       },
                       child: Text(
                         "View More",
@@ -502,11 +492,8 @@ class _HomePageState extends State<HomePage> {
                         child: Text("something went wrong"),
                       );
                     }
-                    // if (snapshot.data!.docs.isEmpty) {
-                    //   return Center(child: Text("No such Product Found"));
-                    // }
+
                     if (snapshot.hasData && snapshot.data != null) {
-                      // var productLength = snapshot.data!.docs.length;
                       if (snapshot.data!.docs.isEmpty) {
                         return Text(
                           "No such Product Found",
@@ -519,104 +506,7 @@ class _HomePageState extends State<HomePage> {
                         child: CustomGridView(
                           products: snapshot.data!.docs
                               .map((e) => e.data())
-                              .toList(), /* (context, index) {
-                  ProductModel data = snapshot.data.docs[index].data();
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        CupertinoPageRoute(
-                          builder: (context) =>
-                              ProductDetails(productModel: data),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(
-                          color: Colors.blueGrey.shade100,
-                          // width: 1,
-                        ),
-                        // color: Colors.white,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      margin: const EdgeInsets.all(10),
-                      // padding: const EdgeInsets.all(8),
-                      height: 200,
-                      width: 162,
-                      child: Column(
-                        // mainAxisSize: MainAxisSize.max,
-                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            height: 120,
-                            width: 142,
-                            // padding: const EdgeInsets.only(left: 10),
-                            margin: const EdgeInsets.only(top: 10, left: 15),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(4),
-                              image: DecorationImage(
-                                image: NetworkImage(
-                                    data.images.first.images.first),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 15),
-                            child: Text(
-                              data.name,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 15),
-                            child: Text(
-                              "Rs. ${data.prices.first.colorPrice.first.price}",
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: KConstants.kPrimary100,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          /* Container(
-                        height: 50,
-                        width: 162,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          color: Colors.white,
-                        ),
-                        child: const Center(
-                          child: Text(
-                            "NameOfProduct",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ), */
-                        ],
-                      ),
-                    ),
-                  );
-                } */
-                          // itemCount: productLength,
+                              .toList(),
                         ),
                       );
                     }

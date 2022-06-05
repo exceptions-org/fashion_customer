@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:fashion_customer/model/order_model.dart';
@@ -62,10 +63,7 @@ class _AddReviewState extends State<AddReview> {
                                   child: InteractiveViewer(
                                     child: Image.file(
                                       File(image),
-                                      // height:
-                                      //     MediaQuery.of(context).size.height,
-                                      // width: MediaQuery.of(context).size.width,
-                                      // fit: BoxFit.cover,
+
                                     ),
                                   )),
                             ),
@@ -235,23 +233,7 @@ class _AddReviewState extends State<AddReview> {
           isaction: [Icon(Icons.abc)],
         ),
       ),
-      /* AppBar(
-        title: Text(
-          'Add Review',
-          style: GoogleFonts.montserratAlternates(
-            color: KConstants.kPrimary100,
-          ),
-        ),
-        leading: IconButton(
-          icon: Image.asset(
-            "Icons/Arrow.png",
-            color: KConstants.kPrimary100,
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      ), */
+
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Column(
@@ -283,8 +265,8 @@ class _AddReviewState extends State<AddReview> {
                                 color: Color(0xffC8D5EF),
                               ),
                             ),
-                            child: Image.network(
-                              order.products[index].image.first,
+                            child: CachedNetworkImage(
+                              imageUrl: order.products[index].image.first,
                               fit: BoxFit.contain,
                             ),
                           ),
@@ -374,9 +356,7 @@ class _AddReviewState extends State<AddReview> {
                   controller: reviewController,
                   decoration: InputDecoration(
                     hintText: 'Tell us how you feel about our product',
-                    // border: OutlineInputBorder(
-                    //   borderRadius: BorderRadius.circular(10),
-                    // ),
+
                   ),
                 ),
               ],

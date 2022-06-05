@@ -33,26 +33,6 @@ class WishlistWidget extends StatelessWidget {
           ),
         ),
       ),
-      /*  AppBar(
-        automaticallyImplyLeading: false,
-        elevation: 1,
-        backgroundColor: Colors.white,
-        title: Text(
-          'Wishlist',
-          style:
-              GoogleFonts.montserratAlternates(color: KConstants.kPrimary100),
-        ),
-        leading: IconButton(
-          icon: Image.asset(
-            "Icons/Arrow.png",
-            color: KConstants.kPrimary100,
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        centerTitle: true,
-      ), */
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: StreamBuilder<QuerySnapshot<ProductModel>>(
@@ -70,21 +50,16 @@ class WishlistWidget extends StatelessWidget {
                 );
               }
 
-              // if (snapshot.data!.docs.isEmpty) {
-              //   return Center(child: Text("No such Product Found"));
-              // }
               if (snapshot.hasData && snapshot.data != null) {
                 List<ProductModel> products = snapshot.data!.docs
                     .map((e) => e.data())
                     .where((element) =>
                         userController.userModel.wishList.contains(element.id))
                     .toList();
-                // var productLength = snapshot.data!.docs.length;
                 if (snapshot.data!.docs.isEmpty) {
                   return Center(
                     child: Text(
                       "No Product Found",
-                      //  style: TextStyle(fontSize: 20),
                     ),
                   );
                 }

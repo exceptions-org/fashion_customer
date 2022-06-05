@@ -49,13 +49,4 @@ class SPHelper {
     return null;
   }
 
- /*  Future<void> setAdminToken(List<String> tokens) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList(_adminTokens, tokens);
-  }
-
-  Future<List<String>?> getAdminToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getStringList(_adminTokens);
-  } */
 }

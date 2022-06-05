@@ -14,6 +14,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'package:cached_network_image/cached_network_image.dart';
 class ViewOrders extends StatefulWidget {
   final String userPhone;
   ViewOrders({Key? key, required this.userPhone}) : super(key: key);
@@ -476,8 +477,6 @@ class _OrderDetailsState extends State<OrderDetails> {
                             });
 
 
-                            // List<String>? tokens =
-                            //     await SPHelper().getAdminToken();
 
                           
                                 KConstants.sendFCMMessage(
@@ -559,26 +558,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                 ),
               ),
             ),
-            /*  AppBar(
-              automaticallyImplyLeading: false,
-              elevation: 1,
-              backgroundColor: Colors.white,
-              title: Text(
-                'Your Orders',
-                style: GoogleFonts.montserratAlternates(
-                    color: KConstants.kPrimary100),
-              ),
-              leading: IconButton(
-                icon: Image.asset(
-                  "Icons/Arrow.png",
-                  color: KConstants.kPrimary100,
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              centerTitle: true,
-            ), */
+
             body: SingleChildScrollView(
               child: Column(
                 children: [
@@ -625,7 +605,8 @@ class _OrderDetailsState extends State<OrderDetails> {
                                       color: Color(0xffC8D5EF),
                                     ),
                                   ),
-                                  child: Image.network(
+                                  child:  CachedNetworkImage(
+                              imageUrl: 
                                     widget.order.products[index].image.first,
                                     fit: BoxFit.contain,
                                   ),

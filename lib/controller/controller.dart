@@ -25,21 +25,6 @@ class UserController {
     });
   }
 
- /*  Future<void> saveAdminToken() async {
-    DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
-        .instance
-        .collection('admin')
-        .doc('tokens')
-        .get();
-    if (snapshot.exists && snapshot.data() != null) {
-      List<dynamic>? data = snapshot.data()?['pushToken'];
-      if (data != null) {
-        List<String>? tokens = List.from(data);
-        spHelper.setAdminToken(tokens);
-      }
-    }
-  } */
-
   Future<void> getUser() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
