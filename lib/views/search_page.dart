@@ -93,7 +93,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   double minPrice = 100;
-  double maxPrice = 10000;
+  double maxPrice = 100000;
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
@@ -130,7 +130,6 @@ class _SearchPageState extends State<SearchPage> {
           child: Container(
             alignment: Alignment.center,
             margin: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
-
             width: double.infinity,
             decoration: BoxDecoration(
               color: Colors.white30,
@@ -224,7 +223,7 @@ class _SearchPageState extends State<SearchPage> {
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
-                                            mainAxisSize: MainAxisSize.min,
+                                        mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Padding(
                                             padding: const EdgeInsets.all(18.0),
@@ -415,7 +414,7 @@ class _SearchPageState extends State<SearchPage> {
                                                         s(() {});
                                                       },
                                                       min: 100,
-                                                      max: 10000,
+                                                      max: 100000,
                                                       divisions: 100000 ~/ 100,
                                                       labels: RangeLabels(
                                                           '${minPrice.toInt()}',
@@ -424,7 +423,7 @@ class _SearchPageState extends State<SearchPage> {
                                                 SizedBox(
                                                   width: 10,
                                                 ),
-                                                Text('10,000'),
+                                                Text('1,00,000'),
                                               ],
                                             ),
                                           ),
@@ -505,7 +504,10 @@ class _SearchPageState extends State<SearchPage> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: StreamBuilder<QuerySnapshot<ProductModel>>(
-                stream: productRefs
+                stream: (widget.isCategry
+                        ? productRefs.where('category.name',
+                            isEqualTo: widget.category)
+                        : productRefs)
                     .withConverter<ProductModel>(
                         fromFirestore: (snapshot, options) =>
                             ProductModel.fromMap(snapshot.data()!),
@@ -518,7 +520,6 @@ class _SearchPageState extends State<SearchPage> {
                     );
                   }
                   if (snapshot.hasData && snapshot.data != null) {
-
                     if (snapshot.data!.docs
                         .where((element) => element
                             .data()
@@ -626,7 +627,6 @@ class _SearchPageState extends State<SearchPage> {
                     }
                     return CustomGridView(
                       products: products,
-
                     );
                   }
                   return const Center(child: Text('Loading...'));
@@ -636,7 +636,6 @@ class _SearchPageState extends State<SearchPage> {
           ),
         ],
       ),
-
     );
   }
 }
