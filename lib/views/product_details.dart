@@ -32,8 +32,7 @@ class ProductDetails extends StatefulWidget {
     Key? key,
     required this.productModel,
     required this.notFromHome,
-  }
-      ) : super(key: key);
+  }) : super(key: key);
 
   @override
   State<ProductDetails> createState() => _ProductDetailsState();
@@ -45,7 +44,7 @@ class _ProductDetailsState extends State<ProductDetails> {
     setState(() {});
   }
 
-  late List<String> listOfImage = productModel.images.first.images;
+  //late List<String> listOfImage = productModel.images.first.images;
 
   late List<String> allImages = productModel.images
       .map((e) => e.images)
@@ -258,7 +257,11 @@ class _ProductDetailsState extends State<ProductDetails> {
                                       productModel.id,
                                       size,
                                       selectedColor.value,
-                                      listOfImage,
+                                      productModel.images
+                                          .firstWhere((element) =>
+                                              element.colorCode ==
+                                              selectedColor.value)
+                                          .images,
                                       productModel.name,
                                       price,
                                       widget.productModel.images
@@ -267,11 +270,12 @@ class _ProductDetailsState extends State<ProductDetails> {
                                               selectedColor.value)
                                           .colorName);
                                   SPHelper().setCart(cartController.cartItems);
-                                  ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(
-                                      SnackBar(
-                                          duration: Duration(seconds: 1),
-                                          content: Text(
-                                              "Product added to the cart")));
+                                  ScaffoldMessenger.of(context)
+                                    ..hideCurrentSnackBar()
+                                    ..showSnackBar(SnackBar(
+                                        duration: Duration(seconds: 1),
+                                        content:
+                                            Text("Product added to the cart")));
 
                                   setState(() {});
                                 },
@@ -581,7 +585,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                     SizedBox(
                       height: 10,
                     ),
-
                   ],
                 ),
               ),
