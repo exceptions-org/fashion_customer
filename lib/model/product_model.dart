@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -116,7 +117,8 @@ class ProductModel {
   }
 
   factory ProductModel.fromMap(Map<String, dynamic> map) {
-    return ProductModel(
+   try{
+  return ProductModel(
       discountPrice: map['discountPrice'] ?? 0,
       name: map['name'] ?? '',
       id: map['id'] ?? '',
@@ -139,6 +141,34 @@ class ProductModel {
       averageRating: map['averageRating']?.toDouble() ?? 0.0,
       createdAt: map['createdAt'] ?? Timestamp.now(),
     );
+   }
+   catch(e){
+    log(map.toString());
+      return ProductModel(
+      discountPrice: map['discountPrice'] ?? 0,
+      name: map['name'] ?? '',
+      id: map['id'] ?? '',
+      description: map['description'] ?? '',
+      category: CategoryModel.fromMap(map['category']),
+      subCategory: CategoryModel.fromMap(map['subCategory']),
+      images: List<ImageColorModel>.from(
+          map['images']?.map((x) => ImageColorModel.fromMap(x))),
+      prices: List<SizePriceModel>.from(
+          map['prices']?.map((x) => SizePriceModel.fromMap(x))),
+      highPrice: map['highPrice'] ?? map['prices'][0]['colorPrice'][0]['price'],
+      quality: map['quality'] ?? '',
+      brand: map['brand'] ?? '',
+      rating: map['rating']?.toDouble() ?? 0.0,
+      orderCount: map['orderCount']?.toInt() ?? 0,
+      reviewCount: map['reviewCount']?.toInt() ?? 0,
+      sizeUnit: map['sizeUnit'] ?? '',
+      unit: map['unit'] ?? '',
+      quantity: map['quantity']?.toDouble() ?? 0.0,
+      averageRating: map['averageRating']?.toDouble() ?? 0.0,
+      createdAt: map['createdAt'] ?? Timestamp.now(),
+    );
+   }
+  
   }
 
   String toJson() => json.encode(toMap());

@@ -1,8 +1,11 @@
+import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fashion_customer/controller/cart_controller.dart';
 import 'package:fashion_customer/model/category_model.dart';
 import 'package:fashion_customer/utils/constants.dart';
 import 'package:fashion_customer/views/custom_grid_view.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../model/product_model.dart';
 
@@ -43,11 +46,13 @@ class SearchPage extends StatefulWidget {
   final String category;
   final Function(int) onChange;
   final List<CategoryModel> subcategories;
+  final String? selectedSubcategory;
   const SearchPage(
       {Key? key,
       required this.onChange,
       this.isCategry = false,
       this.category = '',
+      this.selectedSubcategory,
       this.subcategories = const []})
       : super(key: key);
 
@@ -60,10 +65,14 @@ class _SearchPageState extends State<SearchPage> {
   CollectionReference productRefs =
       FirebaseFirestore.instance.collection('products');
 
-  List<String> subcategories = [];
+/*   late List<String> subcategories = [
+    if (widget.selectedSubcategory != null) widget.selectedSubcategory!
+  ]; */
   SortBy? sortBy;
 
-  List<String> categories = [];
+  late List<String> categories = [
+    if (widget.selectedSubcategory != null) widget.selectedSubcategory!
+  ];
 
   int get filterCount {
     if (categories.isNotEmpty &&
@@ -94,6 +103,9 @@ class _SearchPageState extends State<SearchPage> {
 
   double minPrice = 100;
   double maxPrice = 100000;
+
+  CartController cartController = Get.find();
+
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
@@ -113,17 +125,31 @@ class _SearchPageState extends State<SearchPage> {
                 },
               ),
         actions: [
-          IconButton(
-            icon: Image.asset(
-              "Icons/Bag.png",
-              color: Colors.white,
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: Obx(
+              () => Badge(
+                position: BadgePosition.topEnd(top: 3, end: -4),
+                badgeColor: Colors.white,
+                showBadge: cartController.cartItems.isNotEmpty,
+                badgeContent: Text(
+                  cartController.cartItems.length.toString(),
+                  style: TextStyle(color: KConstants.kPrimary100),
+                ),
+                child: IconButton(
+                  icon: Image.asset(
+                    "Icons/Bag.png",
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    if (widget.isCategry) {
+                      Navigator.of(context).pop();
+                    }
+                    widget.onChange(2);
+                  },
+                ),
+              ),
             ),
-            onPressed: () {
-              if (widget.isCategry) {
-                Navigator.of(context).pop();
-              }
-              widget.onChange(2);
-            },
           ),
         ],
         bottom: PreferredSize(
@@ -627,6 +653,9 @@ class _SearchPageState extends State<SearchPage> {
                     }
                     return CustomGridView(
                       products: products,
+                      onTap: () {
+                        setState(() {});
+                      },
                     );
                   }
                   return const Center(child: Text('Loading...'));

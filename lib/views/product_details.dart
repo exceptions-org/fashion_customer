@@ -1,5 +1,6 @@
 // ignore_for_file: unused_local_variable
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
@@ -18,6 +19,7 @@ import 'package:fashion_customer/views/reviews.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../model/image_color_model.dart';
@@ -53,7 +55,7 @@ class _ProductDetailsState extends State<ProductDetails> {
           (previousValue, element) =>
               previousValue..addAll(element.map((e) => e)));
 
-  CartController cartController = getIt<CartController>();
+  CartController cartController = Get.find<CartController>();
   final PageController pageController = PageController();
 
   ProductModel get productModel => widget.productModel;
@@ -303,15 +305,33 @@ class _ProductDetailsState extends State<ProductDetails> {
             child: CustomAppBar(
               isaction: [
                 Icon(Icons.abc),
-                InkWell(
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: InkWell(
                     onTap: () {
                       Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                              builder: (context) =>
-                                  Cartpage(onChange: onPageChange)));
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (context) =>
+                                      Cartpage(onChange: onPageChange)))
+                          .then((value) {
+                        setState(() {});
+                      });
                     },
-                    child: Image.asset("Icons/Bag.png")),
+                    child: Obx(() {
+                      return Badge(
+                        position: BadgePosition.topEnd(top: 3, end: -6),
+                        badgeColor: KConstants.kPrimary100,
+                        showBadge: cartController.cartItems.isNotEmpty,
+                        badgeContent: Text(
+                          cartController.cartItems.length.toString(),
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        child: Image.asset("Icons/Bag.png"),
+                      );
+                    }),
+                  ),
+                ),
               ],
               isCenterTitle: true,
               title: "Product Details",
@@ -743,7 +763,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                       height: 10,
                     ),
                     Text(
-                      size,
+                      "Size : ${size}",
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: height * 0.02,
@@ -870,10 +890,35 @@ class _ProductDetailsState extends State<ProductDetails> {
                                   ProductModel.fromMap(snapshot.data()!),
                               toFirestore: (product, options) =>
                                   product.toMap())
-                          .limit(10)
                           .snapshots(),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
+                          List<ProductModel> relatedProducts = [];
+                          List<ProductModel> jugad = snapshot.data!.docs
+                              .map((e) => e.data())
+                              .where((element) =>
+                                  element.subCategory.name ==
+                                      productModel.subCategory.name &&
+                                  element.id != productModel.id)
+                              .toList();
+                          List<ProductModel> another = snapshot.data!.docs
+                              .map((e) => e.data())
+                              .where((element) =>
+                                  element.subCategory.name !=
+                                      productModel.subCategory.name &&
+                                  element.id != productModel.id)
+                              .toList();
+
+                          jugad.shuffle();
+                          if (jugad.length > 4) {
+                            relatedProducts.addAll(jugad.take(4));
+                          } else {
+                            relatedProducts.addAll(jugad);
+                          }
+                          another.shuffle();
+                          relatedProducts.addAll(
+                              another.take(10 - relatedProducts.length));
+
                           return AnimationLimiter(
                             child: GridView.count(
                               childAspectRatio: 1 / 1.2,
@@ -882,10 +927,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                               crossAxisSpacing: 8,
                               crossAxisCount: 2,
                               physics: NeverScrollableScrollPhysics(),
-                              children: snapshot.data!.docs
-                                  .where((element) =>
-                                      element.data().id !=
-                                      widget.productModel.id)
+                              children: relatedProducts
                                   .mapIndexed((i, element) =>
                                       AnimationConfiguration.staggeredGrid(
                                           duration: Duration(milliseconds: 300),
@@ -893,7 +935,10 @@ class _ProductDetailsState extends State<ProductDetails> {
                                           position: i,
                                           child: ScaleAnimation(
                                             child: ProductCard(
-                                                data: element.data()),
+                                                data: element,
+                                                onTap: () {
+                                                  setState(() {});
+                                                }),
                                           )))
                                   .toList(),
                             ),

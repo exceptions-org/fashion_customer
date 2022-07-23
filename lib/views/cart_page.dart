@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fashion_customer/controller/cart_controller.dart';
 import 'package:fashion_customer/main.dart';
 import 'package:fashion_customer/utils/constants.dart';
@@ -5,8 +6,8 @@ import 'package:fashion_customer/views/checkout_page.dart';
 import 'package:fashion_customer/views/custom_app_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-import 'package:cached_network_image/cached_network_image.dart';
 class Cartpage extends StatefulWidget {
   final Function(int) onChange;
   const Cartpage({Key? key, required this.onChange}) : super(key: key);
@@ -16,7 +17,7 @@ class Cartpage extends StatefulWidget {
 }
 
 class _CartpageState extends State<Cartpage> {
-  CartController cartController = getIt<CartController>();
+  CartController cartController = Get.find<CartController>();
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,6 @@ class _CartpageState extends State<Cartpage> {
           title: "Cart Page",
         ),
       ),
-
       body: Column(
         children: [
           if (cartController.cartItems.isNotEmpty)
@@ -45,7 +45,6 @@ class _CartpageState extends State<Cartpage> {
                               decoration: BoxDecoration(
                                   color: Colors.white,
                                   border: Border.all(color: Color(0XFFC8D5EF))),
-
                               width: double.infinity,
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,8 +56,8 @@ class _CartpageState extends State<Cartpage> {
                                             color: Color(0xffC8DFEF))),
                                     height: 120,
                                     width: 140,
-                                    child:  CachedNetworkImage(
-                              imageUrl: e.image.first),
+                                    child: CachedNetworkImage(
+                                        imageUrl: e.image.first),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(

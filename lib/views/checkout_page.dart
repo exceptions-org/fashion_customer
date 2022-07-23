@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fashion_customer/bottom_navigation.dart';
 import 'package:fashion_customer/controller/cart_controller.dart';
@@ -12,11 +13,10 @@ import 'package:fashion_customer/views/custom_grid_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../model/product_model.dart';
-
-import 'package:cached_network_image/cached_network_image.dart';
 
 class CheckoutPage extends StatefulWidget {
   final double totalAmount;
@@ -35,7 +35,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     border: Border.all(color: KConstants.kBorderColor),
   );
 
-  CartController cartController = getIt<CartController>();
+  CartController cartController = Get.find<CartController>();
 
   late OrderModel orderModel = OrderModel(
       deliveredDate: Timestamp.now(),
@@ -235,7 +235,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       setState(() {
                         orderPlaced = true;
                       });
-
                     },
                     child: Container(
                       margin: EdgeInsets.all(20),
@@ -272,7 +271,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
             ),
           ),
         ),
-
         body: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
           child: Column(
@@ -770,6 +768,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             if (snapshot.hasData) {
                               return AnimationLimiter(
                                 child: CustomGridView(
+                                    onTap: () {
+                                      setState(() {});
+                                    },
                                     products: snapshot.data!.docs
                                         .map((e) => e.data())
                                         .toList()),

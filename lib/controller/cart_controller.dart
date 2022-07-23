@@ -1,9 +1,12 @@
 import 'package:fashion_customer/model/cart_model.dart';
 import 'package:fashion_customer/utils/spHelper.dart';
+import 'package:get/get.dart';
 
-class CartController {
+class CartController extends GetxController {
   SPHelper spHelper = SPHelper();
-  List<CartModel> cartItems = [];
+  RxList<CartModel> _cartItems = <CartModel>[].obs;
+  List<CartModel> get cartItems => _cartItems.value;
+  set cartItems(List<CartModel> cartItems) => _cartItems.value = cartItems;
 
   void clearCart() {
     cartItems.clear();

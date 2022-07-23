@@ -3,13 +3,19 @@ import 'package:fashion_customer/model/product_model.dart';
 import 'package:fashion_customer/views/product_details.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:smooth_star_rating_null_safety/smooth_star_rating_null_safety.dart';
 
 import 'constants.dart';
 
 class ProductCard extends StatelessWidget {
   final ProductModel data;
   final bool notFromHome;
-  const ProductCard({Key? key, required this.data, this.notFromHome = false})
+  final VoidCallback onTap;
+  const ProductCard(
+      {Key? key,
+      required this.data,
+      this.notFromHome = false,
+      required this.onTap})
       : super(key: key);
 
   @override
@@ -28,19 +34,19 @@ class ProductCard extends StatelessWidget {
                 notFromHome: notFromHome,
               ),
             ),
-          );
+          ).then((value) {
+            onTap();
+          });
         },
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
             border: Border.all(
               color: Colors.blueGrey.shade100,
-
             ),
             borderRadius: BorderRadius.circular(4),
           ),
           height: height * 0.100,
-
           width: width * 0.4,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,8 +59,8 @@ class ProductCard extends StatelessWidget {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(4),
                   image: DecorationImage(
-                    
-                    image: CachedNetworkImageProvider(data.images.first.images.first),
+                    image: CachedNetworkImageProvider(
+                        data.images.first.images.first),
                     fit: BoxFit.contain,
                   ),
                 ),
@@ -105,7 +111,15 @@ class ProductCard extends StatelessWidget {
                   ],
                 ),
               ),
-
+              Padding(
+                padding: const EdgeInsets.only(left: 15),
+                child: Row(
+                  children: [
+                    Text("Rating : "),
+                    SmoothStarRating(size: 18, rating: data.rating),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

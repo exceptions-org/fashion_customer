@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:fashion_customer/services/auth_service.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/constants.dart';
@@ -109,19 +108,24 @@ class _PhoneVerificationState extends State<PhoneVerification> {
                       SizedBox(
                         width: 8,
                       ),
-                      Text.rich(
-                        TextSpan(
-                            text: "Resend OTP",
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                widget.authService
-                                    .signinWithPhone(widget.number, context, true);
-                              }),
-                        style: TextStyle(
-                            fontSize: 14,
-                            color: KConstants.kPrimary100,
-                            fontWeight: FontWeight.bold,
-                            height: 1.4),
+                      InkWell(
+                        onTap: () {
+                          widget.authService
+                              .signinWithPhone(widget.number, context, true);
+                        },
+                        child: Text.rich(TextSpan(
+                          text: "Resend OTP",
+                          /*  recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  widget.authService
+                                      .signinWithPhone(widget.number, context, true);
+                                }, */
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: KConstants.kPrimary100,
+                              fontWeight: FontWeight.bold,
+                              height: 1.4),
+                        )),
                       )
                     ],
                   ),

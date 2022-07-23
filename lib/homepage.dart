@@ -1,7 +1,10 @@
 import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:badges/badges.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fashion_customer/controller/cart_controller.dart';
 import 'package:fashion_customer/controller/controller.dart';
 import 'package:fashion_customer/main.dart';
 import 'package:fashion_customer/model/carousel_model.dart';
@@ -11,13 +14,14 @@ import 'package:fashion_customer/views/custom_app_bar.dart';
 import 'package:fashion_customer/views/custom_grid_view.dart';
 import 'package:fashion_customer/views/product_details.dart';
 import 'package:fashion_customer/views/search_page.dart';
+import 'package:fashion_customer/views/select_sub_category.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'model/product_model.dart';
 import 'utils/constants.dart';
 
-import 'package:cached_network_image/cached_network_image.dart';
 class HomePage extends StatefulWidget {
   final void Function(int) onChange;
 
@@ -142,6 +146,8 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  CartController cartController = Get.find();
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -161,7 +167,17 @@ class _HomePageState extends State<HomePage> {
                   onTap: () {
                     widget.onChange(2);
                   },
-                  child: Image.asset("Icons/Bag.png")),
+                  child: Obx(
+                    () => Badge(
+                        position: BadgePosition.topEnd(top: 3, end: -6),
+                        badgeColor: KConstants.kPrimary100,
+                        showBadge: cartController.cartItems.isNotEmpty,
+                        badgeContent: Text(
+                          cartController.cartItems.length.toString(),
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        child: Image.asset("Icons/Bag.png")),
+                  )),
               InkWell(
                   onTap: () {
                     widget.onChange(3);
@@ -202,10 +218,12 @@ class _HomePageState extends State<HomePage> {
                       Container(
                         width: width * 0.8,
                         child: AutoSizeText(
-                          controller.seletedAddress != null
-                              ? controller.seletedAddress!.actualAddress
-                              : controller
-                                  .userModel.address.first.actualAddress,
+                          controller.userModel.address.isEmpty
+                              ? "Add Address"
+                              : controller.seletedAddress != null
+                                  ? controller.seletedAddress!.actualAddress
+                                  : controller
+                                      .userModel.address.first.actualAddress,
                           textScaleFactor: 1.0,
                           maxLines: 3,
                           style: TextStyle(
@@ -286,9 +304,11 @@ class _HomePageState extends State<HomePage> {
                                               },
                                               child: Column(
                                                 children: [
-                                                   CachedNetworkImage(
-                              imageUrl: 
-                                                    e.data().category.imageUrl,
+                                                  CachedNetworkImage(
+                                                    imageUrl: e
+                                                        .data()
+                                                        .category
+                                                        .imageUrl,
                                                     height: width * 0.12,
                                                     width: width * 0.12,
                                                   ),
@@ -310,42 +330,47 @@ class _HomePageState extends State<HomePage> {
                                                       top:
                                                           Radius.circular(15))),
                                           context: context,
-                                          builder: (c) => Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: 20,
-                                                    top: 20,
-                                                    bottom: 10),
-                                                child: Text('Select Category'),
-                                              ),
-                                              Divider(),
-                                              ListView(
-                                                shrinkWrap: true,
-                                                children: snapshot.data!.docs
-                                                    .map(
-                                                      (e) => ListTile(
-
-                                                        title: Text(
-                                                          e
-                                                              .data()
-                                                              .category
-                                                              .name,
-                                                          style: TextStyle(
-                                                              fontSize: 12),
-                                                        ),
-                                                        onTap: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                          Navigator.push(
-                                                              context,
-                                                              CupertinoPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          SearchPage(
+                                          builder: (c) => Scaffold(
+                                            body: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 20,
+                                                      top: 50,
+                                                      bottom: 10),
+                                                  child:
+                                                      Text('Select Category'),
+                                                ),
+                                                Divider(),
+                                                GridView.count(
+                                                  physics:
+                                                      BouncingScrollPhysics(),
+                                                  childAspectRatio:
+                                                      width / width * 0.9,
+                                                  shrinkWrap: true,
+                                                  mainAxisSpacing: 10,
+                                                  crossAxisSpacing: 15,
+                                                  crossAxisCount: 3,
+                                                  children: snapshot.data!.docs
+                                                      .map((e) => InkWell(
+                                                            onTap: () {
+                                                              Navigator.pop(
+                                                                  context);
+                                                              Navigator.push(
+                                                                  context,
+                                                                  CupertinoPageRoute(
+                                                                      builder:
+                                                                          (context) =>
+                                                                              SelectSubCategory(
+                                                                                onChange: widget.onChange,
+                                                                                category: e.data().category.name,
+                                                                                isCategry: true,
+                                                                                subcategories: e.data().subcategory,
+                                                                              )
+                                                                      /*  SearchPage(
                                                                             onChange:
                                                                                 widget.onChange,
                                                                             category:
@@ -354,16 +379,78 @@ class _HomePageState extends State<HomePage> {
                                                                                 true,
                                                                             subcategories:
                                                                                 e.data().subcategory,
-                                                                          )));
-                                                        },
-                                                      ),
-                                                    )
-                                                    .toList(),
-                                              ),
-                                              SizedBox(
-                                                height: 20,
-                                              )
-                                            ],
+                                                                          ) */
+
+                                                                      ));
+                                                            },
+                                                            child: Container(
+                                                              decoration: BoxDecoration(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              8),
+                                                                  border: Border.all(
+                                                                      color: Colors
+                                                                          .grey)),
+                                                              margin: EdgeInsets
+                                                                  .all(10),
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(10),
+                                                              child: Column(
+                                                                children: [
+                                                                  Image.network(e
+                                                                      .data()
+                                                                      .category
+                                                                      .imageUrl),
+                                                                  Spacer(),
+                                                                  Text(e
+                                                                      .data()
+                                                                      .category
+                                                                      .name)
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ))
+                                                      .toList(),
+                                                ),
+                                                /*     ListView(
+                                                  shrinkWrap: true,
+                                                  children: snapshot.data!.docs
+                                                      .map(
+                                                        (e) => ListTile(
+                                                          title: Text(
+                                                            e
+                                                                .data()
+                                                                .category
+                                                                .name,
+                                                            style: TextStyle(
+                                                                fontSize: 12),
+                                                          ),
+                                                          onTap: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                            Navigator.push(
+                                                                context,
+                                                                CupertinoPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            SearchPage(
+                                                                              onChange: widget.onChange,
+                                                                              category: e.data().category.name,
+                                                                              isCategry: true,
+                                                                              subcategories: e.data().subcategory,
+                                                                            )));
+                                                          },
+                                                        ),
+                                                      )
+                                                      .toList(),
+                                                ), */
+                                                SizedBox(
+                                                  height: 20,
+                                                )
+                                              ],
+                                            ),
                                           ),
                                         );
                                       },
@@ -504,9 +591,11 @@ class _HomePageState extends State<HomePage> {
                       return SingleChildScrollView(
                         physics: const BouncingScrollPhysics(),
                         child: CustomGridView(
-                          products: snapshot.data!.docs
-                              .map((e) => e.data())
-                              .toList(),
+                          onTap: () {
+                            setState(() {});
+                          },
+                          products:
+                              snapshot.data!.docs.map((e) => e.data()).toList(),
                         ),
                       );
                     }

@@ -6,7 +6,9 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
 class CustomGridView extends StatelessWidget {
   final List<ProductModel> products;
-  CustomGridView({Key? key, required this.products}) : super(key: key);
+  final VoidCallback onTap;
+  CustomGridView({Key? key, required this.products, required this.onTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,10 @@ class CustomGridView extends StatelessWidget {
                   columnCount: 2,
                   position: i,
                   child: ScaleAnimation(
-                    child: ProductCard(data: element),
+                    child: ProductCard(
+                      data: element,
+                      onTap: onTap,
+                    ),
                   )))
               .toList()),
     );

@@ -46,7 +46,6 @@ class _ProfilePageState extends State<ProfilePage> {
           title: "Profile",
         ),
       ),
-
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(top: 50),
@@ -57,11 +56,19 @@ class _ProfilePageState extends State<ProfilePage> {
                   radius: 70,
                   backgroundColor: KConstants.kPrimary100,
                   child: Text(
-                    (controller.userModel.name.split(' ').length > 1
-                            ? controller.userModel.name.split(' ')[0][0] +
-                                controller.userModel.name.split(' ')[1][0]
-                            : controller.userModel.name[0])
-                        .toUpperCase(),
+                    controller.userModel.name.isEmpty
+                        ? (Text(
+                            "F",
+                            style: GoogleFonts.montserratAlternates(
+                                fontSize: 40,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ).toString())
+                        : (controller.userModel.name.split(' ').length > 1
+                                ? controller.userModel.name.split(' ')[0][0] +
+                                    controller.userModel.name.split(' ')[1][0]
+                                : controller.userModel.name[0])
+                            .toUpperCase(),
                     style: GoogleFonts.montserratAlternates(
                         fontSize: 40,
                         fontWeight: FontWeight.bold,
@@ -72,7 +79,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 Row(
                   children: [
                     Spacer(),
-                    Text(
+                   controller.userModel.name.isEmpty?( Text(
+                      "Add Your name",
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold),
+                    )): Text(
                       controller.userModel.name,
                       style: TextStyle(
                           fontSize: 20,
@@ -197,7 +210,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   ],
                 ),
                 SizedBox(height: 20),
-
                 Stack(
                   children: [
                     Container(
@@ -208,8 +220,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         leading: Icon(Icons.phone, color: Colors.blue),
                         title: Text("User Contact No"),
                         trailing: Text(controller.userModel.number),
-
-
                       ),
                       decoration: BoxDecoration(
                           color: Colors.white,
@@ -363,10 +373,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     leading: Icon(Icons.phone, color: Colors.blue),
                     title: Text("User Contact No"),
                     trailing: Text(controller.userModel.number),
-
                   ),
                 ),
-
                 Container(
                   margin: const EdgeInsets.symmetric(vertical: 2),
                   padding: const EdgeInsets.symmetric(horizontal: 15),

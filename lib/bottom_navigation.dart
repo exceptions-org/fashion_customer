@@ -126,7 +126,6 @@ class _BottomNavigationState extends State<BottomNavigation> {
       child: Scaffold(
         backgroundColor: Color(0XFFFAFAFF),
         body: routes[index],
-
         bottomNavigationBar: SizedBox(
           height: kBottomNavigationBarHeight * 1.3,
           width: size.width,

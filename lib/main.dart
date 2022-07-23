@@ -3,6 +3,7 @@ import 'package:fashion_customer/controller/controller.dart';
 import 'package:fashion_customer/views/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -12,9 +13,14 @@ GetIt getIt = GetIt.instance;
 
 void main() async {
   getIt.registerLazySingleton(() => UserController());
-  getIt.registerLazySingleton(() => CartController());
+  Get.put(CartController());
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp();
+  /*  QuerySnapshot snap = await FirebaseFirestore.instance.collection("products").get();
+  for (var item in snap.docs) {
+    log(item.id+item.data().toString());
+  } */
   runApp(const MyApp());
 }
 

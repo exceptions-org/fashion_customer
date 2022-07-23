@@ -8,8 +8,6 @@ import 'package:fashion_customer/views/contact_details.dart';
 import 'package:fashion_customer/views/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../views/phone_verification.dart';
@@ -82,7 +80,7 @@ class AuthService {
       DocumentSnapshot<Map<String, dynamic>> snapshot =
           await FirebaseFirestore.instance.collection('users').doc(phone).get();
       FirebaseMessagingService();
-      if (snapshot.exists) {
+      if(snapshot.exists){
         UserController userController = getIt<UserController>();
         UserModel userModel = UserModel.fromMap(snapshot.data()!);
         (await SharedPreferences.getInstance())
@@ -92,16 +90,31 @@ class AuthService {
             context,
             CupertinoPageRoute(builder: (context) => BottomNavigation()),
             (e) => false);
-      } else {
-        await Geolocator.requestPermission();
-        Position position = await Geolocator.getCurrentPosition();
-        Navigator.pushReplacement(
-            context,
-            CupertinoPageRoute(
-                builder: (context) => SignupPage2(
-                      number: phone,
-                      latLng: LatLng(position.latitude, position.longitude),
-                    )));
+      }
+     else {
+       void addaddress() async {
+    UserModel userModel = UserModel(
+        orderCount: 0,
+        wishList: [],
+        name: "",
+        number: phone,
+        pushToken: '',
+        address: []);
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(phone)
+        .set(userModel.toMap());
+
+    await getIt<UserController>().getUser();
+
+    Navigator.pushAndRemoveUntil(
+        context,
+        CupertinoPageRoute(builder: (context) => BottomNavigation()),
+        (r) => false);
+  }
+  addaddress();
+        /*  await Geolocator.requestPermission();
+        Position position = await Geolocator.getCurrentPosition(); */
       }
     } catch (e) {}
     return false;

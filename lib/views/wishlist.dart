@@ -63,7 +63,7 @@ class WishlistWidget extends StatelessWidget {
                     ),
                   );
                 }
-                return CustomGridView(products: products);
+                return CustomGridView(onTap: () {}, products: products);
               }
               return const Center(child: Text('Loading...'));
             }),
